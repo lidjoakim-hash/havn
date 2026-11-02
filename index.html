@@ -1570,7 +1570,7 @@ S.lastVisit=load("havn.lastVisit",0);store("havn.lastVisit",now());
 if(Object.keys(S.match).length)$("#sortMatch").disabled=false;
 $("#lang").value=LANG;applyI18n();
 $("#cvText").value=load("havn.cv","");
-writeFilters(load("havn.filters",{}));
+writeFilters(S.intl?{intl:true}:load("havn.filters",{}));
 renderPlans();renderRoi();
 $("#postForm").innerHTML=postFormHtml("p_",false);
 wirePostForm($("#postForm"),$("#postPreview"),$("#postQuality"),$("#postNotice"),"public");
