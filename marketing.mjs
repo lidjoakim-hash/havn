@@ -26,9 +26,14 @@ const nf = (n) => new Intl.NumberFormat("nb-NO").format(Math.round(n));
 
 async function fetchJobs() {
   if (process.env.MOCK_JOBS) return JSON.parse(await readFile(process.env.MOCK_JOBS, "utf8"));
-  const out = [];
+  const [jobs, texts] = await Promise.all([fetchCol("jobs"), fetchCol("jobtext").catch(() => [])]);
+  const byId = new Map(texts.map((t) => [t.id, t]));
+  return jobs.map((j) => { const t = byId.get(j.id); return t ? { ...j, description: t.description, requirements: t.requirements || j.requirements, benefits: t.benefits || j.benefits } : j; });
+}
+async function fetchCol(col) {
+    const out = [];
   for (let from = 0; ; from += 1000) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.jobs&select=id,data&order=id`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, Range: `${from}-${from + 999}`, "Range-Unit": "items" } });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.${col}&select=id,data&order=id`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, Range: `${from}-${from + 999}`, "Range-Unit": "items" } });
     if (!res.ok) throw new Error(`Supabase answered ${res.status}`);
     const rows = await res.json();
     out.push(...rows.map((r) => ({ id: r.id, ...r.data })));
@@ -37,7 +42,7 @@ async function fetchJobs() {
   return out;
 }
 function intlJob(j) {
-  if (j.source === "jobicy" || j.source === "arbeitnow") return true;
+  if (j.source === "jobicy" || j.source === "arbeitnow" || j.source === "ats") return true;
   const tx = `${j.title || ""} ${j.description || ""}`.toLowerCase();
   let en = 0, no = 0;
   for (const x of tx.split(/[^a-zæøåäöü]+/)) { if (/^(the|and|you|we|with|our|will|your|are|this|have)$/.test(x)) en++; else if (/^(og|du|vi|med|er|på|som|har|deg|det|ikke|eller)$/.test(x)) no++; }
@@ -51,7 +56,12 @@ function payLine(j, lang) {
   const per = { year: { no: "/år", en: "/yr", ro: "/an" }, month: { no: "/mnd", en: "/mo", ro: "/lună" }, hour: { no: "/t", en: "/h", ro: "/oră" } }[j.salaryPeriod || "year"]?.[lang] || "";
   const cur = j.currency === "NOK" ? "kr" : j.currency || "";
   if (a || b) return `${a && b && a !== b ? nf(a) + "–" + nf(b) : nf(a || b)} ${cur}${per}`;
-  if (j.payEst) return { no: `ca. ${nf(j.payEst.min / 1000)}–${nf(j.payEst.max / 1000)}k kr/år (estimat, ikke bekreftet)`, en: `≈ NOK ${nf(j.payEst.min / 1000)}–${nf(j.payEst.max / 1000)}k/yr (estimate, not confirmed)`, ro: `≈ ${nf(j.payEst.min / 1000)}–${nf(j.payEst.max / 1000)}k NOK/an (estimare, neconfirmat)` }[lang];
+  if (j.payEst) {
+    const e = j.payEst, c = e.currency || "NOK", lab = { no: "estimat, ikke bekreftet", en: "estimate, not confirmed", ro: "estimare, neconfirmat" }[lang];
+    if (e.period === "hour") return `ca. ${e.min}–${e.max} ${c === "NOK" ? "kr" : c}${{ no: "/t", en: "/h", ro: "/oră" }[lang]} (${lab})`;
+    const sym = { EUR: "€", USD: "$", GBP: "£" }[c], k = (n) => nf(n / 1000);
+    return `ca. ${sym ? sym + k(e.min) + "–" + sym + k(e.max) + "k" : k(e.min) + "–" + k(e.max) + "k " + (c === "NOK" ? "kr" : c)}${{ no: "/år", en: "/yr", ro: "/an" }[lang]} (${lab})`;
+  }
   return "";
 }
 function pick(list, n = 5) {

@@ -26,7 +26,9 @@ function payText(j) {
   if (!a && !b) {
     if (!j.payEst) return "";
     const f = (n) => new Intl.NumberFormat("nb-NO").format(n);
-    return `ca. ${f(j.payEst.min)}–${f(j.payEst.max)} kr/år (estimat · vanlig lønn, ikke bekreftet)`;
+    const e = j.payEst, c = e.currency || "NOK";
+    if (e.period === "hour") return `ca. ${e.min}–${e.max} ${c === "NOK" ? "kr" : c}/time (estimat · vanlig lønn, ikke bekreftet)`;
+    return `ca. ${f(e.min)}–${f(e.max)} ${c === "NOK" ? "kr" : c}/år (estimat · vanlig lønn, ikke bekreftet)`;
   }
   const per = { year: "/år", month: "/mnd", hour: "/time" }[j.salaryPeriod] || "";
   const f = (n) => new Intl.NumberFormat("nb-NO").format(n);
@@ -34,9 +36,14 @@ function payText(j) {
 }
 
 async function fetchJobs() {
+  const [jobs, texts] = await Promise.all([fetchCol("jobs"), fetchCol("jobtext").catch(() => [])]);
+  const byId = new Map(texts.map((t) => [t.id, t]));
+  return jobs.map((j) => { const t = byId.get(j.id); return t ? { ...j, description: t.description, requirements: t.requirements || j.requirements, benefits: t.benefits || j.benefits } : j; });
+}
+async function fetchCol(col) {
   const out = [];
   for (let from = 0; ; from += 1000) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.jobs&select=id,data&order=id`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.${col}&select=id,data&order=id`, {
       headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, Range: `${from}-${from + 999}`, "Range-Unit": "items" },
     });
     if (!res.ok) throw new Error(`Supabase answered ${res.status}: ${await res.text()}`);
@@ -207,7 +214,7 @@ async function put(path, html) {
 
 const all = (await fetchJobs()).map(enrichPay);
 // Jobs from partner feeds (Jobicy, Arbeitnow) stay in the app only and link back to the original ad; no copies for search engines.
-const PARTNER = new Set(["jobicy", "arbeitnow"]);
+const PARTNER = new Set(["jobicy", "arbeitnow", "ats"]);
 const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && !PARTNER.has(j.source));
 console.log(`Jobs: ${all.length} total, ${live.length} live`);
 

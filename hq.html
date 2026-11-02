@@ -115,7 +115,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-tab],[data
  const by={};live.forEach(r=>{const s=r.s||"havn";by[s]=(by[s]||0)+1});
  const stat=(n,l)=>`<div class="card stat"><div class="n">${n}</div><div class="l">${l}</div></div>`;
  $("#stats").innerHTML=stat(nf(live.length),"live jobs")+stat(nf(live.filter(r=>+r.c>day).length),"new in the last 24 h")+stat(nf(live.filter(r=>r.w==="remote").length),"remote jobs")+stat(nf(by.havn||0),"posted directly on Havn");
- const names={nav:"NAV (Norway)",jobicy:"Jobicy (remote)",arbeitnow:"Arbeitnow (Europe)",havn:"Employers on Havn"};
+ const names={nav:"NAV (Norway)",jobicy:"Jobicy (remote)",arbeitnow:"Arbeitnow (Europe)",ats:"Direct from company career pages",havn:"Employers on Havn"};
  const max=Math.max(...Object.values(by));$("#sources").innerHTML=Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<div class="row"><span>${esc(names[s]||s)}</span><b>${nf(n)}</b></div><div class="bar"><i style="width:${Math.round(100*n/max)}%"></i></div>`).join("");
 })();
 fetch("health.json?x="+Date.now()).then(r=>r.json()).then(h=>{$("#health").innerHTML=`<div class="row"><span>NAV import</span><span class="pill ${h.ok?"":"bad"}">${h.ok?"Running":"Needs a look"}</span></div><div class="row"><span>Newest NAV job</span><b>${h.newestNavHoursAgo} h ago</b></div><div class="row"><span>Last check</span><b>${new Date(h.checkedAt).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})}</b></div>`}).catch(()=>{$("#health").textContent="No health report yet."});

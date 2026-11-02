@@ -33,21 +33,23 @@
 
   /* live updates: one channel, refetch a collection shortly after it changes */
   const subs={};let channel=null;const timers={};
-  function notify(col){clearTimeout(timers[col]);timers[col]=setTimeout(()=>{(subs[col]||[]).forEach(s=>s.run())},700)}
+  const last={},GAP={jobs:900000,jobtext:86400000};
+  /* big public lists (jobs) refresh at most every 15 minutes, so phones don't re-download them all the time; your own changes show at once */
+  function notify(col,now){if(!subs[col])return;clearTimeout(timers[col]);const wait=now?700:Math.max(700,(last[col]||0)+(GAP[col]||0)-Date.now());timers[col]=setTimeout(()=>{last[col]=Date.now();(subs[col]||[]).forEach(s=>s.run())},wait)}
   function ensureChannel(){
     if(channel)return;
     channel=sb.channel("havn-docs").on("postgres_changes",{event:"*",schema:"public",table:T},p=>{const col=(p.new&&p.new.collection)||(p.old&&p.old.collection);if(col)notify(col);else Object.keys(subs).forEach(notify)}).subscribe();
     setInterval(()=>Object.keys(subs).forEach(notify),120000);
   }
-  function subscribe(col,run){ensureChannel();const s={run};(subs[col]=subs[col]||[]).push(s);run();return ()=>{subs[col]=(subs[col]||[]).filter(x=>x!==s)}}
+  function subscribe(col,run){ensureChannel();const s={run};(subs[col]=subs[col]||[]).push(s);last[col]=Date.now();run();return ()=>{subs[col]=(subs[col]||[]).filter(x=>x!==s)}}
 
   function docRef(path){
     const {col,id}=split(path);
     return {id,path,
       get:()=>fetchDoc(col,id),
-      set:async data=>{const {error}=await sb.from(T).upsert({collection:col,id,data,updated_at:new Date().toISOString()},{onConflict:"collection,id"});if(error)throw err(error);notify(col)},
-      update:async data=>{const cur=await fetchDoc(col,id);if(!cur.exists)throw {code:"invalid_argument",message:"Document does not exist"};const {error}=await sb.from(T).update({data:deepMerge(cur.data(),data),updated_at:new Date().toISOString()}).eq("collection",col).eq("id",id);if(error)throw err(error);notify(col)},
-      delete:async()=>{const {error}=await sb.from(T).delete().eq("collection",col).eq("id",id);if(error)throw err(error);notify(col)},
+      set:async data=>{const {error}=await sb.from(T).upsert({collection:col,id,data,updated_at:new Date().toISOString()},{onConflict:"collection,id"});if(error)throw err(error);notify(col,true)},
+      update:async data=>{const cur=await fetchDoc(col,id);if(!cur.exists)throw {code:"invalid_argument",message:"Document does not exist"};const {error}=await sb.from(T).update({data:deepMerge(cur.data(),data),updated_at:new Date().toISOString()}).eq("collection",col).eq("id",id);if(error)throw err(error);notify(col,true)},
+      delete:async()=>{const {error}=await sb.from(T).delete().eq("collection",col).eq("id",id);if(error)throw err(error);notify(col,true)},
       onSnapshot:(next,onErr)=>subscribe(col,()=>fetchDoc(col,id).then(next,e=>onErr&&onErr(e))),
       collection:sub=>colRef(path+"/"+sub)
     };

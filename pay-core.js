@@ -100,13 +100,104 @@ function payEstimate(j) {
   }
   return null;
 }
+// ---------- worldwide: other currencies in the ad text ----------
+const FX_SYM = { "€": "EUR", "eur": "EUR", "$": "USD", "usd": "USD", "£": "GBP", "gbp": "GBP", "chf": "CHF", "sek": "SEK", "dkk": "DKK", "pln": "PLN", "ron": "RON", "lei": "RON" };
+const FX_NUM = String.raw`(\d{1,3}(?:[,.  ]\d{3})+|\d{1,3}(?:\.\d)?\s?[kK]|\d{2,6})`;
+const FX_RE = new RegExp(String.raw`(€|\$|£|\b(?:eur|usd|gbp|chf|sek|dkk|pln|ron)\b)\s?${FX_NUM}\s*(?:-|–|—|to|and)\s*(?:€|\$|£|\b(?:eur|usd|gbp|chf|sek|dkk|pln|ron)\b)?\s?${FX_NUM}(.{0,40})`, "gi");
+const FX_RE2 = new RegExp(String.raw`${FX_NUM}\s*(?:-|–|—|to)\s*${FX_NUM}\s?(€|\b(?:eur|usd|gbp|chf|sek|dkk|pln|ron|lei)\b)(.{0,40})`, "gi");
+function fxNum(s) { s = String(s).trim(); if (/k$/i.test(s)) return Math.round(parseFloat(s) * 1000); return +s.replace(/[^\d]/g, "") || 0; }
+const FX_OK = { year: [12000, 900000], month: [800, 60000], hour: [6, 400] };
+function payFromTextFx(text) {
+  const tx = String(text || "");
+  for (const [re, cur, a1, b1, tail] of [[FX_RE, 1, 2, 3, 4], [FX_RE2, 3, 1, 2, 4]]) {
+    re.lastIndex = 0; let m;
+    while ((m = re.exec(tx))) {
+      const before = tx.slice(Math.max(0, m.index - 45), m.index).toLowerCase();
+      if (/(bonus|funding|raised|revenue|budget|investment|series|valuation|equity|stock|signing)/.test(before + m[0].toLowerCase())) continue;
+      const currency = FX_SYM[m[cur].toLowerCase()] || "EUR";
+      const a = fxNum(m[a1]), b = fxNum(m[b1]);
+      const t = (m[tail] || "").toLowerCase();
+      const per = /(hour|\/h\b|hr\b|stunde|oră)/.test(t) ? "hour" : /(month|\/mo|monat|lună)/.test(t) ? "month" : a >= 12000 ? "year" : a >= 800 ? "month" : "hour";
+      const ok = FX_OK[per];
+      if (a < ok[0] || b > ok[1] || b < a || b > a * 3) continue;
+      return { min: a, max: b, period: per, currency };
+    }
+  }
+  return null;
+}
+// ---------- estimates for any country ----------
+const NOK_TO = { NOK: 1, EUR: 0.085, USD: 0.092, GBP: 0.073, SEK: 0.97, DKK: 0.64, CHF: 0.08, PLN: 0.37, RON: 0.43 };
+const COUNTRY = { // pay level vs Norway for the same job, and the currency shown
+  Norway: [1, "NOK"], Denmark: [1.05, "DKK"], Sweden: [0.75, "SEK"], Finland: [0.75, "EUR"], Iceland: [0.95, "EUR"], Germany: [0.9, "EUR"], Netherlands: [0.9, "EUR"], Belgium: [0.75, "EUR"],
+  Austria: [0.75, "EUR"], Switzerland: [1.3, "CHF"], Ireland: [0.9, "EUR"], "United Kingdom": [0.85, "GBP"], France: [0.65, "EUR"], Spain: [0.5, "EUR"], Portugal: [0.4, "EUR"], Italy: [0.55, "EUR"],
+  Poland: [0.35, "PLN"], Romania: [0.28, "EUR"], Czechia: [0.4, "EUR"], Estonia: [0.45, "EUR"], Lithuania: [0.4, "EUR"], Latvia: [0.38, "EUR"], Greece: [0.38, "EUR"], Hungary: [0.33, "EUR"], Bulgaria: [0.25, "EUR"], Croatia: [0.38, "EUR"],
+  "United States": [1.15, "USD"], Canada: [0.8, "USD"], Australia: [0.85, "USD"], Singapore: [0.85, "USD"], Japan: [0.6, "USD"], India: [0.15, "USD"], Brazil: [0.2, "USD"], Mexico: [0.2, "USD"], UAE: [0.85, "USD"], Israel: [0.85, "USD"],
+};
+const REMOTE_LEVEL = { Worldwide: [0.85, "USD"], Europe: [0.75, "EUR"], Nordics: [0.9, "EUR"], Norway: [1, "NOK"], Romania: [0.3, "EUR"] };
+const CAT_EST = { Engineering: [700000, 900000], Design: [560000, 720000], Product: [750000, 950000], Marketing: [560000, 700000], Sales: [480000, 650000], "Customer support": [420000, 500000],
+  Operations: [520000, 700000], "Admin & office": [480000, 580000], "Hospitality & events": [400000, 480000], "Creative & media": [520000, 680000], "Logistics & warehouse": [450000, 530000],
+  Maritime: [520000, 720000], Healthcare: [520000, 680000], Education: [520000, 680000], "Construction & trades": [500000, 610000], Other: [450000, 600000] };
+const TECH = /(engineer|developer|software|data|machine learning|devops|security|product manager|designer|ux|ingeniør|utvikler)/i;
+function estimateAny(j) {
+  const t = `${j.title || ""}`.toLowerCase();
+  if (/(sommerjobb|summer job|ekstrahjelp|extra help|student|tilkalling|ringevikar|deltid|part[- ]time|werkstudent|helgejobb)/.test(t) && (!j.country || j.country === "Norway")) return { min: 180, max: 230, period: "hour", currency: "NOK" };
+  if (/(lærling|apprentice|ausbildung)/.test(t)) { const [f, c] = COUNTRY[j.country] || [1, "NOK"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(260000 * f * r / 1000) * 1000, max: Math.round(380000 * f * r / 1000) * 1000, period: "year", currency: c }; }
+  if (/(intern|internship|praktikant|trainee)/.test(t)) { const [f, c] = (j.workplace === "remote" ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || [0.8, "EUR"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(300000 * f * r / 1000) * 1000, max: Math.round(420000 * f * r / 1000) * 1000, period: "year", currency: c }; }
+  let base = payEstimate(j);
+  if (!base) { const c = CAT_EST[j.category] || CAT_EST.Other; base = { min: c[0], max: c[1], period: "year" }; }
+  let [f, cur] = (j.workplace === "remote" && j.remoteFrom ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || (j.workplace === "remote" ? REMOTE_LEVEL.Europe : COUNTRY.Norway);
+  if ((cur === "USD" && (j.country === "United States" || j.remoteFrom === "Worldwide")) && TECH.test(t)) f *= 1.35;
+  if (/\b(staff|principal)\b/.test(t)) f *= 1.15;
+  const r = NOK_TO[cur] || NOK_TO.EUR, step = cur === "NOK" || cur === "SEK" || cur === "DKK" ? 10000 : 1000;
+  return { min: Math.round(base.min * f * r / step) * step, max: Math.round(base.max * f * r / step) * step, period: "year", currency: cur };
+}
+// ---------- seniority and languages ----------
+function seniorityOf(j, text) {
+  const t = `${j.title || ""}`.toLowerCase(), x = String(text || "").toLowerCase();
+  if (/(junior|trainee|graduate|entry[- ]level|lærling|apprentice|intern\b|internship|praktikant|student|sommerjobb|ekstrahjelp|tilkalling|ringevikar|werkstudent|assistent|assistant|medarbeider|butikk|servitør|oppvask|renhold|cleaner|kjøkkenhjelp|hjelpearbeider|lagerarbeider|plukker|warehouse worker|helgejobb)/.test(t)) return "Entry";
+  if (/(\bhead of|director|direktør|\bchief|\bvp\b|vice president|\bcto\b|\bceo\b|daglig leder|leder\b|leiar\b|manager|sjef\b|principal|\blead\b|team lead)/.test(t)) return "Lead";
+  if (/(senior|\bsr\.?\b|erfaren|experienced|overlege|staff engineer|ekspert|expert)/.test(t)) return "Senior";
+  if (/(ingen erfaring|uten erfaring|no experience|opplæring gis|training (is )?provided|nyutdannet|newly graduated|0-2 years|0–2 years)/.test(x)) return "Entry";
+  if (/([5-9]\+?\s*(years|års|år)|minst [5-9] år|at least [5-9] years)/.test(x)) return "Senior";
+  return "Mid";
+}
+const LANGS = [["Norwegian", /(norsk|norwegian|skandinavisk|scandinavian)/], ["English", /(english|engelsk|englisch)/], ["German", /(german|deutsch|tysk)/], ["Swedish", /(swedish|svensk)/], ["Danish", /(danish|dansk)/],
+  ["Polish", /(polish|polsk|polski)/], ["Romanian", /(romanian|rumensk|română|limba română)/], ["French", /(french|fransk|français)/], ["Spanish", /(spanish|spansk|español)/], ["Dutch", /(dutch|nederlands)/], ["Lithuanian", /(lithuanian|litauisk)/], ["Ukrainian", /(ukrainian|ukrainsk)/]];
+function adLanguage(text) {
+  const c = { Norwegian: 0, English: 0, German: 0, Swedish: 0, Romanian: 0, Polish: 0 };
+  for (const w of String(text || "").toLowerCase().split(/[^a-zæøåäöüßăâîșț]+/)) {
+    if (/^(og|du|vi|med|er|på|som|har|deg|ikke|eller|hos|skal)$/.test(w)) c.Norwegian++;
+    else if (/^(the|and|you|we|with|our|will|your|are|this)$/.test(w)) c.English++;
+    else if (/^(und|die|der|wir|sie|mit|für|das|ist|ihre|bei)$/.test(w)) c.German++;
+    else if (/^(och|att|vi|med|är|för|som|på|inte)$/.test(w)) c.Swedish++;
+    else if (/^(și|în|pentru|cu|este|sau|care|la)$/.test(w)) c.Romanian++;
+    else if (/^(i|w|z|na|do|jest|oraz|dla)$/.test(w)) c.Polish++;
+  }
+  const best = Object.entries(c).sort((a, b) => b[1] - a[1])[0];
+  return best[1] >= 3 ? best[0] : "";
+}
+function languagesOf(j, text) {
+  const hay = `${j.title || ""} ${j.languages || ""} ${text || ""}`.toLowerCase();
+  const need = LANGS.filter(([, re]) => re.test(hay)).map(([n]) => n);
+  const ad = adLanguage(`${j.title || ""} ${text || ""}`);
+  if (ad === "Swedish" && j.country === "Norway") return need.length ? need : ["Norwegian"];
+  if (!need.length && ad) need.push(ad);
+  if (!need.length && ["jobicy", "ats"].includes(j.source)) need.push("English");
+  if (ad && !need.includes(ad) && ad !== "Swedish") need.unshift(ad);
+  return [...new Set(need)].slice(0, 4);
+}
 function enrichPay(j) {
   if (j._payDone) return j; j._payDone = true;
+  const text = j.description || `${j.summary || ""} | ${j.hints || ""}`;
+  if (!j.seniority) j.seniority = seniorityOf(j, text);
+  if (!j.langs) { j.langs = languagesOf(j, text); if (!j.languages && j.langs.length) j.languages = j.langs.join(", "); }
+  if (j.seniority === "Entry" && /(ingen erfaring|uten erfaring|no experience|opplæring gis|training (is )?provided)/i.test(text)) j.noExperience = true;
   if (+j.salaryMin || +j.salaryMax) { j.paySrc = j.paySrc || "listed"; return j; }
-  if (j.country !== "Norway") return j; // pay rules and estimates are for Norwegian jobs only
-  const found = payFromText(`${j.title || ""}\n${j.description || ""}\n${j.benefits || ""}`);
+  const src = `${j.title || ""}\n${text}\n${j.benefits || ""}`;
+  const found = (!j.country || j.country === "Norway") && j.workplace !== "remote" ? payFromText(src) : null;
+  const fx = found ? null : payFromTextFx(src);
   if (found) { j.salaryMin = found.min; j.salaryMax = found.max; j.salaryPeriod = found.period; j.currency = "NOK"; j.paySrc = "ad"; return j; }
-  const est = payEstimate(j);
-  if (est) { j.payEst = est; j.paySrc = "est"; }
+  if (fx) { j.salaryMin = fx.min; j.salaryMax = fx.max; j.salaryPeriod = fx.period; j.currency = fx.currency; j.paySrc = "ad"; return j; }
+  j.payEst = estimateAny(j); j.paySrc = "est";
   return j;
 }
