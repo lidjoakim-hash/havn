@@ -1,0 +1,1597 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Havn: jobs in Norway, Romania and remote across Europe. Every Havn job shows the pay. Search all of NAV's public jobs in English, Norwegian or Romanian."><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style><title>Havn Jobs</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%230B4A48%27/%3E%3Cpath d=%27M8 20c2.7 2 5.3 2 8 0s5.3-2 8 0%27 stroke=%27%23F2C230%27 stroke-width=%272.4%27 fill=%27none%27/%3E%3C/svg%3E"><style>
+/* Layout: sticky harbour bar, compact hero with search, filter rail + job list; employer pricing in a 4-up grid; detail pages single column. */
+:root{
+  --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E6ECEA; --fg:#0D2224; --muted:#4F6466; --line:#D3DDDB;
+  --primary:#0B4A48; --primary-fg:#F4FBF9; --accent:#F2C230; --accent-ink:#3A2C00;
+  --good:#1D7A4E; --warn:#A8610B; --bad:#B3392C;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1416; --surface:#122022; --surface-2:#18292B; --fg:#E4EEEC; --muted:#93A8A6; --line:#22393B;
+  --primary:#5CC3B4; --primary-fg:#05201E; --accent:#F2C230; --accent-ink:#2B2000;
+  --good:#5BC98F; --warn:#E9A84A; --bad:#EF7A6C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1416; --surface:#122022; --surface-2:#18292B; --fg:#E4EEEC; --muted:#93A8A6; --line:#22393B;
+  --primary:#5CC3B4; --primary-fg:#05201E; --accent:#F2C230; --accent-ink:#2B2000;
+  --good:#5BC98F; --warn:#E9A84A; --bad:#EF7A6C; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:1160px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);line-height:1.1;text-wrap:balance;margin:0}
+a{color:var(--primary)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+/* header */
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+header.bar .wrap{display:flex;align-items:center;gap:16px;padding-block:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--fg);font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:-.02em}
+.logo svg{flex:none}
+nav.main{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+nav.main a{text-decoration:none;color:var(--fg);padding:7px 12px;border-radius:999px;font-weight:500;font-size:14px}
+nav.main a[aria-current="page"]{background:var(--surface-2)}
+nav.main a.cta{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.count{font-family:var(--f-mono);font-size:11px;background:var(--primary);color:var(--primary-fg);border-radius:999px;padding:1px 6px;margin-left:4px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;text-decoration:none;font-size:14px;white-space:nowrap}
+.btn-primary{background:var(--primary);color:var(--primary-fg)}
+.btn-accent{background:var(--accent);color:var(--accent-ink)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--fg)}
+.btn-danger{background:transparent;border-color:var(--bad);color:var(--bad)}
+.btn-sm{padding:6px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* hero */
+.hero{padding-block:44px 28px}
+.hero h1{font-size:clamp(34px,6vw,60px);font-weight:800;letter-spacing:-.03em;max-width:15ch}
+.hero h1 em{font-style:normal;text-decoration:underline var(--accent);text-decoration-thickness:.14em;text-underline-offset:.1em}
+.hero p.lede{font-size:18px;color:var(--muted);max-width:60ch;margin:14px 0 0}
+.promises{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;font-size:14px;font-weight:500}
+.promises span{display:inline-flex;align-items:center;gap:6px}
+.promises span::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--primary)}
+
+.search{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px}
+.search input,.search select{border:0;background:transparent;padding:10px 12px;min-width:0}
+.search input{font-size:16px}
+.search select{border-left:1px solid var(--line)}
+@media (max-width:640px){.search{grid-template-columns:1fr}.search select{border-left:0;border-top:1px solid var(--line)}}
+
+/* board */
+.board{display:grid;grid-template-columns:240px 1fr;gap:28px;padding-block:8px 60px}
+@media (max-width:860px){.board{grid-template-columns:1fr}}
+.filters{display:flex;flex-direction:column;gap:16px;align-self:start;position:sticky;top:calc(80px + env(safe-area-inset-top,0px))}
+@media (max-width:860px){.filters{position:static;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label,.flabel{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.03em}
+.field input,.field select,.field textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+.field textarea{min-height:110px;resize:vertical}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px}
+.results-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.results-head h2{font-size:20px}
+.list{display:flex;flex-direction:column;gap:10px;min-width:0}
+
+.job{display:grid;grid-template-columns:48px 1fr auto;gap:14px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;text-decoration:none;color:var(--fg);position:relative;transition:border-color .15s, transform .15s}
+.job:hover{border-color:var(--primary)}
+.job.featured{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}
+.mark{width:48px;height:48px;border-radius:10px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:20px;color:#fff}
+.job h3{font-size:17px;font-family:var(--f-body);font-weight:600;line-height:1.3}
+.job .co{color:var(--muted);font-size:14px;margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:12px;padding:3px 8px;border-radius:6px;background:var(--surface-2);color:var(--fg);font-weight:500}
+.tag.remote{background:color-mix(in srgb,var(--primary) 16%,transparent);color:var(--primary)}
+.tag.feat{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.pay{text-align:right;min-width:0}
+.pay .amt{font-family:var(--f-mono);font-weight:500;font-size:15px;white-space:nowrap}
+.pay .when{font-size:12px;color:var(--muted);margin-top:4px;white-space:nowrap}
+@media (max-width:560px){.job{grid-template-columns:40px 1fr}.mark{width:40px;height:40px;font-size:17px}.pay{grid-column:2;text-align:left}}
+.save{position:absolute;right:10px;bottom:10px;border:0;background:transparent;cursor:pointer;color:var(--muted);padding:6px;border-radius:6px}
+.save[aria-pressed="true"]{color:var(--accent)}
+.save svg{display:block}
+
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--r);padding:36px 24px;text-align:center}
+.empty h3{font-size:20px;margin-bottom:6px}
+.empty p{color:var(--muted);max-width:52ch;margin:0 auto 14px}
+
+/* detail */
+.detail{display:grid;grid-template-columns:1fr 320px;gap:32px;padding-block:28px 60px}
+@media (max-width:860px){.detail{grid-template-columns:1fr}}
+.detail-main{min-width:0}
+.detail h1{font-size:clamp(28px,4.4vw,40px);letter-spacing:-.02em;margin-top:10px}
+.prose{max-width:68ch}
+.prose h2{font-size:19px;margin:26px 0 8px}
+.prose p{margin:0 0 12px;white-space:pre-wrap}
+.prose ul{padding-left:20px;margin:0}
+.prose li{margin-bottom:6px}
+.side{display:flex;flex-direction:column;gap:14px;align-self:start;position:sticky;top:calc(84px + env(safe-area-inset-top,0px))}
+@media (max-width:860px){.side{position:static}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:14px;margin:0}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0;font-weight:500;min-width:0;overflow-wrap:anywhere}
+.big-pay{font-family:var(--f-mono);font-size:22px;font-weight:500}
+.back{display:inline-flex;gap:6px;align-items:center;text-decoration:none;color:var(--muted);font-weight:500;font-size:14px}
+.copybox{display:flex;gap:6px;align-items:center;background:var(--surface-2);border-radius:8px;padding:8px 10px;font-family:var(--f-mono);font-size:13px;overflow-wrap:anywhere}
+
+/* employers */
+.section{padding-block:48px}
+.section h2{font-size:clamp(26px,4vw,38px);letter-spacing:-.02em}
+.section .sub{color:var(--muted);max-width:62ch;margin-top:10px;font-size:16px}
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+@media (max-width:800px){.why{grid-template-columns:1fr}}
+.why h3{font-size:18px;margin-bottom:6px}
+.why p{margin:0;color:var(--muted)}
+.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+@media (max-width:980px){.plans{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:540px){.plans{grid-template-columns:1fr}}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.plan.hot{border:2px solid var(--primary)}
+.plan .name{font-family:var(--f-display);font-weight:700;font-size:19px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.plan .price{font-family:var(--f-mono);font-size:30px;font-weight:500}
+.plan .price small{font-size:13px;color:var(--muted);font-family:var(--f-body)}
+.plan ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;font-size:14px;flex:1}
+.plan li{padding-left:18px;position:relative}
+.plan li::before{content:"";position:absolute;left:0;top:7px;width:8px;height:8px;border-radius:2px;background:var(--primary)}
+.pill{font-size:11px;font-family:var(--f-body);font-weight:600;padding:3px 8px;border-radius:999px;background:var(--accent);color:var(--accent-ink);letter-spacing:.03em}
+.addons{margin-top:16px;font-size:14px;color:var(--muted)}
+
+.post{display:grid;grid-template-columns:1fr 360px;gap:28px;margin-top:24px}
+@media (max-width:900px){.post{grid-template-columns:1fr}}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;min-width:0}
+.form .full{grid-column:1/-1}
+@media (max-width:560px){.form{grid-template-columns:1fr}}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media (max-width:560px){.tiers{grid-template-columns:1fr}}
+.tier{border:1px solid var(--line);border-radius:8px;padding:10px;cursor:pointer;display:flex;gap:8px;align-items:flex-start;font-size:13px;background:var(--bg)}
+.tier:has(input:checked){border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+.tier b{display:block;font-size:14px}
+.preview{align-self:start;position:sticky;top:calc(84px + env(safe-area-inset-top,0px));display:flex;flex-direction:column;gap:10px}
+@media (max-width:900px){.preview{position:static}}
+.notice{border-radius:8px;padding:12px 14px;font-size:14px;background:var(--surface-2)}
+.notice.ok{background:color-mix(in srgb,var(--good) 15%,transparent)}
+.notice.err{background:color-mix(in srgb,var(--bad) 15%,transparent)}
+
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;margin-top:22px}
+@media (max-width:760px){.faq{grid-template-columns:1fr}}
+.faq details{border-bottom:1px solid var(--line);padding-block:12px}
+.faq summary{cursor:pointer;font-weight:600}
+.faq p{color:var(--muted);margin:8px 0 0}
+
+/* admin */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-block:20px}
+.tabs button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:500;font-size:14px}
+.tabs button[aria-selected="true"]{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.03em}
+tr:last-child td{border-bottom:0}
+.status{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.st-active{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.st-closed,.st-expired{background:var(--surface-2);color:var(--muted)}
+.st-pending{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.kpi b{display:block;font-family:var(--f-mono);font-size:26px;font-weight:500}
+.kpi span{font-size:13px;color:var(--muted)}
+.play{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:800px){.play{grid-template-columns:1fr}}
+.play .panel h3{font-size:17px;margin-bottom:8px}
+.play ol,.play ul{margin:0;padding-left:20px;font-size:14px}
+.play li{margin-bottom:6px}
+.tpl{background:var(--surface-2);border-radius:8px;padding:12px;font-size:14px;white-space:pre-wrap;margin:8px 0}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(5,15,16,.55);z-index:20;display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);border-radius:14px;max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:12px}
+.modal h2{font-size:22px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:500;z-index:30;font-size:14px}
+
+footer{border-top:1px solid var(--line);padding-block:28px;font-size:13px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+[hidden]{display:none!important}
+
+/* ---- v2 additions ---- */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:500;cursor:pointer;color:var(--fg)}
+.chip[aria-pressed="true"]{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+.ai-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;font-size:13px}
+.btn-ai{background:color-mix(in srgb,var(--primary) 12%,var(--surface));color:var(--primary);border-color:color-mix(in srgb,var(--primary) 35%,transparent)}
+.spark{display:inline-block;width:12px;height:12px;flex:none}
+.market{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:13px;color:var(--muted);margin-bottom:14px}
+.market b{font-family:var(--f-mono);color:var(--fg);font-weight:500}
+.tag.new{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.tag.soon{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.tag.ver{background:color-mix(in srgb,var(--primary) 16%,transparent);color:var(--primary)}
+.tag.match{background:var(--fg);color:var(--bg);font-family:var(--f-mono)}
+.why-match{font-size:13px;color:var(--muted);margin-top:8px}
+.conv{font-size:12px;color:var(--muted);margin-top:2px;font-family:var(--f-mono)}
+.recent{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px}
+.recent a{flex:none;max-width:220px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px;text-decoration:none;color:var(--fg);font-size:13px}
+.recent a span{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent a b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.cvpanel textarea{min-height:90px}
+.insight{font-size:14px}
+.bar-track{height:8px;border-radius:999px;background:var(--surface-2);position:relative;margin:10px 0 6px}
+.bar-fill{position:absolute;top:0;bottom:0;border-radius:999px;background:color-mix(in srgb,var(--primary) 40%,transparent)}
+.bar-dot{position:absolute;top:-3px;width:14px;height:14px;border-radius:50%;background:var(--accent);border:2px solid var(--surface);transform:translateX(-50%)}
+.quality{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.qmeter{height:6px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.qmeter i{display:block;height:100%;background:var(--good)}
+.qtips{margin:0;padding-left:18px;color:var(--muted)}
+.stages{display:flex;gap:4px;flex-wrap:wrap}
+.stages button{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:4px 8px;font-size:12px;cursor:pointer}
+.stages button[aria-pressed="true"]{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+.trow{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+@media (max-width:620px){.trow{grid-template-columns:1fr}}
+.trow a{color:var(--fg);font-weight:600;text-decoration:none}
+.co-head{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.co-head .mark{width:64px;height:64px;font-size:28px}
+.aiout{white-space:pre-wrap;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.kbd{font-family:var(--f-mono);font-size:11px;border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--muted)}
+.list-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 10px}
+.toggle{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
+.billing{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface);margin-top:18px}
+.billing button{border:0;background:transparent;border-radius:999px;padding:6px 14px;font-weight:600;font-size:13px;cursor:pointer}
+.billing button[aria-pressed="true"]{background:var(--primary);color:var(--primary-fg)}
+
+.save{position:static;margin-top:6px;margin-right:-6px}
+.fdet>summary{display:none}
+.fdet-body{display:flex;flex-direction:column;gap:16px}
+@media (max-width:860px){
+  .filters{display:block}
+  .filters>.panel{margin-top:12px}
+  .fdet>summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 14px;list-style:none}
+  .fdet>summary::-webkit-details-marker{display:none}
+  .fdet>summary::after{content:"+";font-family:var(--f-mono);color:var(--muted)}
+  .fdet[open]>summary::after{content:"–"}
+  .fdet-body{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-top:12px}
+}
+
+/* ---- v3 ---- */
+.langsel{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 8px;font-size:13px;font-weight:600}
+.roi-grid{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:end;margin-top:8px}
+@media (max-width:640px){.roi-grid{grid-template-columns:1fr}}
+.roi-out{display:flex;gap:22px;flex-wrap:wrap}
+.roi-out div{display:flex;flex-direction:column}
+.roi-out b{font-family:var(--f-mono);font-size:22px;font-weight:500}
+.roi-out span{font-size:13px;color:var(--muted)}
+.sal-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:800px){.sal-grid{grid-template-columns:1fr}}
+.sal-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) auto;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.sal-row:last-child{border-bottom:0}
+.sal-bar{height:10px;border-radius:999px;background:var(--surface-2);position:relative}
+.sal-bar i{position:absolute;top:0;bottom:0;border-radius:999px;background:color-mix(in srgb,var(--primary) 30%,transparent)}
+.sal-bar b{position:absolute;top:-2px;width:4px;height:14px;border-radius:2px;background:var(--primary);transform:translateX(-50%)}
+.sal-val{font-family:var(--f-mono);white-space:nowrap;text-align:right}
+.sal-val small{display:block;color:var(--muted);font-family:var(--f-body);font-size:11px}
+.cmp-table th{width:150px}
+.cmp-table td{min-width:180px}
+.cmp-tray{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:15;background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.ask-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:15;display:inline-flex;gap:8px;align-items:center;background:var(--primary);color:var(--primary-fg);border:0;border-radius:999px;padding:12px 18px;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+.ask{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:16;width:min(420px,calc(100vw - 32px));height:min(620px,calc(100vh - 120px));background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.ask[hidden]{display:none}
+.ask-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:14px 16px;border-bottom:1px solid var(--line)}
+.ask-log{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:90%;padding:10px 12px;border-radius:12px;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--primary);color:var(--primary-fg);white-space:pre-wrap}
+.msg.bot{align-self:flex-start;background:var(--surface-2)}
+.msg.bot p{margin:0 0 8px}.msg.bot p:last-child{margin:0}
+.msg.bot ul{margin:4px 0 8px;padding-left:18px}
+.jobref{display:block;margin:6px 0;padding:8px 10px;border-radius:8px;background:var(--surface);border:1px solid var(--line);color:var(--fg);text-decoration:none}
+.jobref b{display:block;font-size:14px}.jobref span{font-size:12px;color:var(--muted)}
+.ask-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);align-items:flex-end}
+.ask-form textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);min-width:0}
+.md h3{font-size:16px;margin:14px 0 6px;font-family:var(--f-body)}
+.md p{margin:0 0 10px}.md ul{margin:0 0 10px;padding-left:20px}.md li{margin-bottom:4px}
+.share-row{display:flex;gap:6px;flex-wrap:wrap}
+.share-row a{font-size:13px;padding:6px 10px;border:1px solid var(--line);border-radius:6px;text-decoration:none;color:var(--fg)}
+.bulk-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+@media (max-width:860px){nav.main .langsel{margin-left:auto}}
+</style></head><body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="logo" href="#jobs" aria-label="Havn Jobs home">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--primary)"/><path d="M8 20c2.7 2 5.3 2 8 0s5.3-2 8 0" stroke="var(--accent)" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M16 7v10M12 11h8" stroke="var(--primary-fg)" stroke-width="2.4" stroke-linecap="round"/></svg>
+      Havn
+    </a>
+    <nav class="main" aria-label="Main">
+      <a href="#jobs" data-nav="jobs" data-i18n="nav.jobs">Find jobs</a>
+      <a href="#salaries" data-nav="salaries" data-i18n="nav.salaries">Salaries</a>
+      <a href="#my" data-nav="my"><span data-i18n="nav.my">My jobs</span><span class="count" id="myCount" hidden></span></a>
+      <a href="#employers" data-nav="employers" data-i18n="nav.employers">For employers</a>
+      <a href="#admin" data-nav="admin" id="adminLink" hidden>Admin<span class="count" id="adminCount" hidden></span></a>
+      <a href="#post" class="cta" data-nav="post" data-i18n="nav.post">Post a job</a>
+      <select id="lang" class="langsel" aria-label="Language"><option value="en">EN</option><option value="no">NO</option><option value="ro">RO</option></select>
+    </nav>
+  </div>
+</header>
+
+<main id="app">
+  <!-- JOBS -->
+  <section id="v-jobs" data-view>
+    <div class="wrap hero">
+      <div class="eyebrow" data-i18n="hero.eyebrow">Norway · Romania · Remote across Europe</div>
+      <h1 style="margin-top:10px" data-i18n-html="hero.h1">Every job shows <em>the pay</em>. Every listing is checked by a person.</h1>
+      <p class="lede" data-i18n="hero.lede">Havn is a job board with no ghost jobs, no hidden salaries and no recruiter spam.</p>
+      <div class="promises"><span data-i18n="p1">Salary on every listing</span><span data-i18n="p2">Human-reviewed posts</span><span data-i18n="p3">Free for job seekers, always</span><span data-i18n="p4">Clear "remote from" rules</span></div>
+      <form class="search" id="searchForm" role="search">
+        <input id="q" type="search" data-i18n-ph="search.ph" placeholder="Job title, skill or company" aria-label="Search jobs" autocomplete="off">
+        <select id="fromWhere" aria-label="Where you can work from">
+          <option value="" data-i18n="from.any">Working from anywhere</option>
+          <option value="Norway" data-i18n="from.no">I'm in Norway</option>
+          <option value="Romania" data-i18n="from.ro">I'm in Romania</option>
+          <option value="EU" data-i18n="from.eu">I'm elsewhere in the EU</option>
+        </select>
+        <button class="btn btn-primary" type="submit" data-i18n="search.btn">Search</button>
+      </form>
+      <div class="ai-row" id="aiSearchRow" hidden>
+        <button class="btn btn-ai btn-sm" type="button" data-act="ai-search"><svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg><span data-i18n="ai.search">Search with AI</span></button>
+        <span class="muted" data-i18n="ai.try">Try: "remote customer support from Romania, at least €30k"</span>
+        <span id="aiSearchMsg" class="muted"></span>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Quick filters"></div>
+    </div>
+    <div class="wrap board">
+      <aside class="filters" aria-label="Filters">
+        <details class="fdet" id="filterDetails" open><summary data-i18n="filters">Filters</summary><div class="fdet-body">
+        <div class="field"><label for="fWork" data-i18n="f.work">Workplace</label>
+          <select id="fWork"><option value="" data-i18n="any">Any</option><option value="remote" data-i18n="remote">Remote</option><option value="hybrid" data-i18n="hybrid">Hybrid</option><option value="onsite" data-i18n="onsite">On-site</option></select></div>
+        <div class="field"><label for="fCat" data-i18n="f.cat">Category</label><select id="fCat"><option value="" data-i18n="allcats">All categories</option></select></div>
+        <div class="field"><label for="fType" data-i18n="f.type">Job type</label>
+          <select id="fType"><option value="" data-i18n="any">Any</option><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Freelance">Freelance</option><option value="Seasonal">Seasonal</option><option value="Internship">Internship</option></select></div>
+        <div class="field"><label for="fLevel" data-i18n="f.level">Seniority</label>
+          <select id="fLevel"><option value="" data-i18n="any">Any</option><option value="Entry">Entry</option><option value="Mid">Mid</option><option value="Senior">Senior</option><option value="Lead">Lead</option></select></div>
+        <div class="field"><label for="fMin" data-i18n="f.min">Minimum yearly pay (EUR)</label>
+          <select id="fMin"><option value="0" data-i18n="nomin">No minimum</option><option value="25000">€25k+</option><option value="40000">€40k+</option><option value="60000">€60k+</option><option value="80000">€80k+</option></select></div>
+        <div class="field"><label for="fTz" data-i18n="f.tz">Working hours</label>
+          <select id="fTz"><option value="" data-i18n="any">Any</option><option value="cet" data-i18n="tz.cet">Fits European time (CET)</option></select></div>
+        <div class="field"><label for="fSort" data-i18n="f.sort">Sort</label>
+          <select id="fSort"><option value="new" data-i18n="sort.new">Newest first</option><option value="pay" data-i18n="sort.pay">Highest pay</option><option value="match" id="sortMatch" disabled data-i18n="sort.match">Best match to my CV</option></select></div>
+        <label class="chk"><input type="checkbox" id="fDirect"> <span data-i18n="f.direct">Direct employers only</span></label>
+        <label class="chk"><input type="checkbox" id="fNoExp"> <span data-i18n="f.noexp">No experience needed</span></label>
+        <label class="chk"><input type="checkbox" id="fVisa"> <span data-i18n="f.visa">Relocation or visa help</span></label>
+        <button class="btn btn-ghost btn-sm" type="button" data-act="clear" data-i18n="clear">Clear filters</button>
+        <div class="panel cvpanel" id="cvPanel" hidden>
+          <div class="flabel" data-i18n="cv.title">MATCH JOBS TO YOUR CV</div>
+          <p style="margin:6px 0 10px;font-size:14px" data-i18n="cv.text">Paste your CV. AI scores every open job for you.</p>
+          <div class="field"><label for="cvText" class="flabel" data-i18n="cv.label">YOUR CV</label><textarea id="cvText" data-i18n-ph="cv.ph"></textarea></div>
+          <div class="row" style="margin-top:8px"><button class="btn btn-ai btn-sm" type="button" data-act="match" data-i18n="cv.btn">Score jobs</button><span class="muted" id="matchMsg" style="font-size:13px"></span></div>
+        </div>
+        </div></details>
+        <div class="panel" id="alertPanel">
+          <div class="flabel" data-i18n="dg.title">WEEKLY DIGEST</div>
+          <p style="margin:6px 0 10px;font-size:14px" data-i18n="dg.text">Get the best new jobs that match your search, once a week.</p>
+          <button class="btn btn-accent btn-sm" type="button" data-act="digest" data-i18n="dg.btn">Get the digest</button>
+        </div>
+      </aside>
+      <div style="min-width:0">
+        <div id="recentBox"></div>
+        <div class="market" id="market"></div>
+        <div class="results-head"><h2 id="resultsTitle">Open jobs</h2><span class="muted" id="resultsMeta"></span></div>
+        <div class="list" id="jobList" aria-live="polite"></div>
+        <div id="moreBox" style="margin-top:14px;text-align:center"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALARIES -->
+  <section id="v-salaries" data-view hidden>
+    <div class="wrap section" style="padding-bottom:64px">
+      <h2 data-i18n="sal.title">Havn salary index</h2>
+      <p class="sub" data-i18n="sal.sub">Real pay from every open job on Havn.</p>
+      <div id="salBody" style="margin-top:24px"></div>
+      <p class="muted" style="font-size:13px;margin-top:18px" data-i18n="sal.note"></p>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section id="v-privacy" data-view hidden>
+    <div class="wrap section prose" style="padding-bottom:64px">
+      <h2 style="font-size:clamp(26px,4vw,38px)" data-i18n="priv">Privacy</h2>
+      <div id="privBody"></div>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section id="v-compare" data-view hidden>
+    <div class="wrap section" style="padding-bottom:64px">
+      <h2 data-i18n="cmp.title">Compare jobs</h2>
+      <p class="sub" data-i18n="cmp.sub">Up to 3 jobs side by side.</p>
+      <div id="cmpBody" style="margin-top:24px"></div>
+    </div>
+  </section>
+
+  <!-- JOB DETAIL -->
+  <section id="v-job" data-view hidden><div class="wrap" id="jobDetail"></div></section>
+
+  <!-- COMPANY -->
+  <section id="v-co" data-view hidden><div class="wrap" id="coDetail" style="padding-block:28px 60px"></div></section>
+
+  <!-- MY JOBS -->
+  <section id="v-my" data-view hidden>
+    <div class="wrap section" style="padding-bottom:0">
+      <h2 data-i18n="my.title">My jobs</h2>
+      <p class="sub" data-i18n="my.sub">Your saved jobs and where each application stands.</p>
+      <div class="tabs" role="tablist" id="myTabs">
+        <button role="tab" data-mytab="saved" aria-selected="true" data-i18n="my.saved">Saved</button>
+        <button role="tab" data-mytab="applied" data-i18n="my.apps">Applications</button>
+      </div>
+    </div>
+    <div class="wrap" style="padding-bottom:60px"><div class="list" id="myList"></div></div>
+  </section>
+
+  <!-- EMPLOYERS -->
+  <section id="v-employers" data-view hidden>
+    <div class="wrap section">
+      <div class="eyebrow">For employers</div>
+      <h2 style="margin-top:8px">Hire people who already know what you pay.</h2>
+      <p class="sub">Candidates on Havn see the salary, the location rules and the hiring steps before they apply. That means fewer mismatched applications and faster hires.</p>
+      <div class="why">
+        <div class="panel"><h3>Applicants who fit</h3><p>Salary and "remote from" rules are required fields, so people who can't take the job filter themselves out.</p></div>
+        <div class="panel"><h3>Seen where it matters</h3><p>Featured jobs go into the weekly digest and are posted on Havn's social channels in Norway and Romania.</p></div>
+        <div class="panel"><h3>Write it in two minutes</h3><p>Paste your old job ad or a few notes and AI fills in the whole listing. You check it and submit.</p></div>
+      </div>
+    </div>
+
+    <div class="wrap section" id="pricing" style="padding-top:8px">
+      <h2>Simple pricing</h2>
+      <p class="sub">Job seekers never pay. Employers pay only for reach. Prices exclude VAT.</p>
+      <div class="billing" role="group" aria-label="Billing period"><button type="button" data-bill="month" aria-pressed="true">Monthly</button><button type="button" data-bill="year" aria-pressed="false">Yearly · save 29%</button></div>
+      <div class="plans" id="plans"></div>
+      <div class="panel roi" style="margin-top:22px">
+        <div class="flabel">WHAT A HIRE COSTS YOU</div>
+        <div class="roi-grid">
+          <div class="field"><label for="roiSalary">Yearly salary of the hire (EUR)</label><input id="roiSalary" type="number" inputmode="numeric" value="45000" min="0"></div>
+          <div class="roi-out" id="roiOut"></div>
+        </div>
+        <p class="muted" style="font-size:13px;margin:8px 0 0">Recruitment agencies typically charge 15–25% of the first year's salary. Ranges vary by market and role.</p>
+      </div>
+      <p class="addons"><b>Add-ons:</b> Weekly digest sponsorship €149 per issue · Extra 30 days for any post €39 · Verified company badge free after your first paid post.</p>
+    </div>
+
+    <div class="wrap section" id="postSection" style="padding-top:8px">
+      <h2>Post a job</h2>
+      <p class="sub">Fill in the listing and watch the preview. Posts are reviewed and usually go live within one working day.</p>
+      <div class="post">
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+          <div class="panel" id="aiFillPanel" hidden>
+            <div class="flabel">SAVE TIME WITH AI</div>
+            <div class="field" style="margin-top:8px"><label for="pasteAd">Paste an existing job ad or a few notes about the role</label><textarea id="pasteAd" style="min-height:80px" placeholder="e.g. Need a part-time wedding photographer in Cluj, weekends May–Sept, 150 EUR per wedding, own camera, English or Romanian"></textarea></div>
+            <div class="row" style="margin-top:8px"><button class="btn btn-ai btn-sm" type="button" data-act="ai-fill" data-form="postForm">Fill the form with AI</button><span class="muted" data-aimsg="postForm" style="font-size:13px"></span></div>
+          </div>
+          <form class="form" id="postForm" novalidate></form>
+        </div>
+        <div class="preview">
+          <div class="flabel">LIVE PREVIEW</div>
+          <div id="postPreview"></div>
+          <div id="postQuality"></div>
+          <div id="postNotice"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap section" style="padding-top:8px;padding-bottom:64px">
+      <h2>Questions</h2>
+      <div class="faq">
+        <details><summary>Why must I show the salary?</summary><p>Listings with pay get more relevant applicants and fewer drop-outs late in the process. A range is fine, and so is an hourly rate.</p></details>
+        <details><summary>What does "remote from" mean?</summary><p>It says where a remote hire can legally live and work, for example "Europe" or "Norway". It saves you from applicants you cannot employ.</p></details>
+        <details><summary>How long does a post stay up?</summary><p>30 days. After that it closes automatically, so the board never shows stale jobs. You can extend it if you are still hiring.</p></details>
+        <details><summary>Is it free for job seekers?</summary><p>Yes, always. Havn earns from employers who want more reach, never from the people looking for work.</p></details>
+        <details><summary>Can I post in Norwegian or Romanian?</summary><p>Yes. Write the listing in the language you work in. Candidates can filter by the country they live in.</p></details>
+        <details><summary>Can recruitment agencies post?</summary><p>Yes, but agency jobs are labelled, and candidates can choose to see direct employers only.</p></details>
+        <details><summary>How do I pay?</summary><p>After review we send an invoice for paid plans. Standard posts are free during the launch period.</p></details>
+        <details><summary>What is the reply promise?</summary><p>You choose how many days you need to answer every applicant. It's shown on the listing. Employers who keep it rank higher.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="v-admin" data-view hidden>
+    <div class="wrap section" style="padding-bottom:0">
+      <div class="eyebrow">Owner only</div>
+      <h2 style="margin-top:8px">Havn admin</h2>
+      <div class="tabs" role="tablist" id="adminTabs">
+        <button role="tab" data-tab="overview" aria-selected="true">Overview</button>
+        <button role="tab" data-tab="jobs">Jobs</button>
+        <button role="tab" data-tab="requests">Post requests</button>
+        <button role="tab" data-tab="apps">Applications</button>
+        <button role="tab" data-tab="reports">Reports</button>
+        <button role="tab" data-tab="digest">Digest list</button>
+        <button role="tab" data-tab="growth">Growth playbook</button>
+        <button role="tab" data-tab="settings">Settings</button>
+      </div>
+    </div>
+    <div class="wrap" style="padding-bottom:64px" id="adminBody"></div>
+  </section>
+</main>
+
+<footer><div class="wrap"><span>© Havn Jobs · <span data-i18n="foot.free">Free for job seekers, always.</span></span><span><a href="#salaries" data-i18n="nav.salaries">Salaries</a> · <a href="#employers" data-i18n="nav.employers">For employers</a> · <a href="#my" data-i18n="nav.my">My jobs</a> · <a href="#privacy" data-i18n="priv">Privacy</a> · <span class="kbd">/</span> <span data-i18n="foot.search">to search</span></span></div></footer>
+
+<a href="#compare" class="cmp-tray" id="cmpTray" hidden></a>
+<button type="button" class="ask-fab" id="askFab" data-act="ask-open" hidden><svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg><span data-i18n="ask.btn">Ask Havn</span></button>
+<div class="ask" id="askPanel" role="dialog" aria-label="Ask Havn" hidden>
+  <div class="ask-head"><div><b data-i18n="ask.title">Ask Havn</b><div class="muted" style="font-size:12px" data-i18n="ask.sub"></div></div><button type="button" class="btn btn-ghost btn-sm" data-act="ask-close" aria-label="Close">✕</button></div>
+  <div class="ask-log" id="askLog" aria-live="polite"></div>
+  <form class="ask-form" id="askForm"><textarea id="askInput" rows="2" data-i18n-ph="ask.ph"></textarea><button class="btn btn-primary btn-sm" type="submit" id="askSend" data-i18n="ask.send">Send</button></form>
+</div>
+<div id="modalRoot"></div>
+
+<script src="config.js"></script><script src="supabase-2.118.0.js"></script><script src="havn-backend.js"></script>
+<script>
+(function(){
+"use strict";
+/* ================= constants ================= */
+const CATS=["Engineering","Design","Product","Marketing","Sales","Customer support","Operations","Admin & office","Hospitality & events","Creative & media","Logistics & warehouse","Maritime","Healthcare","Education","Construction & trades","Other"];
+const REGIONS=["Worldwide","Europe","Nordics","Norway","Romania"];
+const COUNTRIES=["Norway","Romania","Sweden","Denmark","Germany","Netherlands","Spain","Poland","United Kingdom","Other"];
+const CUR=["EUR","NOK","RON","USD","SEK","DKK","GBP"];
+const TYPES=["Full-time","Part-time","Contract","Freelance","Seasonal","Internship"];
+const LEVELS=["Entry","Mid","Senior","Lead"];
+const TO_EUR={EUR:1,NOK:0.085,RON:0.2,USD:0.92,SEK:0.087,DKK:0.134,GBP:1.17};
+const PER_YEAR={year:1,month:12,hour:1650};
+const TIERS={
+  standard:{name:"Standard",price:0,label:"Free at launch",rank:0},
+  boost:{name:"Boost",price:79,label:"€79 per post",rank:1},
+  featured:{name:"Featured",price:199,label:"€199 per post",rank:2}
+};
+const PLANS=[
+  {id:"standard",name:"Standard",price:{month:"€0",year:"€0"},per:{month:"launch offer",year:"launch offer"},items:["1 job live for 30 days","Human review within 1 working day","Listed in search and category pages","Apply by link, email or Quick apply"],btn:"Post for free"},
+  {id:"boost",name:"Boost",price:{month:"€79",year:"€79"},per:{month:"per post",year:"per post"},items:["Everything in Standard","Highlighted and pinned in its category for 7 days","Shown first in matching weekly digests","Shareable job link with preview"],btn:"Choose Boost"},
+  {id:"featured",name:"Featured",price:{month:"€199",year:"€199"},per:{month:"per post",year:"per post"},hot:true,items:["Everything in Boost","Pinned at the top of the board for 30 days","Posted on Havn's Instagram, Facebook and LinkedIn","Top spot in the weekly digest"],btn:"Choose Featured"},
+  {id:"pro",name:"Hiring Pro",price:{month:"€349",year:"€2,990"},per:{month:"per month",year:"per year"},items:["Unlimited job posts, all Featured","Company page with all your jobs","Verified company badge","Applicant inbox, CSV export and priority support"],btn:"Talk to us"}
+];
+const CHIPS=[
+  {id:"ro",k:"chip.ro",on:f=>f.from==="Romania"&&f.work==="remote",set:on=>{$("#fromWhere").value=on?"Romania":"";$("#fWork").value=on?"remote":""}},
+  {id:"no",k:"chip.no",on:f=>f.from==="Norway"&&f.work==="remote",set:on=>{$("#fromWhere").value=on?"Norway":"";$("#fWork").value=on?"remote":""}},
+  {id:"stv",k:"chip.stv",on:f=>f.q.toLowerCase()==="stavanger",set:on=>{$("#q").value=on?"Stavanger":""}},
+  {id:"new",k:"chip.new",on:f=>f.newOnly,set:on=>{S.newOnly=on}},
+  {id:"noexp",k:"chip.noexp",on:f=>f.noexp,set:on=>{$("#fNoExp").checked=on}},
+  {id:"direct",k:"chip.direct",on:f=>f.direct,set:on=>{$("#fDirect").checked=on}},
+  {id:"visa",k:"chip.visa",on:f=>f.visa,set:on=>{$("#fVisa").checked=on}},
+  {id:"cet",k:"chip.cet",on:f=>f.tz==="cet",set:on=>{$("#fTz").value=on?"cet":""}},
+  {id:"paid",k:"chip.paid",on:f=>f.payOnly,set:on=>{S.payOnly=on}},
+  {id:"pay",k:"chip.pay",on:f=>f.min>=50000,set:on=>{$("#fMin").value=on?"60000":"0"}}
+];
+const DAY=86400000;const PAGE=30;
+const STAGES=["applied","interview","offer","rejected"];
+const TZS=["CET ±2h","UK hours","US hours","Flexible"];
+
+const S={db:null,user:null,sample:null,downloads:null,uid:null,isOwner:false,canWrite:null,
+  jobs:[],jobsLoaded:false,settings:{},apps:[],requests:[],alerts:[],reports:[],
+  myApps:{},myRequests:{},myReports:{},saved:new Set(),track:{},recent:[],match:{},
+  adminTab:"overview",myTab:"saved",editing:null,newOnly:false,bill:"month",compare:[],limit:30,lastVisit:0};
+
+/* ================= i18n ================= */
+const T={
+en:{
+"nav.jobs":"Find jobs","nav.my":"My jobs","nav.salaries":"Salaries","nav.employers":"For employers","nav.post":"Post a job",
+"hero.eyebrow":"Norway · Romania · Remote across Europe",
+"hero.h1":"Every Havn job shows <em>the pay</em>. Every listing is checked by a person.",
+"hero.lede":"Jobs posted on Havn always show the salary and expire after 30 days unless the employer is still hiring. On top of that you can search every public job ad in Norway from NAV, in one place, in English, Norwegian or Romanian.",
+"p1":"Salary on every Havn listing","p2":"Human-reviewed posts","p3":"Free for job seekers, always","p4":"Clear \"remote from\" rules",
+"search.ph":"Job title, skill or company — or describe the job you want","from.any":"Working from anywhere","from.no":"I'm in Norway","from.ro":"I'm in Romania","from.eu":"I'm elsewhere in the EU","search.btn":"Search",
+"ai.search":"Search with AI","ai.try":"Try: \"remote customer support from Romania, at least €30k\"","ai.thinking":"Thinking…","ai.set":"Filters set from your search.","ai.typefirst":"Type what you're looking for first.",
+"chip.ro":"Remote from Romania","chip.no":"Remote from Norway","chip.stv":"Stavanger","chip.new":"New this week","chip.noexp":"No experience needed","chip.direct":"Direct employers","chip.visa":"Relocation help","chip.pay":"€50k+ a year","chip.cet":"European hours",
+"f.work":"Workplace","any":"Any","remote":"Remote","hybrid":"Hybrid","onsite":"On-site","f.cat":"Category","allcats":"All categories","f.type":"Job type","f.level":"Seniority","f.min":"Minimum yearly pay (EUR)","nomin":"No minimum","f.tz":"Working hours","tz.cet":"Fits European time (CET)","f.sort":"Sort","sort.new":"Newest first","sort.pay":"Highest pay","sort.match":"Best match to my CV","f.direct":"Direct employers only","f.noexp":"No experience needed","f.visa":"Relocation or visa help","clear":"Clear filters","filters":"Filters",
+"cv.title":"MATCH JOBS TO YOUR CV","cv.text":"Paste your CV. AI scores every open job for you. Your CV stays in this browser.","cv.label":"YOUR CV","cv.ph":"Paste your CV or a summary of your experience","cv.btn":"Score jobs","cv.more":"Paste a bit more of your CV first.","cv.scoring":"Scoring {n} jobs…","cv.done":"Done. Jobs are sorted by match.","cv.none":"No open jobs to score yet.",
+"dg.title":"WEEKLY DIGEST","dg.text":"Get the best new jobs that match your search, once a week.","dg.btn":"Get the digest",
+"recent":"RECENTLY VIEWED","m.open":"open jobs","m.cos":"companies","m.remote":"remote","m.median":"Median pay","m.new":"new in 3 days","m.since":"{n} new since your last visit",
+"res.title":"Open jobs","res.q":"Jobs matching \"{q}\"","res.meta":"{n} of {t} jobs","more":"Show more jobs",
+"e1.h":"The first jobs are on their way","e1.p":"Havn is just opening. New listings are reviewed by hand and appear here as soon as they are approved.","e1.b":"Post the first job","e2.h":"No jobs match these filters","e2.p":"Try a broader search, or get the weekly digest and we'll send matching jobs when they appear.","loading":"Loading jobs…",
+"b.feat":"Featured","b.new":"New","b.soon":"Closes soon","b.ver":"Verified","b.noexp":"No experience needed","b.visa":"Relocation help","b.agency":"Agency","b.match":"{n}% match","replies":"Replies within {n} days",
+"ago.today":"Today","ago.yday":"Yesterday","ago.d":"{n} days ago","ago.m":"{n} mo ago","preview":"Preview",
+"d.back":"← All jobs","d.about":"About the role","d.bring":"What you bring","d.get":"What you get","d.process":"Hiring process","d.promise":"{co} promises to answer every applicant within {n} days.","d.similar":"Similar jobs","d.pay":"PAY","d.work":"Workplace","d.from":"Remote from","d.loc":"Location","d.by":"Posted by","d.direct":"Direct employer","d.agency":"Recruitment agency","d.reply":"Reply within","d.days":"{n} days","d.posted":"Posted","d.closes":"Closes","d.in":"In {n} days","d.tomorrow":"Tomorrow","d.closed":"Closed","d.hours":"Working hours",
+"d.applysite":"Apply on {co}'s site","d.quick":"Quick apply with Havn","d.update":"Update your application","d.email":"OR EMAIL YOUR CV TO","copy":"Copy","d.mark":"I've applied, track it","d.save":"Save job","d.saved":"Saved","d.link":"Copy link","d.never":"Never pay to apply.","d.report":"Report this listing","d.inapps":"In your applications · {s}.","d.upd":"Update","d.noacc":"No longer accepting applications","d.gone.h":"This job is no longer listed","d.gone.p":"It may have been filled or expired. There are more open jobs on the board.","d.see":"See open jobs","d.openjobs":"{n} open jobs","d.match":"{n}% match with your CV.","d.share":"SHARE",
+"d.compare":"Compare","d.compared":"In comparison","ai.tools":"AI CAREER TOOLS","ai.interview":"Prepare for the interview","ai.tailor":"Tailor my CV to this job","ai.fit":"Should I apply?","ai.needcv":"Add your CV in the match panel on the job list for sharper answers.",
+"ins.title":"PAY COMPARED WITH {c} JOBS ON HAVN","ins.at":"Right at the median","ins.above":"{n}% above the median","ins.below":"{n}% below the median","ins.of":"of {n} similar jobs ({m}/yr).",
+"co.jobs":"{n} open jobs","co.none":"No jobs from this company right now","co.browse":"Browse the other open jobs on Havn.",
+"my.title":"My jobs","my.sub":"Your saved jobs and where each application stands. Kept in this browser.","my.saved":"Saved","my.apps":"Applications","my.e1.h":"No saved jobs yet","my.e1.p":"Tap the bookmark on any job to keep it here while you decide.","my.browse":"Browse jobs","my.e2.h":"No applications tracked","my.e2.p":"When you apply, Havn keeps a list here so you can follow up. You can also press \"I've applied, track it\" on any job.","my.find":"Find a job","my.applied":"applied {t}","my.closed":"listing closed","my.follow":"time to follow up",
+"st.applied":"Applied","st.interview":"Interview","st.offer":"Offer","st.rejected":"No luck",
+"sal.title":"Havn salary index","sal.sub":"Real pay from every open job on Havn, converted to euros per year. Updated live as jobs are posted.","sal.cat":"BY CATEGORY","sal.where":"BY WHERE YOU WORK","sal.jobs":"{n} jobs","sal.few":"few jobs, rough number","sal.empty":"Salary data appears here as soon as jobs are posted.","sal.median":"median","sal.remote":"Remote","sal.norway":"In Norway","sal.romania":"In Romania","sal.other":"Elsewhere in Europe","sal.note":"Converted with fixed rates (1 NOK ≈ €0.085, 1 RON ≈ €0.20). Hourly pay × 1,650 hours, monthly × 12.",
+"cmp.title":"Compare jobs","cmp.sub":"Up to 3 jobs side by side.","cmp.empty":"Add jobs with the Compare button on a job page.","cmp.tray":"Compare ({n})","cmp.clear":"Clear","cmp.pay":"Pay","cmp.eur":"Per year in EUR","cmp.match":"CV match","cmp.remove":"Remove","cmp.full":"You can compare 3 jobs at a time.",
+"ask.btn":"Ask Havn","ask.title":"Ask Havn","ask.sub":"Tell me what you're looking for. I only suggest jobs that are on Havn right now.","ask.ph":"e.g. Part-time jobs in Stavanger for a student","ask.send":"Send","ask.stop":"Stop","ask.hello":"Hi! What kind of job are you looking for? Tell me where you live, what you're good at and what pay you need.",
+"foot.free":"Free for job seekers, always.","pay.none":"Pay not listed","b.nav":"via NAV","chip.paid":"Pay shown","d.navfull":"See the full ad on arbeidsplassen.no","d.navapply":"Apply on the employer's page","d.navnote":"This ad comes from NAV's public job database. Apply directly with the employer.","d.signapply":"Sign in to Quick apply","priv":"Privacy","u.yr":"/yr","u.mo":"/mo","u.hr":"/hr","foot.search":"to search","toast.saved":"Saved","toast.removed":"Removed","toast.tracked":"Added to My jobs","toast.copied":"Copied"
+},
+no:{
+"nav.jobs":"Finn jobb","nav.my":"Mine jobber","nav.salaries":"Lønninger","nav.employers":"For arbeidsgivere","nav.post":"Legg ut jobb",
+"hero.eyebrow":"Norge · Romania · Fjernarbeid i hele Europa",
+"hero.h1":"Hver Havn-jobb viser <em>lønnen</em>. Hver annonse sjekkes av et menneske.",
+"hero.lede":"Jobber lagt ut på Havn viser alltid lønn og utløper etter 30 dager hvis arbeidsgiveren ikke fortsatt ansetter. I tillegg kan du søke i alle offentlige stillingsannonser i Norge fra NAV, på ett sted, på norsk, engelsk eller rumensk.",
+"p1":"Lønn i hver Havn-annonse","p2":"Manuelt kontrollerte annonser","p3":"Alltid gratis for jobbsøkere","p4":"Tydelig hvor du kan jobbe fra",
+"search.ph":"Stilling, ferdighet eller firma – eller beskriv jobben du vil ha","from.any":"Jobber fra hvor som helst","from.no":"Jeg er i Norge","from.ro":"Jeg er i Romania","from.eu":"Jeg er et annet sted i EU","search.btn":"Søk",
+"ai.search":"Søk med KI","ai.try":"Prøv: «kundeservice hjemmefra i Norge, minst 450 000 kr»","ai.thinking":"Tenker …","ai.set":"Filtrene er satt ut fra søket ditt.","ai.typefirst":"Skriv hva du ser etter først.",
+"chip.ro":"Fjernarbeid fra Romania","chip.no":"Fjernarbeid fra Norge","chip.stv":"Stavanger","chip.new":"Nye denne uken","chip.noexp":"Ingen erfaring kreves","chip.direct":"Direkte arbeidsgivere","chip.visa":"Hjelp med flytting","chip.pay":"€50k+ i året","chip.cet":"Europeisk arbeidstid",
+"f.work":"Arbeidssted","any":"Alle","remote":"Fjernarbeid","hybrid":"Hybrid","onsite":"På stedet","f.cat":"Kategori","allcats":"Alle kategorier","f.type":"Stillingstype","f.level":"Nivå","f.min":"Minste årslønn (EUR)","nomin":"Ingen minimum","f.tz":"Arbeidstid","tz.cet":"Passer europeisk tid (CET)","f.sort":"Sorter","sort.new":"Nyeste først","sort.pay":"Høyest lønn","sort.match":"Best match med CV-en min","f.direct":"Bare direkte arbeidsgivere","f.noexp":"Ingen erfaring kreves","f.visa":"Hjelp med flytting eller visum","clear":"Nullstill filtre","filters":"Filtre",
+"cv.title":"MATCH JOBBER MED CV-EN DIN","cv.text":"Lim inn CV-en din. KI gir hver ledige jobb en score for deg. CV-en blir værende i denne nettleseren.","cv.label":"DIN CV","cv.ph":"Lim inn CV-en eller et sammendrag av erfaringen din","cv.btn":"Gi jobbene score","cv.more":"Lim inn litt mer av CV-en først.","cv.scoring":"Gir {n} jobber score …","cv.done":"Ferdig. Jobbene er sortert etter match.","cv.none":"Ingen ledige jobber å vurdere ennå.",
+"dg.title":"UKENTLIG OVERSIKT","dg.text":"Få de beste nye jobbene som passer søket ditt, én gang i uken.","dg.btn":"Få oversikten",
+"recent":"SIST SETT","m.open":"ledige jobber","m.cos":"bedrifter","m.remote":"fjernarbeid","m.median":"Medianlønn","m.new":"nye siste 3 dager","m.since":"{n} nye siden sist",
+"res.title":"Ledige jobber","res.q":"Jobber som matcher «{q}»","res.meta":"{n} av {t} jobber","more":"Vis flere jobber",
+"e1.h":"De første jobbene er på vei","e1.p":"Havn har nettopp åpnet. Nye annonser sjekkes manuelt og dukker opp her så snart de er godkjent.","e1.b":"Legg ut den første jobben","e2.h":"Ingen jobber passer disse filtrene","e2.p":"Prøv et bredere søk, eller få den ukentlige oversikten, så sender vi jobber som passer når de dukker opp.","loading":"Laster jobber …",
+"b.feat":"Fremhevet","b.new":"Ny","b.soon":"Frist snart","b.ver":"Verifisert","b.noexp":"Ingen erfaring kreves","b.visa":"Hjelp med flytting","b.agency":"Byrå","b.match":"{n} % match","replies":"Svarer innen {n} dager",
+"ago.today":"I dag","ago.yday":"I går","ago.d":"{n} dager siden","ago.m":"{n} mnd siden","preview":"Forhåndsvisning",
+"d.back":"← Alle jobber","d.about":"Om stillingen","d.bring":"Dette tar du med deg","d.get":"Dette får du","d.process":"Ansettelsesprosess","d.promise":"{co} lover å svare alle søkere innen {n} dager.","d.similar":"Lignende jobber","d.pay":"LØNN","d.work":"Arbeidssted","d.from":"Fjernarbeid fra","d.loc":"Sted","d.by":"Lagt ut av","d.direct":"Direkte arbeidsgiver","d.agency":"Rekrutteringsbyrå","d.reply":"Svar innen","d.days":"{n} dager","d.posted":"Lagt ut","d.closes":"Frist","d.in":"Om {n} dager","d.tomorrow":"I morgen","d.closed":"Stengt","d.hours":"Arbeidstid",
+"d.applysite":"Søk hos {co}","d.quick":"Hurtigsøk med Havn","d.update":"Oppdater søknaden","d.email":"ELLER SEND CV TIL","copy":"Kopier","d.mark":"Jeg har søkt, følg den","d.save":"Lagre jobb","d.saved":"Lagret","d.link":"Kopier lenke","d.never":"Betal aldri for å søke.","d.report":"Rapporter annonsen","d.inapps":"I søknadene dine · {s}.","d.upd":"Oppdater","d.noacc":"Tar ikke lenger imot søknader","d.gone.h":"Denne jobben er ikke lenger ute","d.gone.p":"Den kan være besatt eller utløpt. Det finnes flere ledige jobber.","d.see":"Se ledige jobber","d.openjobs":"{n} ledige jobber","d.match":"{n} % match med CV-en din.","d.share":"DEL",
+"d.compare":"Sammenlign","d.compared":"Sammenlignes","ai.tools":"KI-KARRIEREVERKTØY","ai.interview":"Forbered deg til intervjuet","ai.tailor":"Tilpass CV-en til jobben","ai.fit":"Bør jeg søke?","ai.needcv":"Legg inn CV-en i match-panelet på jobblisten for bedre svar.",
+"ins.title":"LØNN SAMMENLIGNET MED {c}-JOBBER PÅ HAVN","ins.at":"Akkurat på medianen","ins.above":"{n} % over medianen","ins.below":"{n} % under medianen","ins.of":"for {n} lignende jobber ({m}/år).",
+"co.jobs":"{n} ledige jobber","co.none":"Ingen jobber fra denne bedriften akkurat nå","co.browse":"Se de andre ledige jobbene på Havn.",
+"my.title":"Mine jobber","my.sub":"Lagrede jobber og status for hver søknad. Lagres i denne nettleseren.","my.saved":"Lagret","my.apps":"Søknader","my.e1.h":"Ingen lagrede jobber ennå","my.e1.p":"Trykk på bokmerket på en jobb for å ha den her mens du bestemmer deg.","my.browse":"Se jobber","my.e2.h":"Ingen søknader fulgt","my.e2.p":"Når du søker, holder Havn en liste her så du kan følge opp. Du kan også trykke «Jeg har søkt, følg den» på en jobb.","my.find":"Finn en jobb","my.applied":"søkt {t}","my.closed":"annonsen er stengt","my.follow":"på tide å følge opp",
+"st.applied":"Søkt","st.interview":"Intervju","st.offer":"Tilbud","st.rejected":"Ikke denne gang",
+"sal.title":"Havns lønnsindeks","sal.sub":"Ekte lønn fra alle ledige jobber på Havn, regnet om til euro per år. Oppdateres når nye jobber legges ut.","sal.cat":"ETTER KATEGORI","sal.where":"ETTER HVOR DU JOBBER","sal.jobs":"{n} jobber","sal.few":"få jobber, grovt tall","sal.empty":"Lønnsdata vises her så snart jobber legges ut.","sal.median":"median","sal.remote":"Fjernarbeid","sal.norway":"I Norge","sal.romania":"I Romania","sal.other":"Ellers i Europa","sal.note":"Regnet om med faste kurser (1 NOK ≈ €0,085, 1 RON ≈ €0,20). Timelønn × 1 650 timer, månedslønn × 12.",
+"cmp.title":"Sammenlign jobber","cmp.sub":"Opptil 3 jobber side om side.","cmp.empty":"Legg til jobber med Sammenlign-knappen på en jobbside.","cmp.tray":"Sammenlign ({n})","cmp.clear":"Tøm","cmp.pay":"Lønn","cmp.eur":"Per år i EUR","cmp.match":"CV-match","cmp.remove":"Fjern","cmp.full":"Du kan sammenligne 3 jobber om gangen.",
+"ask.btn":"Spør Havn","ask.title":"Spør Havn","ask.sub":"Fortell hva du ser etter. Jeg foreslår bare jobber som ligger på Havn nå.","ask.ph":"f.eks. Deltidsjobber i Stavanger for student","ask.send":"Send","ask.stop":"Stopp","ask.hello":"Hei! Hva slags jobb ser du etter? Fortell hvor du bor, hva du er god på og hvilken lønn du trenger.",
+"foot.free":"Alltid gratis for jobbsøkere.","pay.none":"Lønn ikke oppgitt","b.nav":"via NAV","chip.paid":"Lønn oppgitt","d.navfull":"Se hele annonsen på arbeidsplassen.no","d.navapply":"Søk hos arbeidsgiveren","d.navnote":"Annonsen kommer fra NAVs offentlige stillingsdatabase. Søk direkte hos arbeidsgiveren.","d.signapply":"Logg inn for hurtigsøk","priv":"Personvern","u.yr":"/år","u.mo":"/mnd","u.hr":"/t","foot.search":"for å søke","toast.saved":"Lagret","toast.removed":"Fjernet","toast.tracked":"Lagt til i Mine jobber","toast.copied":"Kopiert"
+},
+ro:{
+"nav.jobs":"Caută joburi","nav.my":"Joburile mele","nav.salaries":"Salarii","nav.employers":"Pentru angajatori","nav.post":"Publică un job",
+"hero.eyebrow":"Norvegia · România · Remote în toată Europa",
+"hero.h1":"Fiecare job Havn arată <em>salariul</em>. Fiecare anunț e verificat de un om.",
+"hero.lede":"Joburile publicate pe Havn arată mereu salariul și expiră după 30 de zile dacă angajatorul nu mai angajează. În plus, poți căuta toate anunțurile publice de joburi din Norvegia de la NAV, într-un singur loc, în română, engleză sau norvegiană.",
+"p1":"Salariul în fiecare anunț Havn","p2":"Anunțuri verificate manual","p3":"Mereu gratuit pentru candidați","p4":"Reguli clare despre de unde poți lucra",
+"search.ph":"Post, abilitate sau companie – sau descrie jobul dorit","from.any":"Lucrez de oriunde","from.no":"Sunt în Norvegia","from.ro":"Sunt în România","from.eu":"Sunt în altă țară din UE","search.btn":"Caută",
+"ai.search":"Caută cu AI","ai.try":"Încearcă: „suport clienți remote din România, minim 30.000 €”","ai.thinking":"Mă gândesc…","ai.set":"Filtrele au fost setate după căutarea ta.","ai.typefirst":"Scrie mai întâi ce cauți.",
+"chip.ro":"Remote din România","chip.no":"Remote din Norvegia","chip.stv":"Stavanger","chip.new":"Noi săptămâna asta","chip.noexp":"Fără experiență","chip.direct":"Angajatori direcți","chip.visa":"Ajutor la relocare","chip.pay":"50k+ € pe an","chip.cet":"Program european",
+"f.work":"Loc de muncă","any":"Oricare","remote":"Remote","hybrid":"Hibrid","onsite":"La birou","f.cat":"Categorie","allcats":"Toate categoriile","f.type":"Tip de job","f.level":"Nivel","f.min":"Salariu anual minim (EUR)","nomin":"Fără minim","f.tz":"Program","tz.cet":"Potrivit cu ora Europei (CET)","f.sort":"Sortare","sort.new":"Cele mai noi","sort.pay":"Salariu maxim","sort.match":"Potrivire maximă cu CV-ul","f.direct":"Doar angajatori direcți","f.noexp":"Fără experiență","f.visa":"Ajutor la relocare sau viză","clear":"Șterge filtrele","filters":"Filtre",
+"cv.title":"POTRIVEȘTE JOBURILE CU CV-UL TĂU","cv.text":"Lipește CV-ul. AI-ul dă un scor fiecărui job disponibil. CV-ul rămâne în acest browser.","cv.label":"CV-UL TĂU","cv.ph":"Lipește CV-ul sau un rezumat al experienței tale","cv.btn":"Evaluează joburile","cv.more":"Lipește mai întâi ceva mai mult din CV.","cv.scoring":"Evaluez {n} joburi…","cv.done":"Gata. Joburile sunt sortate după potrivire.","cv.none":"Încă nu sunt joburi de evaluat.",
+"dg.title":"RAPORT SĂPTĂMÂNAL","dg.text":"Primește cele mai bune joburi noi pentru căutarea ta, o dată pe săptămână.","dg.btn":"Primește raportul",
+"recent":"VĂZUTE RECENT","m.open":"joburi disponibile","m.cos":"companii","m.remote":"remote","m.median":"Salariu median","m.new":"noi în 3 zile","m.since":"{n} noi de la ultima vizită",
+"res.title":"Joburi disponibile","res.q":"Joburi pentru „{q}”","res.meta":"{n} din {t} joburi","more":"Arată mai multe joburi",
+"e1.h":"Primele joburi sunt pe drum","e1.p":"Havn abia s-a deschis. Anunțurile noi sunt verificate manual și apar aici imediat ce sunt aprobate.","e1.b":"Publică primul job","e2.h":"Niciun job nu se potrivește filtrelor","e2.p":"Încearcă o căutare mai largă sau abonează-te la raportul săptămânal și îți trimitem joburile potrivite când apar.","loading":"Se încarcă joburile…",
+"b.feat":"Promovat","b.new":"Nou","b.soon":"Expiră curând","b.ver":"Verificat","b.noexp":"Fără experiență","b.visa":"Ajutor la relocare","b.agency":"Agenție","b.match":"Potrivire {n}%","replies":"Răspunde în {n} zile",
+"ago.today":"Azi","ago.yday":"Ieri","ago.d":"acum {n} zile","ago.m":"acum {n} luni","preview":"Previzualizare",
+"d.back":"← Toate joburile","d.about":"Despre rol","d.bring":"Ce aduci","d.get":"Ce primești","d.process":"Procesul de angajare","d.promise":"{co} promite să răspundă fiecărui candidat în {n} zile.","d.similar":"Joburi similare","d.pay":"SALARIU","d.work":"Loc de muncă","d.from":"Remote din","d.loc":"Locație","d.by":"Publicat de","d.direct":"Angajator direct","d.agency":"Agenție de recrutare","d.reply":"Răspuns în","d.days":"{n} zile","d.posted":"Publicat","d.closes":"Expiră","d.in":"În {n} zile","d.tomorrow":"Mâine","d.closed":"Închis","d.hours":"Program",
+"d.applysite":"Aplică pe site-ul {co}","d.quick":"Aplicare rapidă cu Havn","d.update":"Actualizează aplicarea","d.email":"SAU TRIMITE CV-UL LA","copy":"Copiază","d.mark":"Am aplicat, urmărește","d.save":"Salvează","d.saved":"Salvat","d.link":"Copiază linkul","d.never":"Nu plăti niciodată ca să aplici.","d.report":"Raportează anunțul","d.inapps":"În aplicările tale · {s}.","d.upd":"Actualizează","d.noacc":"Nu mai primește aplicări","d.gone.h":"Acest job nu mai este listat","d.gone.p":"Poate a fost ocupat sau a expirat. Mai sunt joburi disponibile.","d.see":"Vezi joburile","d.openjobs":"{n} joburi disponibile","d.match":"Potrivire {n}% cu CV-ul tău.","d.share":"DISTRIBUIE",
+"d.compare":"Compară","d.compared":"În comparație","ai.tools":"UNELTE AI PENTRU CARIERĂ","ai.interview":"Pregătește-te de interviu","ai.tailor":"Adaptează CV-ul la job","ai.fit":"Merită să aplic?","ai.needcv":"Adaugă CV-ul în panoul de potrivire din lista de joburi pentru răspunsuri mai bune.",
+"ins.title":"SALARIUL COMPARAT CU JOBURILE DE {c} DE PE HAVN","ins.at":"Exact la mediană","ins.above":"Cu {n}% peste mediană","ins.below":"Cu {n}% sub mediană","ins.of":"pentru {n} joburi similare ({m}/an).",
+"co.jobs":"{n} joburi disponibile","co.none":"Niciun job de la această companie acum","co.browse":"Vezi celelalte joburi de pe Havn.",
+"my.title":"Joburile mele","my.sub":"Joburile salvate și stadiul fiecărei aplicări. Păstrate în acest browser.","my.saved":"Salvate","my.apps":"Aplicări","my.e1.h":"Încă nu ai joburi salvate","my.e1.p":"Apasă semnul de carte de pe un job ca să-l păstrezi aici cât te gândești.","my.browse":"Vezi joburile","my.e2.h":"Nicio aplicare urmărită","my.e2.p":"Când aplici, Havn păstrează o listă aici ca să poți reveni. Poți apăsa și „Am aplicat, urmărește” pe orice job.","my.find":"Caută un job","my.applied":"aplicat {t}","my.closed":"anunț închis","my.follow":"e momentul să revii",
+"st.applied":"Aplicat","st.interview":"Interviu","st.offer":"Ofertă","st.rejected":"Nu de data asta",
+"sal.title":"Indexul de salarii Havn","sal.sub":"Salarii reale din toate joburile disponibile pe Havn, convertite în euro pe an. Se actualizează când apar joburi noi.","sal.cat":"PE CATEGORII","sal.where":"DUPĂ LOCUL DE MUNCĂ","sal.jobs":"{n} joburi","sal.few":"puține joburi, cifră aproximativă","sal.empty":"Datele despre salarii apar aici imediat ce sunt publicate joburi.","sal.median":"median","sal.remote":"Remote","sal.norway":"În Norvegia","sal.romania":"În România","sal.other":"În restul Europei","sal.note":"Convertit la cursuri fixe (1 NOK ≈ 0,085 €, 1 RON ≈ 0,20 €). Plata pe oră × 1.650 ore, lunară × 12.",
+"cmp.title":"Compară joburi","cmp.sub":"Până la 3 joburi unul lângă altul.","cmp.empty":"Adaugă joburi cu butonul Compară de pe pagina unui job.","cmp.tray":"Compară ({n})","cmp.clear":"Golește","cmp.pay":"Salariu","cmp.eur":"Pe an în EUR","cmp.match":"Potrivire CV","cmp.remove":"Elimină","cmp.full":"Poți compara 3 joburi odată.",
+"ask.btn":"Întreabă Havn","ask.title":"Întreabă Havn","ask.sub":"Spune-mi ce cauți. Sugerez doar joburi care sunt acum pe Havn.","ask.ph":"ex. Joburi part-time în Cluj pentru studenți","ask.send":"Trimite","ask.stop":"Oprește","ask.hello":"Salut! Ce fel de job cauți? Spune-mi unde locuiești, la ce te pricepi și de ce salariu ai nevoie.",
+"foot.free":"Mereu gratuit pentru candidați.","pay.none":"Salariu nespecificat","b.nav":"via NAV","chip.paid":"Cu salariu afișat","d.navfull":"Vezi anunțul complet pe arbeidsplassen.no","d.navapply":"Aplică pe pagina angajatorului","d.navnote":"Anunțul vine din baza publică de joburi NAV (Norvegia). Aplică direct la angajator.","d.signapply":"Autentifică-te pentru aplicare rapidă","priv":"Confidențialitate","u.yr":"/an","u.mo":"/lună","u.hr":"/oră","foot.search":"pentru căutare","toast.saved":"Salvat","toast.removed":"Eliminat","toast.tracked":"Adăugat la Joburile mele","toast.copied":"Copiat"
+}};
+const VT={
+no:{"Full-time":"Heltid","Part-time":"Deltid","Contract":"Kontrakt","Freelance":"Frilans","Seasonal":"Sesong","Internship":"Praksis","Entry":"Junior","Mid":"Erfaren","Senior":"Senior","Lead":"Leder",
+"Engineering":"Utvikling og teknologi","Design":"Design","Product":"Produkt","Marketing":"Markedsføring","Sales":"Salg","Customer support":"Kundeservice","Operations":"Drift","Admin & office":"Administrasjon og kontor","Hospitality & events":"Servering og arrangement","Creative & media":"Kreativt og media","Logistics & warehouse":"Logistikk og lager","Maritime":"Maritim","Healthcare":"Helse","Education":"Undervisning","Construction & trades":"Bygg og håndverk","Other":"Annet",
+"Worldwide":"Hele verden","Europe":"Europa","Nordics":"Norden","Norway":"Norge","Romania":"Romania","CET ±2h":"CET ±2 t","UK hours":"Britisk tid","US hours":"Amerikansk tid","Flexible":"Fleksibel"},
+ro:{"Full-time":"Normă întreagă","Part-time":"Part-time","Contract":"Contract","Freelance":"Freelance","Seasonal":"Sezonier","Internship":"Internship","Entry":"Junior","Mid":"Mediu","Senior":"Senior","Lead":"Lead",
+"Engineering":"IT și inginerie","Design":"Design","Product":"Produs","Marketing":"Marketing","Sales":"Vânzări","Customer support":"Suport clienți","Operations":"Operațiuni","Admin & office":"Administrativ și birou","Hospitality & events":"HoReCa și evenimente","Creative & media":"Creativ și media","Logistics & warehouse":"Logistică și depozit","Maritime":"Maritim","Healthcare":"Sănătate","Education":"Educație","Construction & trades":"Construcții și meserii","Other":"Altele",
+"Worldwide":"Oriunde în lume","Europe":"Europa","Nordics":"Țările nordice","Norway":"Norvegia","Romania":"România","CET ±2h":"CET ±2 h","UK hours":"Ora Marii Britanii","US hours":"Ora SUA","Flexible":"Flexibil"}};
+let LANG=(()=>{try{const s=localStorage.getItem("havn.lang");if(s)return JSON.parse(s)}catch(e){}const n=(navigator.language||"en").toLowerCase();return /^(nb|nn|no)/.test(n)?"no":/^ro/.test(n)?"ro":"en"})();
+if(!T[LANG])LANG="en";
+function t(k,v){let s=(T[LANG]&&T[LANG][k])??T.en[k]??k;if(v)for(const [a,b] of Object.entries(v))s=s.split("{"+a+"}").join(b);return s}
+function vt(x){return (VT[LANG]&&VT[LANG][x])||x}
+function applyI18n(){
+  document.documentElement.lang=LANG==="no"?"nb":LANG;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{el.innerHTML=t(el.dataset.i18nHtml)});
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{el.placeholder=t(el.dataset.i18nPh)});
+  document.querySelectorAll("#fCat option").forEach(o=>{if(o.value)o.textContent=vt(o.value)});
+  document.querySelectorAll("#fType option,#fLevel option").forEach(o=>{if(o.value)o.textContent=vt(o.value)});
+}
+
+/* ================= helpers ================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const now=()=>Date.now();
+function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;t.setAttribute("role","status");document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+function hue(str){let h=0;for(const c of String(str))h=(h*31+c.charCodeAt(0))%360;return h}
+function slug(s){return String(s||"").toLowerCase().normalize("NFKD").replace(/[^\w\s-]/g,"").trim().replace(/[\s_]+/g,"-").replace(/-+/g,"-").slice(0,60)||"company"}
+function markHtml(co,big){const h=hue(co);return `<div class="mark" style="background:hsl(${h} 45% 34%)" aria-hidden="true">${esc((co||"?").trim().charAt(0).toUpperCase())}</div>`}
+function money(n,cur){try{return new Intl.NumberFormat("en-GB",{style:"currency",currency:cur||"EUR",maximumFractionDigits:0}).format(n)}catch(e){return (cur||"")+" "+Math.round(n)}}
+function compact(n,cur){if(n<10000)return money(n,cur);try{return new Intl.NumberFormat("en-GB",{style:"currency",currency:cur||"EUR",notation:"compact",maximumFractionDigits:1}).format(n)}catch(e){return money(n,cur)}}
+function payText(j){
+  const per={year:t("u.yr"),month:t("u.mo"),hour:t("u.hr")}[j.salaryPeriod]||"";
+  const a=+j.salaryMin||0,b=+j.salaryMax||0;if(!a&&!b)return t("pay.none");
+  const fmt=n=>j.salaryPeriod==="hour"?money(n,j.currency):compact(n,j.currency);
+  return (a&&b&&a!==b?fmt(a)+"–"+fmt(b):fmt(a||b))+per;
+}
+function yearlyEur(j){const a=+j.salaryMin||0,b=+j.salaryMax||0;const v=a&&b?(a+b)/2:(a||b);return v*(TO_EUR[j.currency]||1)*(PER_YEAR[j.salaryPeriod]||1)}
+function convText(j){if((j.currency||"EUR")==="EUR"&&j.salaryPeriod==="year")return "";const v=yearlyEur(j);return v?"≈ "+compact(v,"EUR")+t("u.yr"):""}
+function ago(ts){const d=Math.floor((now()-ts)/DAY);if(d<=0)return t("ago.today");if(d===1)return t("ago.yday");if(d<30)return t("ago.d",{n:d});return t("ago.m",{n:Math.floor(d/30)})}
+function daysLeft(j){return Math.ceil(((j.expiresAt||0)-now())/DAY)}
+function isLive(j){return j.status==="active"&&(j.expiresAt||0)>now()}
+function isNew(j){return now()-(j.createdAt||0)<3*DAY}
+function jobStatus(j){if(j.status==="closed")return "closed";if((j.expiresAt||0)<=now())return "expired";return "active"}
+function lines(s){return Array.isArray(s)?s.map(String).filter(Boolean):String(s||"").split(/\n+/).map(x=>x.replace(/^[-•*]\s*/,"").trim()).filter(Boolean)}
+function median(a){if(!a.length)return 0;const s=a.slice().sort((x,y)=>x-y);const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2}
+function safeUrl(u){u=String(u||"").trim();if(!u)return "#";if(/^https?:\/\//i.test(u))return u;return "https://"+u.replace(/^\/+/,"")}
+async function copy(text){try{await navigator.clipboard.writeText(text);toast(t("toast.copied"))}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(t("toast.copied"))}catch(_){toast("Select the text and copy it")}ta.remove()}}
+function store(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function canSave(){return !!(S.db&&S.uid&&S.canWrite!==false)}
+function jobLink(id){return location.href.split("#")[0]+"#job-"+id}
+function aiError(e){const c=e&&e.code;if(c==="not_granted"||c==="sampling_disabled"||c==="not_declared"||c==="capability_disabled"||c==="capability_removed"){hideAI();return "AI isn't available for your account."}if(c==="rate_limited")return "AI is busy. Try again in a minute.";if(c==="cancelled")return "";if(c==="invalid_json")return "AI gave an unclear answer. Try again.";return "AI couldn't finish. Try again."}
+function hideAI(){S.sample=null;document.querySelectorAll("#aiSearchRow,#cvPanel,#aiFillPanel,[data-aionly],#askFab,#askPanel").forEach(e=>e.hidden=true)}
+const SPARK='<svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg>';
+
+/* ================= filters ================= */
+const catSel=$("#fCat");CATS.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;catSel.appendChild(o)});
+function regionCovers(region,me){if(!me)return true;if(region==="Worldwide"||region==="Europe")return true;if(me==="Norway")return region==="Nordics"||region==="Norway";if(me==="Romania")return region==="Romania";return false}
+function readFilters(){return{q:$("#q").value.trim(),from:$("#fromWhere").value,work:$("#fWork").value,cat:$("#fCat").value,type:$("#fType").value,level:$("#fLevel").value,min:+$("#fMin").value||0,tz:$("#fTz").value,sort:$("#fSort").value,direct:$("#fDirect").checked,noexp:$("#fNoExp").checked,visa:$("#fVisa").checked,newOnly:S.newOnly,payOnly:S.payOnly}}
+function writeFilters(f){$("#q").value=f.q||"";$("#fromWhere").value=f.from||"";$("#fWork").value=f.work||"";$("#fCat").value=f.cat||"";$("#fType").value=f.type||"";$("#fLevel").value=f.level||"";$("#fMin").value=String(f.min||0);if(![...$("#fMin").options].some(o=>o.value===String(f.min||0)))$("#fMin").value="0";$("#fTz").value=f.tz||"";$("#fSort").value=f.sort==="match"&&!Object.keys(S.match).length?"new":(f.sort||"new");$("#fDirect").checked=!!f.direct;$("#fNoExp").checked=!!f.noexp;$("#fVisa").checked=!!f.visa;S.newOnly=!!f.newOnly;S.payOnly=!!f.payOnly;S.limit=PAGE}
+function fitsCet(j){return j.workplace!=="remote"||!j.tz||j.tz==="CET ±2h"||j.tz==="Flexible"||j.tz==="UK hours"}
+function matches(j,f){
+  if(f.q){const hay=[j.title,j.company,j.category,vt(j.category),j.location,j.country,vt(j.country),j.description,j.requirements,j.languages].join(" ").toLowerCase();if(!f.q.toLowerCase().split(/\s+/).every(w=>hay.includes(w)))return false}
+  if(f.work&&j.workplace!==f.work)return false;
+  if(f.cat&&j.category!==f.cat)return false;
+  if(f.type&&j.jobType!==f.type)return false;
+  if(f.level&&j.seniority!==f.level)return false;
+  if(f.min&&yearlyEur(j)<f.min)return false;
+  if(f.tz==="cet"&&!fitsCet(j))return false;
+  if(f.direct&&j.employerType==="agency")return false;
+  if(f.noexp&&!j.noExperience)return false;
+  if(f.visa&&!j.visa)return false;
+  if(f.newOnly&&now()-(j.createdAt||0)>7*DAY)return false;
+  if(f.payOnly&&!yearlyEur(j))return false;
+  if(f.from){
+    if(j.workplace==="remote"){if(!regionCovers(j.remoteFrom,f.from))return false}
+    else{const c=j.country;if(f.from==="EU"){if(c==="Norway"||c==="Romania"||c==="United Kingdom")return false}else if(c!==f.from)return false}
+  }
+  return true;
+}
+function sortJobs(arr,sort){return arr.slice().sort((a,b)=>{
+  if(sort==="match"){const d=(S.match[b.id]?.score||0)-(S.match[a.id]?.score||0);if(d)return d}
+  const r=(TIERS[b.tier]||TIERS.standard).rank-(TIERS[a.tier]||TIERS.standard).rank;if(r&&sort!=="match")return r;
+  if(sort==="pay")return yearlyEur(b)-yearlyEur(a);
+  return (b.createdAt||0)-(a.createdAt||0)})}
+function renderChips(){const f=readFilters();$("#chips").innerHTML=CHIPS.map(c=>`<button type="button" class="chip" data-act="chip" data-id="${c.id}" aria-pressed="${!!c.on(f)}">${esc(t(c.k))}</button>`).join("")}
+
+/* ================= cards ================= */
+const BM='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
+const BM_ON='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
+function workLabel(w){return t(w==="remote"?"remote":w==="hybrid"?"hybrid":"onsite")}
+function workTag(j){if(j.workplace==="remote")return `<span class="tag remote">${esc(t("remote"))} · ${esc(vt(j.remoteFrom||"Worldwide"))}</span>`;return `<span class="tag">${esc(workLabel(j.workplace))} · ${esc(j.location||vt(j.country)||"")}</span>`}
+function badges(j,preview){
+  const out=[];const m=S.match[j.id];
+  if(m&&!preview)out.push(`<span class="tag match">${esc(t("b.match",{n:Math.round(m.score)}))}</span>`);
+  if(j.tier==="featured")out.push(`<span class="tag feat">${esc(t("b.feat"))}</span>`);
+  if(!preview&&isNew(j))out.push(`<span class="tag new">${esc(t("b.new"))}</span>`);
+  if(!preview&&isLive(j)&&daysLeft(j)<=5)out.push(`<span class="tag soon">${esc(t("b.soon"))}</span>`);
+  if(j.verified)out.push(`<span class="tag ver">${esc(t("b.ver"))}</span>`);
+  out.push(workTag(j));
+  if(j.jobType)out.push(`<span class="tag">${esc(vt(j.jobType))}</span>`);
+  if(j.workplace==="remote"&&j.tz)out.push(`<span class="tag">${esc(vt(j.tz))}</span>`);
+  if(j.noExperience)out.push(`<span class="tag">${esc(t("b.noexp"))}</span>`);
+  if(j.visa)out.push(`<span class="tag">${esc(t("b.visa"))}</span>`);
+  if(j.employerType==="agency")out.push(`<span class="tag">${esc(t("b.agency"))}</span>`);
+  if(j.source==="nav")out.push(`<span class="tag">${esc(t("b.nav"))}</span>`);
+  return out.join("");
+}
+function card(j,opts){
+  opts=opts||{};const feat=j.tier==="featured"||j.tier==="boost";const saved=S.saved.has(j.id);const m=S.match[j.id];
+  return `<a class="job${feat?" featured":""}" href="${opts.preview?"#post":"#job-"+esc(j.id)}">
+    ${markHtml(j.company)}
+    <div style="min-width:0"><h3>${esc(j.title||"Job title")}</h3><div class="co">${esc(j.company||"Company")}${j.category?" · "+esc(vt(j.category)):""}${j.replyDays?" · "+esc(t("replies",{n:j.replyDays})):""}</div>
+      <div class="tags">${badges(j,opts.preview)}</div>
+      ${m&&m.reason&&!opts.preview?`<div class="why-match">${esc(m.reason)}</div>`:""}</div>
+    <div class="pay"><div class="amt">${esc(payText(j))}</div>${convText(j)?`<div class="conv">${esc(convText(j))}</div>`:""}<div class="when">${opts.preview?esc(t("preview")):ago(j.createdAt||now())}</div>
+    ${opts.preview?"":`<button class="save" type="button" data-act="save" data-id="${esc(j.id)}" aria-pressed="${saved}" aria-label="${esc(saved?t("toast.removed"):t("d.save"))}">${saved?BM_ON:BM}</button>`}</div>
+  </a>`;
+}
+
+/* ================= board ================= */
+function renderMarket(live){
+  const el=$("#market");if(live.length<1){el.innerHTML="";return}
+  const remote=live.filter(j=>j.workplace==="remote").length;
+  const pays=live.map(yearlyEur).filter(Boolean);const cos=new Set(live.map(j=>j.company)).size;
+  const since=S.lastVisit?live.filter(j=>(j.createdAt||0)>S.lastVisit).length:0;
+  el.innerHTML=`${since?`<span style="color:var(--good);font-weight:600">${esc(t("m.since",{n:since}))}</span>`:""}<span><b>${live.length}</b> ${esc(t("m.open"))}</span><span><b>${cos}</b> ${esc(t("m.cos"))}</span><span><b>${Math.round(remote/live.length*100)}%</b> ${esc(t("m.remote"))}</span>${pays.length>=3?`<span>${esc(t("m.median"))} <b>${compact(median(pays),"EUR")}</b>${esc(t("u.yr"))}</span>`:""}<span><b>${live.filter(isNew).length}</b> ${esc(t("m.new"))}</span><a href="#salaries" style="font-size:13px">${esc(t("nav.salaries"))} →</a>`;
+}
+function renderRecent(){
+  const items=S.recent.map(id=>S.jobs.find(j=>j.id===id)).filter(j=>j&&isLive(j)).slice(0,6);
+  $("#recentBox").innerHTML=items.length?`<div class="flabel" style="margin-bottom:8px">${esc(t("recent"))}</div><div class="recent">${items.map(j=>`<a href="#job-${esc(j.id)}"><b>${esc(j.title)}</b><span>${esc(j.company)} · ${esc(payText(j))}</span></a>`).join("")}</div>`:"";
+}
+function renderBoard(){
+  const f=readFilters();store("havn.filters",f);renderChips();const list=$("#jobList");const more=$("#moreBox");more.innerHTML="";
+  if(!S.jobsLoaded){list.innerHTML=`<div class="empty"><h3>${esc(t("loading"))}</h3></div>`;$("#resultsMeta").textContent="";return}
+  const live=S.jobs.filter(isLive);const res=sortJobs(live.filter(j=>matches(j,f)),f.sort);
+  renderMarket(live);renderRecent();
+  $("#resultsTitle").textContent=f.q?t("res.q",{q:f.q}):t("res.title");
+  $("#resultsMeta").textContent=live.length?t("res.meta",{n:res.length,t:live.length}):"";
+  if(!live.length){list.innerHTML=`<div class="empty"><h3>${esc(t("e1.h"))}</h3><p>${esc(t("e1.p"))}</p><a class="btn btn-accent" href="#post">${esc(t("e1.b"))}</a></div>`;return}
+  if(!res.length){list.innerHTML=`<div class="empty"><h3>${esc(t("e2.h"))}</h3><p>${esc(t("e2.p"))}</p><div class="row" style="justify-content:center"><button class="btn btn-ghost" type="button" data-act="clear">${esc(t("clear"))}</button><button class="btn btn-accent" type="button" data-act="digest">${esc(t("dg.btn"))}</button></div></div>`;return}
+  list.innerHTML=res.slice(0,S.limit).map(j=>card(j)).join("");
+  if(res.length>S.limit)more.innerHTML=`<button class="btn btn-ghost" type="button" data-act="more">${esc(t("more"))} (${res.length-S.limit})</button>`;
+}
+
+/* ================= detail ================= */
+function insightHtml(j){
+  const peers=S.jobs.filter(x=>isLive(x)&&x.category===j.category).map(yearlyEur).filter(Boolean);
+  const me=yearlyEur(j);if(peers.length<3||!me)return "";
+  const lo=Math.min(...peers),hi=Math.max(...peers),md=median(peers);const span=hi-lo||1;
+  const pos=Math.max(0,Math.min(100,(me-lo)/span*100));const diff=Math.round((me-md)/md*100);
+  return `<div class="panel insight"><div class="flabel">${esc(t("ins.title",{c:vt(j.category).toUpperCase()}))}</div>
+    <div class="bar-track"><div class="bar-fill" style="left:0;right:0"></div><div class="bar-dot" style="left:${pos}%"></div></div>
+    <div class="row" style="justify-content:space-between"><span class="mono muted">${compact(lo,"EUR")}</span><span class="mono muted">${compact(hi,"EUR")}</span></div>
+    <p style="margin:8px 0 0">${esc(diff===0?t("ins.at"):t(diff>0?"ins.above":"ins.below",{n:Math.abs(diff)}))} ${esc(t("ins.of",{n:peers.length,m:compact(md,"EUR")}))}</p></div>`;
+}
+function shareRow(j){
+  const url=jobLink(j.id);const text=`${j.title} · ${j.company} · ${payText(j)}`;
+  return `<div><div class="flabel" style="margin-bottom:6px">${esc(t("d.share"))}</div><div class="share-row">
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}" target="_blank" rel="noopener">Facebook</a>
+    <a href="https://wa.me/?text=${encodeURIComponent(text+" "+url)}" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="#" data-act="share" data-id="${esc(j.id)}">${esc(t("d.link"))}</a></div></div>`;
+}
+function renderDetail(id){
+  const box=$("#jobDetail");const j=S.jobs.find(x=>x.id===id);
+  if(!j){box.innerHTML=S.jobsLoaded?`<div class="section"><a class="back" href="#jobs">${esc(t("d.back"))}</a><div class="empty" style="margin-top:20px"><h3>${esc(t("d.gone.h"))}</h3><p>${esc(t("d.gone.p"))}</p><a class="btn btn-primary" href="#jobs">${esc(t("d.see"))}</a></div></div>`:`<div class="section"><div class="empty"><h3>${esc(t("loading"))}</h3></div></div>`;return}
+  S.recent=[id,...S.recent.filter(x=>x!==id)].slice(0,8);store("havn.recent",S.recent);
+  const st=jobStatus(j);const left=daysLeft(j);const applied=S.myApps[j.id]||S.track[j.id];
+  const req=lines(j.requirements),ben=lines(j.benefits);const m=S.match[j.id];
+  const similar=sortJobs(S.jobs.filter(x=>x.id!==j.id&&isLive(x)&&(x.category===j.category||x.company===j.company)),"new").slice(0,3);
+  const coCount=S.jobs.filter(x=>isLive(x)&&x.company===j.company).length;const inCmp=S.compare.includes(j.id);
+  const applyBtn=st!=="active"?`<button class="btn btn-ghost" disabled>${esc(t("d.noacc"))}</button>`
+    :j.source==="nav"?`<a class="btn btn-primary" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl||j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.navapply"))}</a>
+      ${j.sourceUrl?`<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.navfull"))}</a>`:""}
+      <p class="muted" style="font-size:13px;margin:0">${esc(t("d.navnote"))}</p>
+      ${!applied?`<button class="btn btn-ghost btn-sm" type="button" data-act="mark-applied" data-id="${esc(j.id)}">${esc(t("d.mark"))}</button>`:""}`
+    :`${j.applyUrl?`<a class="btn btn-primary" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl))}" target="_blank" rel="noopener">${esc(t("d.applysite",{co:j.company}))}</a>`:""}
+      ${!S.uid&&window.havn?`<button class="btn ${j.applyUrl?"btn-ghost":"btn-primary"}" type="button" data-act="signin" data-id="apply">${esc(t("d.signapply"))}</button>`:""}
+      ${canSave()?`<button class="btn ${j.applyUrl?"btn-ghost":"btn-primary"}" type="button" data-act="quick" data-id="${esc(j.id)}">${esc(S.myApps[j.id]?t("d.update"):t("d.quick"))}</button>`:""}
+      ${j.applyEmail?`<div><div class="flabel" style="margin:6px 0 4px">${esc(t("d.email"))}</div><div class="copybox"><span style="flex:1">${esc(j.applyEmail)}</span><button class="btn btn-ghost btn-sm" type="button" data-act="copy" data-text="${esc(j.applyEmail)}">${esc(t("copy"))}</button></div></div>`:""}
+      ${!applied?`<button class="btn btn-ghost btn-sm" type="button" data-act="mark-applied" data-id="${esc(j.id)}">${esc(t("d.mark"))}</button>`:""}`;
+  const stageName=t("st."+(S.track[j.id]?.stage||"applied"));
+  box.innerHTML=`<div class="detail">
+    <div class="detail-main">
+      <a class="back" href="#jobs">${esc(t("d.back"))}</a>
+      <div style="display:flex;gap:14px;align-items:center;margin-top:20px">${markHtml(j.company)}<div><a href="#co-${esc(slug(j.company))}" style="font-weight:600;color:var(--fg)">${esc(j.company)}</a><div style="font-size:14px" class="row">${coCount>1?`<a href="#co-${esc(slug(j.company))}">${esc(t("d.openjobs",{n:coCount}))}</a>`:""}${j.companyUrl?`<a href="${esc(safeUrl(j.companyUrl))}" target="_blank" rel="noopener">${esc(j.companyUrl.replace(/^https?:\/\//,""))}</a>`:""}</div></div></div>
+      <h1>${esc(j.title)}</h1>
+      <div class="tags" style="margin-top:14px">${badges(j)}${j.seniority?`<span class="tag">${esc(vt(j.seniority))}</span>`:""}${(j.languages||"").split(",").map(s=>s.trim()).filter(Boolean).map(l=>`<span class="tag">${esc(l)}</span>`).join("")}</div>
+      ${m?`<div class="notice" style="margin-top:16px"><b>${esc(t("d.match",{n:Math.round(m.score)}))}</b> ${esc(m.reason||"")}</div>`:""}
+      <div class="prose">
+        <h2>${esc(t("d.about"))}</h2><p>${esc(j.description)}</p>
+        ${req.length?`<h2>${esc(t("d.bring"))}</h2><ul>${req.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+        ${ben.length?`<h2>${esc(t("d.get"))}</h2><ul>${ben.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
+        ${j.process||j.replyDays?`<h2>${esc(t("d.process"))}</h2><p>${esc(j.process||"")}${j.replyDays?`${j.process?"\n":""}${esc(t("d.promise",{co:j.company,n:j.replyDays}))}`:""}</p>`:""}
+      </div>
+      <div class="panel" data-aionly ${S.sample?"":"hidden"} style="margin-top:28px"><div class="flabel">${esc(t("ai.tools"))}</div>
+        <div class="row" style="margin-top:10px"><button class="btn btn-ai btn-sm" type="button" data-act="ai-tool" data-tool="fit" data-id="${esc(j.id)}">${SPARK}${esc(t("ai.fit"))}</button><button class="btn btn-ai btn-sm" type="button" data-act="ai-tool" data-tool="interview" data-id="${esc(j.id)}">${SPARK}${esc(t("ai.interview"))}</button><button class="btn btn-ai btn-sm" type="button" data-act="ai-tool" data-tool="tailor" data-id="${esc(j.id)}">${SPARK}${esc(t("ai.tailor"))}</button></div>
+        ${load("havn.cv","")?"":`<p class="muted" style="font-size:13px;margin:8px 0 0">${esc(t("ai.needcv"))}</p>`}</div>
+      ${similar.length?`<h2 style="font-size:20px;margin:34px 0 12px">${esc(t("d.similar"))}</h2><div class="list">${similar.map(x=>card(x)).join("")}</div>`:""}
+    </div>
+    <aside class="side">
+      <div class="panel">
+        <div class="flabel">${esc(t("d.pay"))}</div><div class="big-pay">${esc(payText(j))}</div>${convText(j)?`<div class="conv">${esc(convText(j))}</div>`:""}
+        <dl class="facts" style="margin-top:14px">
+          <dt>${esc(t("d.work"))}</dt><dd>${esc(workLabel(j.workplace))}</dd>
+          ${j.workplace==="remote"?`<dt>${esc(t("d.from"))}</dt><dd>${esc(vt(j.remoteFrom))}</dd>`:""}
+          ${j.workplace==="remote"&&j.tz?`<dt>${esc(t("d.hours"))}</dt><dd>${esc(vt(j.tz))}</dd>`:""}
+          ${j.location||j.country?`<dt>${esc(t("d.loc"))}</dt><dd>${esc([j.location,vt(j.country)].filter(Boolean).join(", "))}</dd>`:""}
+          ${j.source==="nav"?"":`<dt>${esc(t("d.by"))}</dt><dd>${esc(j.employerType==="agency"?t("d.agency"):t("d.direct"))}</dd>`}
+          ${j.replyDays?`<dt>${esc(t("d.reply"))}</dt><dd>${esc(t("d.days",{n:j.replyDays}))}</dd>`:""}
+          <dt>${esc(t("d.posted"))}</dt><dd>${ago(j.createdAt)}</dd>
+          <dt>${esc(t("d.closes"))}</dt><dd>${esc(st==="active"?(left<=1?t("d.tomorrow"):t("d.in",{n:left})):t("d.closed"))}</dd>
+        </dl>
+      </div>
+      ${insightHtml(j)}
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px">
+        ${applied?`<div class="notice ok">${esc(t("d.inapps",{s:stageName}))} <a href="#my" data-act="mytab" data-id="applied">${esc(t("d.upd"))}</a></div>`:""}
+        ${applyBtn}
+        <div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" type="button" data-act="save" data-id="${esc(j.id)}" style="flex:1">${esc(S.saved.has(j.id)?t("d.saved"):t("d.save"))}</button><button class="btn btn-ghost btn-sm" type="button" data-act="cmp" data-id="${esc(j.id)}" aria-pressed="${inCmp}" style="flex:1">${esc(inCmp?t("d.compared"):t("d.compare"))}</button></div>
+        ${shareRow(j)}
+      </div>
+      <p class="muted" style="font-size:13px;margin:0">${esc(t("d.never"))} <button type="button" class="btn btn-ghost btn-sm" data-act="report" data-id="${esc(j.id)}" style="margin-top:6px">${esc(t("d.report"))}</button></p>
+    </aside>
+  </div>`;
+}
+
+/* ================= company ================= */
+function renderCompany(sl){
+  const jobs=S.jobs.filter(j=>slug(j.company)===sl);const box=$("#coDetail");
+  if(!jobs.length){box.innerHTML=`<a class="back" href="#jobs">${esc(t("d.back"))}</a><div class="empty" style="margin-top:20px"><h3>${esc(S.jobsLoaded?t("co.none"):t("loading"))}</h3><p>${esc(t("co.browse"))}</p><a class="btn btn-primary" href="#jobs">${esc(t("d.see"))}</a></div>`;return}
+  const co=jobs[0].company;const live=sortJobs(jobs.filter(isLive),"new");const url=jobs.find(j=>j.companyUrl)?.companyUrl;const ver=jobs.some(j=>j.verified);
+  const places=[...new Set(live.map(j=>j.workplace==="remote"?t("remote")+" ("+vt(j.remoteFrom)+")":[j.location,vt(j.country)].filter(Boolean).join(", ")))];
+  box.innerHTML=`<a class="back" href="#jobs">${esc(t("d.back"))}</a>
+    <div class="co-head" style="margin-top:20px">${markHtml(co)}<div><h1 style="font-size:clamp(28px,4vw,40px)">${esc(co)}</h1><div class="row muted" style="margin-top:6px">${ver?`<span class="tag ver">${esc(t("b.ver"))}</span>`:""}${url?`<a href="${esc(safeUrl(url))}" target="_blank" rel="noopener">${esc(url.replace(/^https?:\/\//,""))}</a>`:""}<span>${esc(t("co.jobs",{n:live.length}))}</span>${places.length?`<span>· ${esc(places.join(" · "))}</span>`:""}</div></div></div>
+    <div class="list" style="margin-top:24px">${live.length?live.map(j=>card(j)).join(""):`<div class="empty"><h3>${esc(t("co.none"))}</h3><p>${esc(t("co.browse"))}</p></div>`}</div>`;
+}
+
+/* ================= my jobs ================= */
+function renderMy(){
+  document.querySelectorAll("#myTabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.mytab===S.myTab));
+  const list=$("#myList");
+  if(S.myTab==="saved"){
+    const items=S.jobs.filter(j=>S.saved.has(j.id));
+    list.innerHTML=items.length?sortJobs(items,"new").map(j=>card(j)).join(""):`<div class="empty"><h3>${esc(t("my.e1.h"))}</h3><p>${esc(t("my.e1.p"))}</p><a class="btn btn-primary" href="#jobs">${esc(t("my.browse"))}</a></div>`;return;
+  }
+  const rows=Object.entries(S.track).sort((a,b)=>b[1].at-a[1].at);
+  if(!rows.length){list.innerHTML=`<div class="empty"><h3>${esc(t("my.e2.h"))}</h3><p>${esc(t("my.e2.p"))}</p><a class="btn btn-primary" href="#jobs">${esc(t("my.find"))}</a></div>`;return}
+  const counts=STAGES.map(k=>`<span>${esc(t("st."+k))} <b>${rows.filter(r=>r[1].stage===k).length}</b></span>`).join("");
+  list.innerHTML=`<div class="market">${counts}</div>`+rows.map(([id,tr])=>{const j=S.jobs.find(x=>x.id===id);const follow=tr.stage==="applied"&&now()-tr.at>7*DAY;return `<div class="trow"><div style="min-width:0">${j?`<a href="#job-${esc(id)}">${esc(tr.title)}</a>`:`<b>${esc(tr.title)}</b>`}<div class="muted" style="font-size:13px">${esc(tr.company)} · ${esc(t("my.applied",{t:ago(tr.at).toLowerCase()}))}${j&&!isLive(j)?" · "+esc(t("my.closed")):""}${follow?` · <span style="color:var(--warn)">${esc(t("my.follow"))}</span>`:""}</div></div>
+    <div class="row"><div class="stages" role="group" aria-label="Stage">${STAGES.map(k=>`<button type="button" data-act="stage" data-id="${esc(id)}" data-stage="${k}" aria-pressed="${tr.stage===k}">${esc(t("st."+k))}</button>`).join("")}</div><button type="button" class="btn btn-ghost btn-sm" data-act="untrack" data-id="${esc(id)}" aria-label="Remove">✕</button></div></div>`}).join("");
+}
+function trackApplied(j){if(!S.track[j.id]){S.track[j.id]={stage:"applied",at:now(),title:j.title,company:j.company};store("havn.track",S.track);updateCounts()}}
+function updateCounts(){const n=S.saved.size+Object.keys(S.track).length;const c=$("#myCount");c.hidden=!n;c.textContent=n;
+  const tr=$("#cmpTray");tr.hidden=!S.compare.length||location.hash==="#compare";tr.textContent=t("cmp.tray",{n:S.compare.length})}
+
+/* ================= salaries ================= */
+function salRows(groups,max){
+  return groups.map(g=>{const v=g.vals;const md=median(v);const lo=Math.min(...v),hi=Math.max(...v);
+    return `<div class="sal-row"><div style="min-width:0"><b style="font-weight:600">${esc(g.label)}</b><div class="muted" style="font-size:12px">${esc(t("sal.jobs",{n:v.length}))}${v.length<3?" · "+esc(t("sal.few")):""}</div></div>
+    <div class="sal-bar" aria-hidden="true"><i style="left:${lo/max*100}%;right:${100-hi/max*100}%"></i><b style="left:${md/max*100}%"></b></div>
+    <div class="sal-val">${compact(md,"EUR")}<small>${esc(t("sal.median"))}</small></div></div>`}).join("");
+}
+function renderSalaries(){
+  const box=$("#salBody");const live=S.jobs.filter(isLive).filter(j=>yearlyEur(j)>0);
+  if(!live.length){box.innerHTML=`<div class="empty"><h3>${esc(t(S.jobsLoaded?"sal.empty":"loading"))}</h3></div>`;return}
+  const max=Math.max(...live.map(yearlyEur))*1.05;
+  const byCat={};live.forEach(j=>{(byCat[j.category]=byCat[j.category]||[]).push(yearlyEur(j))});
+  const cats=Object.entries(byCat).map(([c,vals])=>({label:vt(c),vals})).sort((a,b)=>median(b.vals)-median(a.vals));
+  const where={remote:[],norway:[],romania:[],other:[]};
+  live.forEach(j=>{const v=yearlyEur(j);if(j.workplace==="remote")where.remote.push(v);else if(j.country==="Norway")where.norway.push(v);else if(j.country==="Romania")where.romania.push(v);else where.other.push(v)});
+  const wh=Object.entries(where).filter(([k,v])=>v.length).map(([k,vals])=>({label:t("sal."+k),vals}));
+  box.innerHTML=`<div class="sal-grid"><div class="panel"><div class="flabel">${esc(t("sal.cat"))}</div>${salRows(cats,max)}</div><div class="panel" style="align-self:start"><div class="flabel">${esc(t("sal.where"))}</div>${salRows(wh,max)}</div></div>`;
+}
+
+/* ================= compare ================= */
+function toggleCompare(id){const i=S.compare.indexOf(id);if(i>=0)S.compare.splice(i,1);else{if(S.compare.length>=3){toast(t("cmp.full"));return}S.compare.push(id)}store("havn.compare",S.compare);updateCounts()}
+function renderCompare(){
+  const box=$("#cmpBody");const js=S.compare.map(id=>S.jobs.find(j=>j.id===id)).filter(Boolean);
+  if(!js.length){box.innerHTML=`<div class="empty"><h3>${esc(t("cmp.empty"))}</h3><a class="btn btn-primary" href="#jobs">${esc(t("my.browse"))}</a></div>`;return}
+  const best=Math.max(...js.map(yearlyEur));
+  const rows=[
+    [t("cmp.pay"),j=>esc(payText(j))],
+    [t("cmp.eur"),j=>`<span class="mono" style="${yearlyEur(j)===best&&js.length>1?"color:var(--good);font-weight:600":""}">${compact(yearlyEur(j),"EUR")}</span>`],
+    [t("d.work"),j=>esc(workLabel(j.workplace)+(j.workplace==="remote"?" · "+vt(j.remoteFrom):""))],
+    [t("d.loc"),j=>esc([j.location,vt(j.country)].filter(Boolean).join(", "))],
+    [t("f.type"),j=>esc(vt(j.jobType||""))],[t("f.level"),j=>esc(vt(j.seniority||""))],
+    [t("d.hours"),j=>esc(j.tz?vt(j.tz):"–")],
+    [t("d.by"),j=>esc(j.employerType==="agency"?t("d.agency"):t("d.direct"))],
+    [t("d.reply"),j=>esc(j.replyDays?t("d.days",{n:j.replyDays}):"–")],
+    [t("b.visa"),j=>j.visa?"✓":"–"],[t("b.noexp"),j=>j.noExperience?"✓":"–"],
+    [t("cmp.match"),j=>S.match[j.id]?`<b class="mono">${Math.round(S.match[j.id].score)}%</b>`:"–"],
+    [t("d.closes"),j=>esc(isLive(j)?t("d.in",{n:daysLeft(j)}):t("d.closed"))]
+  ];
+  box.innerHTML=`<div class="row" style="justify-content:flex-end;margin-bottom:10px"><button class="btn btn-ghost btn-sm" data-act="cmp-clear">${esc(t("cmp.clear"))}</button></div><div class="tablewrap"><table class="cmp-table"><thead><tr><th></th>${js.map(j=>`<th style="font-size:14px;color:var(--fg)"><a href="#job-${esc(j.id)}">${esc(j.title)}</a><div class="muted" style="font-weight:400">${esc(j.company)}</div></th>`).join("")}</tr></thead><tbody>${rows.map(([l,f])=>`<tr><th>${esc(l)}</th>${js.map(j=>`<td>${f(j)}</td>`).join("")}</tr>`).join("")}<tr><th></th>${js.map(j=>`<td><button class="btn btn-ghost btn-sm" data-act="cmp-remove" data-id="${esc(j.id)}">${esc(t("cmp.remove"))}</button></td>`).join("")}</tr></tbody></table></div>`;
+}
+
+/* ================= light markdown ================= */
+function md(src){
+  const out=[];let list=false;
+  for(const raw of String(src||"").split("\n")){
+    const l=raw.trimEnd();const inline=s=>esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\[\[([\w-]+)\]\]/g,(m,id)=>jobRef(id));
+    if(/^\s*[-*•]\s+/.test(l)){if(!list){out.push("<ul>");list=true}out.push("<li>"+inline(l.replace(/^\s*[-*•]\s+/,""))+"</li>");continue}
+    if(list){out.push("</ul>");list=false}
+    if(/^#{1,4}\s/.test(l)){out.push("<h3>"+inline(l.replace(/^#+\s/,""))+"</h3>");continue}
+    if(/^\d+\.\s/.test(l)){out.push("<p>"+inline(l)+"</p>");continue}
+    if(l.trim())out.push("<p>"+inline(l)+"</p>");
+  }
+  if(list)out.push("</ul>");return out.join("");
+}
+function jobRef(id){const j=S.jobs.find(x=>x.id===id);if(!j)return "";return `<a class="jobref" href="#job-${esc(j.id)}"><b>${esc(j.title)}</b><span>${esc(j.company)} · ${esc(payText(j))}</span></a>`}
+
+/* ================= AI career tools ================= */
+function aiToolModal(kind,id){
+  const j=S.jobs.find(x=>x.id===id);if(!j||!S.sample)return;const cv=load("havn.cv","");
+  const title={fit:t("ai.fit"),interview:t("ai.interview"),tailor:t("ai.tailor")}[kind];
+  const langName={en:"English",no:"Norwegian (bokmål)",ro:"Romanian"}[LANG];
+  const job=JSON.stringify({title:j.title,company:j.company,category:j.category,seniority:j.seniority,where:j.workplace==="remote"?"remote from "+j.remoteFrom:[j.location,j.country].join(", "),pay:payText(j),languages:j.languages,description:String(j.description).slice(0,2500),requirements:lines(j.requirements),benefits:lines(j.benefits),process:j.process});
+  const task={
+    fit:`Give an honest verdict on whether this candidate should apply. Start with one line: "Verdict: Apply", "Verdict: Apply, but prepare", or "Verdict: Probably skip". Then "### Strengths" (3 bullets tied to the job), "### Gaps" (up to 3 bullets) and "### How to close the gaps" (2-3 bullets). If no CV is given, explain what you'd need to know and give general advice for this job.`,
+    interview:`Prepare the candidate for an interview for this job. Give "### Likely questions" (8 questions specific to this role and company type), then for the 4 hardest give "### How to answer" with a short answer outline using the candidate's real experience where possible. End with "### Questions to ask them" (3 smart questions, including one about pay progression or remote rules if relevant).`,
+    tailor:`Suggest how to tailor the CV to this job. Give "### Headline" (one line), "### Summary" (3 sentences the candidate can paste), "### Bullets to add or rewrite" (5 bullets using strong verbs and only real experience from the CV; mark where they should add a number with [number]), and "### Keywords to include" (8 keywords from the ad). Never invent experience.`
+  }[kind];
+  openModal(`<h2>${esc(title)}</h2><p class="muted" style="margin:0">${esc(j.title)} · ${esc(j.company)}</p><div class="md" id="aiOut" style="min-height:120px">${esc(t("ai.thinking"))}</div><div class="row" style="justify-content:flex-end"><button class="btn btn-ghost" type="button" id="aiCopy">${esc(t("copy"))}</button><button class="btn btn-primary" type="button" data-act="close">OK</button></div>`,m=>{
+    const out=m.querySelector("#aiOut");let text="";const ctl=new AbortController();
+    m.querySelector("#aiCopy").addEventListener("click",()=>copy(text));
+    m.closest(".scrim").addEventListener("click",e=>{if(e.target.matches("[data-act=close],.scrim"))ctl.abort()});
+    S.sample(`${task}\nWrite in ${langName}. Be concrete and brief. Use simple markdown (### headings, - bullets, **bold**).\n\nJOB:\n${job}\n\nCANDIDATE CV:\n${cv.slice(0,6000)||"(not given)"}`,{modelTier:"default",signal:ctl.signal,onText:({text:tx})=>{text=tx;out.innerHTML=md(tx)}})
+      .catch(e=>{if(e.code!=="cancelled"){out.innerHTML=md(e.text||"")+`<p class="muted">${esc(aiError(e))}</p>`}});
+  });
+}
+
+/* ================= Ask Havn assistant ================= */
+const ASK={turns:[],ctl:null};
+function askOpen(){$("#askPanel").hidden=false;$("#askFab").hidden=true;if(!ASK.turns.length&&!$("#askLog").children.length)askAdd("bot",t("ask.hello"));$("#askInput").focus()}
+function askClose(){$("#askPanel").hidden=true;$("#askFab").hidden=!S.sample;ASK.ctl?.abort()}
+function askAdd(who,text){const d=document.createElement("div");d.className="msg "+who;if(who==="me")d.textContent=text;else d.innerHTML=md(text);$("#askLog").appendChild(d);d.scrollIntoView({block:"end"});return d}
+async function askSend(q){
+  if(!S.sample)return;if(ASK.ctl){ASK.ctl.abort();return}
+  askAdd("me",q);ASK.turns.push({role:"user",content:q});const bub=askAdd("bot",t("ai.thinking"));
+  const words=q.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(w=>w.length>3);
+  const scoreJ=j=>{const hay=[j.title,j.company,j.category,vt(j.category),j.location,j.country,j.jobType,j.description].join(" ").toLowerCase();return words.reduce((n,w)=>n+(hay.includes(w)?1:0),0)+(matches(j,readFilters())?0.5:0)};
+  const live=S.jobs.filter(isLive).map(j=>[scoreJ(j),j]).sort((a,b)=>b[0]-a[0]||(b[1].createdAt||0)-(a[1].createdAt||0)).slice(0,150).map(x=>x[1]).map(j=>({id:j.id,title:j.title,company:j.company,category:j.category,type:j.jobType,level:j.seniority,where:j.workplace==="remote"?"remote from "+j.remoteFrom+(j.tz?", "+j.tz:""):j.workplace+" in "+[j.location,j.country].filter(Boolean).join(", "),pay:payText(j),eurPerYear:Math.round(yearlyEur(j)),noExperience:!!j.noExperience,relocation:!!j.visa,languages:j.languages,posted:ago(j.createdAt),summary:String(j.description).slice(0,220)}));
+  const cv=load("havn.cv","");
+  const rules=`You are Havn's job assistant on a job board for Norway, Romania and remote work in Europe. Help the person find jobs ON THIS BOARD ONLY, using the list below. When you mention a job, put its id in double brackets on its own line, like [[abc123]] — the page turns it into a clickable card. Recommend at most 5 jobs, best first, each with one short reason. If nothing fits, say so honestly and suggest how to widen the search or that they subscribe to the weekly digest. You may also give short career advice. Never invent jobs, pay or companies. Reply in the person's language. Keep answers short.
+${cv?"\nTHE PERSON'S CV (for context):\n"+cv.slice(0,4000)+"\n":""}
+OPEN JOBS (${live.length}):\n${JSON.stringify(live)}`;
+  const turns=[{role:"user",content:rules},...ASK.turns.slice(-10)];
+  ASK.ctl=new AbortController();$("#askSend").textContent=t("ask.stop");
+  try{const r=await S.sample(turns,{cache:false,signal:ASK.ctl.signal,modelTier:"default",onText:({text})=>{bub.innerHTML=md(text);bub.scrollIntoView({block:"end"})}});ASK.turns.push({role:"assistant",content:r.text})}
+  catch(e){if(e.code==="cancelled"){if(e.text){bub.innerHTML=md(e.text);ASK.turns.push({role:"assistant",content:e.text})}else bub.remove()}else{bub.innerHTML=md(e.text||"")+`<p class="muted">${esc(aiError(e))}</p>`}}
+  ASK.ctl=null;$("#askSend").textContent=t("ask.send");
+}
+
+
+/* ================= employers ================= */
+function renderPlans(){
+  document.querySelectorAll("[data-bill]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.bill===S.bill));
+  $("#plans").innerHTML=PLANS.map(p=>`<div class="plan${p.hot?" hot":""}">
+    <div class="name">${p.name}${p.hot?'<span class="pill">MOST CHOSEN</span>':""}</div>
+    <div class="price">${p.price[S.bill]} <small>${p.per[S.bill]}</small></div>
+    <ul>${p.items.map(i=>`<li>${i}</li>`).join("")}</ul>
+    <a class="btn ${p.hot?"btn-primary":"btn-ghost"}" href="#post" data-act="pick" data-id="${p.id}">${p.btn}</a></div>`).join("");
+}
+function postFormHtml(p,admin){
+  const opt=(arr,sel)=>arr.map(x=>`<option${x===sel?" selected":""}>${esc(x)}</option>`).join("");
+  return `
+  ${admin?`<div class="full row" id="${p}editBar" hidden><span class="notice" style="flex:1">Editing an existing job. Saving updates it in place.</span><button class="btn btn-ghost btn-sm" type="button" data-act="cancel-edit">Cancel edit</button></div>`:""}
+  <div class="field full"><label for="${p}title">Job title *</label><input id="${p}title" name="title" required maxlength="90" placeholder="e.g. Customer Support Specialist"></div>
+  <div class="field"><label for="${p}company">Company *</label><input id="${p}company" name="company" required maxlength="60"></div>
+  <div class="field"><label for="${p}companyUrl">Company website</label><input id="${p}companyUrl" name="companyUrl" placeholder="example.com"></div>
+  <div class="field"><label for="${p}category">Category *</label><select id="${p}category" name="category">${opt(CATS,"Customer support")}</select></div>
+  <div class="field"><label for="${p}jobType">Job type *</label><select id="${p}jobType" name="jobType">${opt(TYPES,"Full-time")}</select></div>
+  <div class="field"><label for="${p}seniority">Seniority</label><select id="${p}seniority" name="seniority">${opt(LEVELS,"Mid")}</select></div>
+  <div class="field"><label for="${p}employerType">Posted by</label><select id="${p}employerType" name="employerType"><option value="direct">Direct employer</option><option value="agency">Recruitment agency</option></select></div>
+  <div class="field"><label for="${p}workplace">Workplace *</label><select id="${p}workplace" name="workplace"><option value="remote">Remote</option><option value="hybrid">Hybrid</option><option value="onsite">On-site</option></select></div>
+  <div class="field" data-remote><label for="${p}remoteFrom">Remote from *</label><select id="${p}remoteFrom" name="remoteFrom">${opt(REGIONS,"Europe")}</select></div>
+  <div class="field" data-remote><label for="${p}tz">Working hours</label><select id="${p}tz" name="tz"><option value="">Not set</option>${opt(TZS,"")}</select></div>
+  <div class="field"><label for="${p}country">Country</label><select id="${p}country" name="country">${opt(COUNTRIES,"Norway")}</select></div>
+  <div class="field"><label for="${p}location">City</label><input id="${p}location" name="location" placeholder="e.g. Stavanger"></div>
+  <div class="field"><label for="${p}languages">Languages</label><input id="${p}languages" name="languages" placeholder="English, Norwegian"></div>
+  <div class="field"><label for="${p}replyDays">We reply to everyone within</label><select id="${p}replyDays" name="replyDays"><option value="">No promise</option><option value="3">3 days</option><option value="7">7 days</option><option value="14">14 days</option></select></div>
+  <div class="field"><label for="${p}salaryMin">Pay from *</label><input id="${p}salaryMin" name="salaryMin" type="number" min="0" inputmode="numeric" required></div>
+  <div class="field"><label for="${p}salaryMax">Pay to</label><input id="${p}salaryMax" name="salaryMax" type="number" min="0" inputmode="numeric"></div>
+  <div class="field"><label for="${p}currency">Currency</label><select id="${p}currency" name="currency">${opt(CUR,"EUR")}</select></div>
+  <div class="field"><label for="${p}salaryPeriod">Per</label><select id="${p}salaryPeriod" name="salaryPeriod"><option value="year">Year</option><option value="month">Month</option><option value="hour">Hour</option></select></div>
+  <div class="full row"><label class="chk"><input type="checkbox" name="noExperience" id="${p}noExperience"> No experience needed</label><label class="chk"><input type="checkbox" name="visa" id="${p}visa"> We help with relocation or visa</label></div>
+  <div class="field full"><label for="${p}description">About the role *</label><textarea id="${p}description" name="description" required placeholder="What the person will do, the team, and why the role exists."></textarea></div>
+  <div class="full row" data-aionly hidden><button class="btn btn-ai btn-sm" type="button" data-act="ai-write" data-form="${p==="a_"?"adminForm":"postForm"}">${SPARK}Write the rest with AI</button><span class="muted" style="font-size:13px" data-aimsg2="${p==="a_"?"adminForm":"postForm"}">Uses the title, pay and notes above.</span></div>
+  <div class="field"><label for="${p}requirements">What they bring (one per line)</label><textarea id="${p}requirements" name="requirements"></textarea></div>
+  <div class="field"><label for="${p}benefits">What they get (one per line)</label><textarea id="${p}benefits" name="benefits"></textarea></div>
+  <div class="field full"><label for="${p}process">Hiring process</label><input id="${p}process" name="process" placeholder="e.g. 20-min call → small task → final interview"></div>
+  <div class="field"><label for="${p}applyUrl">Apply link</label><input id="${p}applyUrl" name="applyUrl" placeholder="https://…"></div>
+  <div class="field"><label for="${p}applyEmail">Or apply email</label><input id="${p}applyEmail" name="applyEmail" type="email" placeholder="jobs@company.com"></div>
+  <div class="field full"><span class="flabel">VISIBILITY</span><div class="tiers">${Object.entries(TIERS).map(([k,t],i)=>`<label class="tier"><input type="radio" name="tier" value="${k}"${i===0?" checked":""}><span><b>${t.name}</b>${t.label}</span></label>`).join("")}</div></div>
+  <div class="field full"><label for="${p}contact">Your email for invoice and questions *</label><input id="${p}contact" name="contact" type="email" required></div>
+  <div class="full" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn btn-primary" type="submit">${admin?"Publish now":"Submit for review"}</button><span class="muted" style="font-size:13px">* required</span></div>`;
+}
+function formData(form){
+  const fd=new FormData(form);const o={};for(const [k,v] of fd.entries())o[k]=typeof v==="string"?v.trim():v;
+  o.noExperience=!!form.elements.noExperience?.checked;o.visa=!!form.elements.visa?.checked;
+  o.salaryMin=+o.salaryMin||0;o.salaryMax=+o.salaryMax||0;if(o.salaryMax&&o.salaryMax<o.salaryMin)[o.salaryMin,o.salaryMax]=[o.salaryMax,o.salaryMin];
+  if(o.workplace!=="remote"){o.remoteFrom="";o.tz=""}o.replyDays=o.replyDays?+o.replyDays:0;
+  return o;
+}
+function fillForm(form,o){
+  for(const [k,v] of Object.entries(o||{})){
+    const el=form.elements[k];if(!el||v==null||v==="")continue;
+    if(el instanceof RadioNodeList){[...el].forEach(r=>r.checked=r.value===v);continue}
+    if(el.type==="checkbox"){el.checked=!!v;continue}
+    const val=Array.isArray(v)?v.join("\n"):String(v);
+    if(el.tagName==="SELECT"){if([...el.options].some(op=>(op.value||op.textContent)===val))el.value=val;continue}
+    el.value=val;
+  }
+  form.dispatchEvent(new Event("input"));
+}
+function validate(o){
+  const miss=[];if(!o.title)miss.push("job title");if(!o.company)miss.push("company");if(!o.salaryMin)miss.push("pay");if(!o.description)miss.push("description");
+  if(!o.applyUrl&&!o.applyEmail)miss.push("an apply link or email");if(!o.contact)miss.push("your email");
+  if(o.applyEmail&&!/.+@.+\..+/.test(o.applyEmail))miss.push("a valid apply email");
+  return miss;
+}
+function quality(o){
+  const checks=[[o.salaryMin&&o.salaryMax,20,"Give a pay range, not one number"],[String(o.description||"").length>=300,20,"Write at least a few sentences about the role"],[lines(o.requirements).length>=3,15,"List 3 or more things the person brings"],[lines(o.benefits).length>=2,15,"Add 2 or more benefits"],[o.process,10,"Describe the hiring steps"],[o.replyDays,10,"Promise a reply time"],[o.languages,5,"Say which languages are needed"],[o.companyUrl,5,"Add your website"]];
+  const score=checks.reduce((s,c)=>s+(c[0]?c[1]:0),0);return {score,tips:checks.filter(c=>!c[0]).map(c=>c[2])};
+}
+function wirePostForm(form,previewEl,qualityEl,noticeEl,mode){
+  const sync=()=>{const o=formData(form);form.querySelectorAll("[data-remote]").forEach(x=>x.hidden=o.workplace!=="remote");
+    previewEl.innerHTML=card(Object.assign({id:"preview",createdAt:now()},o),{preview:true})+`<p class="muted" style="font-size:13px;margin:8px 0 0">${TIERS[o.tier]?.price?`Total ${money(TIERS[o.tier].price,"EUR")} + VAT, invoiced after review.`:"Free during launch."}</p>`;
+    const q=quality(o);qualityEl.innerHTML=`<div class="panel quality"><div class="row" style="justify-content:space-between"><span class="flabel">LISTING STRENGTH</span><b class="mono">${q.score}/100</b></div><div class="qmeter"><i style="width:${q.score}%"></i></div>${q.tips.length?`<ul class="qtips">${q.tips.slice(0,3).map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`:`<span style="color:var(--good)">Strong listing. Candidates have everything they need.</span>`}</div>`};
+  form.addEventListener("input",sync);form.addEventListener("change",sync);sync();
+  form.addEventListener("submit",async e=>{
+    e.preventDefault();const o=formData(form);const miss=validate(o);const n=noticeEl;
+    if(miss.length){n.innerHTML=`<div class="notice err">Add ${esc(miss.join(", "))} to continue.</div>`;return}
+    const btn=form.querySelector("button[type=submit]");btn.disabled=true;
+    try{
+      if(mode==="admin"){
+        if(S.editing){await S.db.doc("jobs/"+S.editing).update(editableFields(o));n.innerHTML=`<div class="notice ok">Saved. The listing is updated.</div>`;S.editing=null;form.reset();$("#a_editBar").hidden=true;btn.textContent="Publish now"}
+        else{await publishJob(o);n.innerHTML=`<div class="notice ok">Published. It's live on the board now.</div>`;form.reset()}
+        sync();
+      }else{
+        if(window.havn&&!S.uid){store("havn.postDraft",o);n.innerHTML=`<div class="notice">Sign in to submit. Your listing is saved in this browser.</div>`;window.havn.signIn("post");btn.disabled=false;return}
+        const ok=await submitRequest(o);
+        if(ok){const pay=(S.settings.payLinks||{})[o.tier];try{localStorage.removeItem("havn.postDraft")}catch(e){}
+          n.innerHTML=`<div class="notice ok">Thanks. Your job is in the review queue and usually goes live within one working day. We'll email ${esc(o.contact)} if anything needs changing.${pay&&TIERS[o.tier]?.price?`<div class="row" style="margin-top:10px"><a class="btn btn-accent btn-sm" href="${esc(safeUrl(pay))}" target="_blank" rel="noopener">Pay ${money(TIERS[o.tier].price,"EUR")} now</a><span class="muted" style="font-size:13px">Paying now gets your post live faster. Write your company name in the payment.</span></div>`:""}</div>`;form.reset();sync()}
+        else{n.innerHTML=offlineSubmit(o)}}
+    }catch(err){n.innerHTML=mode==="admin"?`<div class="notice err">Couldn't save (${esc(err&&err.code||"error")}). Check your connection and try again.</div>`:offlineSubmit(o)}
+    btn.disabled=false;
+  });
+}
+function briefText(o){return `NEW JOB FOR HAVN
+Title: ${o.title}
+Company: ${o.company} ${o.companyUrl||""} (${o.employerType==="agency"?"agency":"direct employer"})
+Category: ${o.category} · ${o.jobType} · ${o.seniority}
+Workplace: ${o.workplace}${o.remoteFrom?" (remote from "+o.remoteFrom+")":""}${o.tz?" · hours: "+o.tz:""} · ${[o.location,o.country].filter(Boolean).join(", ")}
+Pay: ${o.salaryMin}${o.salaryMax?"–"+o.salaryMax:""} ${o.currency} per ${o.salaryPeriod}
+Languages: ${o.languages||"-"} · Reply promise: ${o.replyDays?o.replyDays+" days":"-"}
+No experience needed: ${o.noExperience?"yes":"no"} · Relocation/visa help: ${o.visa?"yes":"no"}
+Apply: ${o.applyUrl||o.applyEmail}
+Plan: ${TIERS[o.tier]?.name}
+Contact: ${o.contact}
+
+About the role:
+${o.description}
+
+Requirements:
+${o.requirements||"-"}
+
+Benefits:
+${o.benefits||"-"}
+
+Process: ${o.process||"-"}`}
+function offlineSubmit(o){
+  const mail=S.settings.contactEmail;window.__brief=briefText(o);
+  return `<div class="notice">Online submission isn't open for your account yet. Copy your listing${mail?` and email it to <b>${esc(mail)}</b>`:" and send it to the Havn team"}. We'll publish it after review.
+  <div class="row" style="margin-top:10px"><button class="btn btn-primary btn-sm" type="button" data-act="copybrief">Copy listing</button>${mail?`<button class="btn btn-ghost btn-sm" type="button" data-act="copy" data-text="${esc(mail)}">Copy email address</button>`:""}</div></div>`;
+}
+
+/* ================= data writes ================= */
+function editableFields(o){const t=TIERS[o.tier]?o.tier:"standard";return {title:o.title,company:o.company,companyUrl:o.companyUrl||"",category:o.category,jobType:o.jobType,seniority:o.seniority,employerType:o.employerType||"direct",workplace:o.workplace,remoteFrom:o.remoteFrom||"",tz:o.tz||"",country:o.country,location:o.location||"",languages:o.languages||"",replyDays:o.replyDays||0,noExperience:!!o.noExperience,visa:!!o.visa,salaryMin:o.salaryMin,salaryMax:o.salaryMax,currency:o.currency,salaryPeriod:o.salaryPeriod,description:o.description,requirements:Array.isArray(o.requirements)?o.requirements.join("\n"):o.requirements||"",benefits:Array.isArray(o.benefits)?o.benefits.join("\n"):o.benefits||"",process:o.process||"",applyUrl:o.applyUrl||"",applyEmail:o.applyEmail||"",contact:o.contact||"",tier:t}}
+function jobDoc(o){const t=now();return Object.assign(editableFields(o),{status:"active",verified:!!o.verified,createdAt:t,expiresAt:t+30*DAY})}
+async function publishJob(o){if(!S.db)throw {code:"unavailable"};await S.db.collection("jobs").add(jobDoc(o))}
+async function submitRequest(o){
+  if(!canSave())return false;
+  const id="r"+now().toString(36);const items=Object.assign({},S.myRequests);items[id]=Object.assign({},o,{submittedAt:now(),state:"pending"});
+  try{await S.db.doc("requests/"+S.uid).set({items});S.myRequests=items;return true}catch(e){if(e&&e.code==="invalid_argument")S.canWrite=false;return false}
+}
+
+/* ================= AI ================= */
+async function aiSearch(){
+  const q=$("#q").value.trim();const msg=$("#aiSearchMsg");if(!q){msg.textContent="Type what you're looking for first.";$("#q").focus();return}
+  msg.textContent="Thinking…";
+  try{
+    const r=await S.sample.json(`Turn this job search into filters for a job board. Reply with only a JSON object:
+{"q": short keywords for title/skills/city or "", "from": "" | "Norway" | "Romania" | "EU" (where the person lives/works from), "work": "" | "remote" | "hybrid" | "onsite", "cat": "" or one of ${JSON.stringify(CATS)}, "type": "" or one of ${JSON.stringify(TYPES)}, "level": "" or one of ${JSON.stringify(LEVELS)}, "min": minimum yearly pay converted to EUR as a number or 0, "noexp": boolean, "visa": boolean, "direct": boolean}
+Only set what the search clearly asks for.
+Search: ${q}`,{modelTier:"quick"});
+    const mins=[0,25000,40000,60000,80000];const min=+r.min||0;const pick=mins.filter(m=>m<=min).pop()||0;
+    writeFilters({q:r.q||"",from:r.from||"",work:r.work||"",cat:CATS.includes(r.cat)?r.cat:"",type:TYPES.includes(r.type)?r.type:"",level:LEVELS.includes(r.level)?r.level:"",min:pick,sort:$("#fSort").value,noexp:!!r.noexp,visa:!!r.visa,direct:!!r.direct,newOnly:false});
+    msg.textContent="Filters set from your search.";if(location.hash&&location.hash!=="#jobs")location.hash="jobs";renderBoard();
+  }catch(e){msg.textContent=aiError(e)}
+}
+async function aiMatch(){
+  const cv=$("#cvText").value.trim();const msg=$("#matchMsg");store("havn.cv",cv);
+  if(cv.length<80){msg.textContent="Paste a bit more of your CV first.";return}
+  const f0=readFilters();const live=sortJobs(S.jobs.filter(isLive).filter(j=>matches(j,f0)),"new").slice(0,80);if(!live.length){msg.textContent="No open jobs to score yet.";return}
+  msg.textContent="Scoring "+live.length+" jobs…";
+  const compactJobs=live.map(j=>({id:j.id,title:j.title,company:j.company,category:j.category,level:j.seniority,type:j.jobType,where:j.workplace==="remote"?"remote from "+j.remoteFrom:[j.location,j.country].join(", "),pay:payText(j),languages:j.languages,needs:lines(j.requirements).slice(0,5).join("; ").slice(0,300),noExperience:!!j.noExperience}));
+  try{
+    const r=await S.sample.json(`You match a candidate to jobs. Score each job 0-100 for how well this candidate fits (skills, experience level, languages, location rules). Reply with only a JSON array, one item per job: [{"id": "...", "score": 0-100, "reason": "max 14 words, second person, concrete"}].
+
+CANDIDATE CV:
+${cv.slice(0,7000)}
+
+JOBS:
+${JSON.stringify(compactJobs)}`,{modelTier:"default"});
+    S.match={};(Array.isArray(r)?r:[]).forEach(x=>{if(x&&x.id&&live.some(j=>j.id===x.id))S.match[x.id]={score:Math.max(0,Math.min(100,+x.score||0)),reason:String(x.reason||"").slice(0,140)}});
+    store("havn.match",S.match);$("#sortMatch").disabled=false;$("#fSort").value="match";msg.textContent="Done. Jobs are sorted by match.";renderBoard();
+  }catch(e){msg.textContent=aiError(e)}
+}
+const FORM_SCHEMA=`{"title": string, "company": string, "companyUrl": string, "category": one of ${JSON.stringify(CATS)}, "jobType": one of ${JSON.stringify(TYPES)}, "seniority": one of ${JSON.stringify(LEVELS)}, "employerType": "direct"|"agency", "workplace": "remote"|"hybrid"|"onsite", "remoteFrom": "" or one of ${JSON.stringify(REGIONS)}, "tz": "" or one of ${JSON.stringify(TZS)} (working hours for remote jobs), "country": one of ${JSON.stringify(COUNTRIES)}, "location": city, "languages": comma-separated, "salaryMin": number, "salaryMax": number, "currency": one of ${JSON.stringify(CUR)}, "salaryPeriod": "year"|"month"|"hour", "description": 2 short paragraphs, "requirements": array of 3-6 short strings, "benefits": array of 2-6 short strings, "process": one sentence, "applyUrl": string, "applyEmail": string, "noExperience": boolean, "visa": boolean}`;
+async function aiFill(formId,mode){
+  const form=document.getElementById(formId);const msgEl=document.querySelector(mode==="paste"?`[data-aimsg="${formId}"]`:`[data-aimsg2="${formId}"]`);
+  const cur=formData(form);const pasted=(mode==="paste"?($("#"+(formId==="adminForm"?"a_paste":"pasteAd"))?.value||"").trim():"");
+  if(mode==="paste"&&pasted.length<20){msgEl.textContent="Paste the ad or a few notes first.";return}
+  if(mode!=="paste"&&!cur.title){msgEl.textContent="Add a job title first.";return}
+  msgEl.textContent="Writing…";
+  const src=mode==="paste"?`SOURCE TEXT:\n${pasted.slice(0,8000)}`:`WHAT THE EMPLOYER FILLED IN SO FAR:\n${JSON.stringify(cur)}`;
+  try{
+    const r=await S.sample.json(`You write clear, honest job listings for Havn, a job board where every job shows pay. Build the listing from the information below. Reply with only a JSON object with these keys:
+${FORM_SCHEMA}
+Rules: Use "" or 0 for anything not given. Never invent pay, company names, emails, links or benefits that aren't stated or clearly implied; you may phrase requirements and the description from the role. Write in the same language as the source. Plain, friendly sentences, no hype.
+
+${src}`,{modelTier:"default"});
+    const out={};for(const [k,v] of Object.entries(r||{})){if(v===""||v==null||v===0)continue;if(mode!=="paste"&&cur[k]&&!["description","requirements","benefits","process"].includes(k))continue;out[k]=v}
+    fillForm(form,out);msgEl.textContent="Filled in. Check every field before you submit.";
+  }catch(e){msgEl.textContent=aiError(e)}
+}
+
+/* ================= modals ================= */
+function openModal(html,onMount){const root=$("#modalRoot");root.innerHTML=`<div class="scrim" data-act="close-scrim"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`;const m=root.querySelector(".modal");m.querySelector("input,textarea,button")?.focus();onMount&&onMount(m)}
+function closeModal(){$("#modalRoot").innerHTML=""}
+function quickApply(id){
+  const j=S.jobs.find(x=>x.id===id);if(!j)return;const prof=load("havn.profile",{});const prev=S.myApps[id]||{};
+  openModal(`<h2>Apply: ${esc(j.title)}</h2><p class="muted" style="margin:0">${esc(j.company)} will receive your details through Havn.</p>
+    <form id="qa" style="display:flex;flex-direction:column;gap:10px">
+      <div class="field"><label for="qaName">Full name *</label><input id="qaName" name="name" required value="${esc(prof.name||"")}"></div>
+      <div class="field"><label for="qaEmail">Email *</label><input id="qaEmail" name="email" type="email" required value="${esc(prof.email||"")}"></div>
+      <div class="field"><label for="qaPhone">Phone</label><input id="qaPhone" name="phone" value="${esc(prof.phone||"")}"></div>
+      <div class="field"><label for="qaLink">CV or LinkedIn link</label><input id="qaLink" name="link" value="${esc(prof.link||"")}"></div>
+      <div class="field"><label for="qaNote">Why you fit this job *</label><textarea id="qaNote" name="note" required>${esc(prev.note||"")}</textarea></div>
+      ${S.sample?`<div class="row"><button class="btn btn-ai btn-sm" type="button" id="qaAi">${SPARK}Write it with AI</button><span class="muted" id="qaAiMsg" style="font-size:13px">${load("havn.cv","")?"Uses your saved CV.":"Tip: paste your CV in the match panel for a better letter."}</span></div>`:""}
+      <div id="qaMsg"></div>
+      <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost" type="button" data-act="close">Cancel</button><button class="btn btn-primary" type="submit">Send application</button></div>
+    </form>`,m=>{
+      let ctl=null;
+      m.querySelector("#qaAi")?.addEventListener("click",async()=>{
+        const note=m.querySelector("#qaNote");const am=m.querySelector("#qaAiMsg");if(ctl){ctl.abort();return}
+        ctl=new AbortController();am.textContent="Writing… (press again to stop)";const draft=note.value;
+        try{await S.sample(`Write a short application note (120-170 words) from the candidate to the employer for this job. First person, warm and specific, no placeholders, no subject line, no sign-off name. Write in the same language as the job ad. Use only facts from the CV and notes; don't invent experience.
+
+JOB: ${JSON.stringify({title:j.title,company:j.company,description:String(j.description).slice(0,1500),requirements:lines(j.requirements),languages:j.languages})}
+CANDIDATE NAME: ${m.querySelector("#qaName").value}
+CANDIDATE CV: ${load("havn.cv","").slice(0,5000)||"(not given)"}
+CANDIDATE NOTES: ${draft||"(none)"}`,{signal:ctl.signal,cache:false,onText:({text})=>{note.value=text}});am.textContent="Done. Edit it so it sounds like you."}
+        catch(e){if(e.code==="cancelled"){am.textContent="Stopped."}else{note.value=e.text||draft;am.textContent=aiError(e)}}
+        ctl=null;
+      });
+      m.querySelector("#qa").addEventListener("submit",async e=>{
+        e.preventDefault();const fd=Object.fromEntries(new FormData(e.target).entries());
+        if(!fd.name||!fd.email||!fd.note){m.querySelector("#qaMsg").innerHTML=`<div class="notice err">Add your name, email and a short note.</div>`;return}
+        store("havn.profile",{name:fd.name,email:fd.email,phone:fd.phone,link:fd.link});
+        const apps=Object.assign({},S.myApps);apps[id]={note:fd.note,at:now(),jobTitle:j.title,company:j.company};
+        try{await S.db.doc("applications/"+S.uid).set({profile:{name:fd.name,email:fd.email,phone:fd.phone||"",link:fd.link||""},apps});S.myApps=apps;trackApplied(j);closeModal();toast("Application sent");route()}
+        catch(err){S.canWrite=false;m.querySelector("#qaMsg").innerHTML=`<div class="notice err">Quick apply isn't available for your account. ${j.applyUrl?"Use the employer's apply link instead.":j.applyEmail?"Email your CV to "+esc(j.applyEmail)+" instead.":""}</div>`}
+      });
+    });
+}
+function digestModal(){
+  const f=readFilters();
+  openModal(`<h2>Weekly job digest</h2><p class="muted" style="margin:0">One email a week with new jobs that match: <b>${esc([f.q||"all jobs",f.from&&("from "+f.from),f.work,f.cat].filter(Boolean).join(" · "))}</b>. Unsubscribe any time.</p>
+  ${canSave()?`<form id="dg" style="display:flex;flex-direction:column;gap:10px"><div class="field"><label for="dgEmail">Email</label><input id="dgEmail" type="email" required value="${esc(load("havn.profile",{}).email||"")}"></div><div id="dgMsg"></div><div class="row" style="justify-content:flex-end"><button class="btn btn-ghost" type="button" data-act="close">Cancel</button><button class="btn btn-accent" type="submit">Subscribe</button></div></form>`
+  :window.havn?`<div class="row" style="justify-content:flex-end"><button class="btn btn-ghost" type="button" data-act="close">Cancel</button><button class="btn btn-accent" type="button" data-act="signin" data-id="digest">Sign in to subscribe</button></div>`
+  :`<div class="notice">Digest sign-up opens with accounts at launch. Save jobs with the bookmark for now, they stay in this browser.</div><div class="row" style="justify-content:flex-end"><button class="btn btn-ghost" type="button" data-act="close">Close</button></div>`}`,m=>{
+    const fm=m.querySelector("#dg");if(!fm)return;
+    fm.addEventListener("submit",async e=>{e.preventDefault();const email=m.querySelector("#dgEmail").value.trim();if(!/.+@.+\..+/.test(email)){m.querySelector("#dgMsg").innerHTML=`<div class="notice err">Enter a valid email address.</div>`;return}
+      try{await S.db.doc("alerts/"+S.uid).set({email,q:f.q,from:f.from,work:f.work,cat:f.cat,min:f.min,at:now()});closeModal();toast("You're on the digest")}
+      catch(err){S.canWrite=false;m.querySelector("#dgMsg").innerHTML=`<div class="notice err">Sign-up isn't available for your account yet.</div>`}});
+  });
+}
+const REASONS=["Asks for money, ID copies or bank details","Looks fake or like a scam","The job is already filled","Pay or details are wrong","Something else"];
+function reportModal(id){
+  const j=S.jobs.find(x=>x.id===id);if(!j)return;const mail=S.settings.contactEmail;
+  openModal(`<h2>Report this listing</h2><p class="muted" style="margin:0">${esc(j.title)} · ${esc(j.company)}. A person checks every report.</p>
+  <form id="rp" style="display:flex;flex-direction:column;gap:10px"><fieldset style="border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:6px"><legend class="flabel" style="margin-bottom:6px">WHAT'S WRONG?</legend>${REASONS.map((r,i)=>`<label class="chk"><input type="radio" name="reason" value="${esc(r)}"${i===0?" checked":""}> ${esc(r)}</label>`).join("")}</fieldset>
+  <div class="field"><label for="rpNote">Details (optional)</label><textarea id="rpNote" name="note" style="min-height:70px"></textarea></div><div id="rpMsg"></div>
+  <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost" type="button" data-act="close">Cancel</button><button class="btn btn-danger" type="submit">Send report</button></div></form>`,m=>{
+    m.querySelector("#rp").addEventListener("submit",async e=>{e.preventDefault();const fd=Object.fromEntries(new FormData(e.target).entries());
+      if(canSave()){const items=Object.assign({},S.myReports);items["x"+now().toString(36)]={jobId:id,jobTitle:j.title,company:j.company,reason:fd.reason,note:fd.note||"",at:now(),state:"open"};
+        try{await S.db.doc("reports/"+S.uid).set({items});S.myReports=items;closeModal();toast("Thanks. We'll check it.");return}catch(err){S.canWrite=false}}
+      if(window.havn&&!S.uid){window.havn.signIn("report");return}
+      const text=`Report: ${j.title} (${j.company})\nLink: ${jobLink(id)}\nReason: ${fd.reason}\n${fd.note||""}`;window.__brief=text;
+      m.querySelector("#rpMsg").innerHTML=`<div class="notice">Copy the report${mail?` and email it to <b>${esc(mail)}</b>`:" and send it to the Havn team"}.<div class="row" style="margin-top:8px"><button class="btn btn-primary btn-sm" type="button" data-act="copybrief">Copy report</button></div></div>`;
+    });
+  });
+}
+function socialText(j,lang){
+  const where=j.workplace==="remote"?"Remote ("+j.remoteFrom+")":[j.location,j.country].filter(Boolean).join(", ");
+  const req=lines(j.requirements).slice(0,3);const tags=["#havnjobs","#jobs",j.workplace==="remote"?"#remotejobs":"",j.country?"#"+slug(j.country).replace(/-/g,""):"",j.location?"#"+slug(j.location).replace(/-/g,""):"","#"+slug(j.category).replace(/-/g,"")].filter(Boolean).join(" ");
+  return `New job on Havn: ${j.title} at ${j.company}
+Pay: ${payText(j)}
+Where: ${where}
+${req.length?"\nYou bring:\n"+req.map(r=>"• "+r).join("\n")+"\n":""}
+Salary shown, every post checked by a person. Apply here:
+${jobLink(j.id)}
+
+${tags}`;
+}
+function socialModal(id){
+  const j=S.jobs.find(x=>x.id===id);if(!j)return;
+  openModal(`<h2>Social post</h2><p class="muted" style="margin:0">Ready for Instagram, Facebook or LinkedIn. Edit before posting.</p>
+  <div class="field"><label for="soText">Post text</label><textarea id="soText" style="min-height:240px">${esc(socialText(j))}</textarea></div>
+  ${S.sample?`<div class="row"><button class="btn btn-ai btn-sm" type="button" data-lang="Norwegian (bokmål)">${SPARK}Rewrite in Norwegian</button><button class="btn btn-ai btn-sm" type="button" data-lang="Romanian">${SPARK}Rewrite in Romanian</button><button class="btn btn-ai btn-sm" type="button" data-lang="English, punchier, for a short reel caption">${SPARK}Reel caption</button><span class="muted" id="soMsg" style="font-size:13px"></span></div>`:""}
+  <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost" type="button" data-act="close">Close</button><button class="btn btn-primary" type="button" id="soCopy">Copy text</button></div>`,m=>{
+    m.querySelector("#soCopy").addEventListener("click",()=>copy(m.querySelector("#soText").value));
+    m.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",async()=>{const ta=m.querySelector("#soText");const msg=m.querySelector("#soMsg");msg.textContent="Writing…";const base=socialText(j);
+      try{await S.sample(`Rewrite this job post for social media in ${b.dataset.lang}. Keep the pay, place and link exactly. Keep it short, friendly and honest. Keep the hashtags at the end. Reply with only the post text.\n\n${base}`,{cache:false,onText:({text})=>{ta.value=text}});msg.textContent="Done."}catch(e){msg.textContent=aiError(e)}}));
+  });
+}
+
+/* ================= admin ================= */
+function pendingCount(){return S.requests.reduce((n,r)=>n+Object.values(r.items||{}).filter(i=>i.state==="pending").length,0)}
+function openReports(){const out=[];S.reports.forEach(r=>Object.entries(r.items||{}).forEach(([k,v])=>out.push(Object.assign({_uid:r.id,_k:k},v))));return out.sort((a,b)=>b.at-a.at)}
+function updateAdminCount(){const n=pendingCount()+openReports().filter(r=>r.state==="open").length;const c=$("#adminCount");c.hidden=!n;c.textContent=n}
+function csv(rows){return rows.map(r=>r.map(v=>{const s=String(v==null?"":v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}).join(",")).join("\n")}
+async function saveCsv(name,rows){const data=csv(rows);if(S.downloads){try{await S.downloads.save({filename:name,data});return}catch(e){if(e&&e.code==="declined")return}}copy(data)}
+function renderAdmin(force){
+  const body=$("#adminBody");updateAdminCount();
+  document.querySelectorAll("#adminTabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===S.adminTab));
+  if(!S.isOwner){body.innerHTML=`<div class="empty"><h3>Admin is for the Havn owner</h3><p>Sign in as the owner to manage jobs and applications.</p></div>`;return}
+  const t=S.adminTab;
+  if(t==="overview"){
+    const live=S.jobs.filter(isLive);const appsN=S.apps.reduce((n,a)=>n+Object.keys(a.apps||{}).length,0);
+    const rev=S.jobs.filter(j=>(j.createdAt||0)>now()-30*DAY).reduce((s,j)=>s+(TIERS[j.tier]?.price||0),0);
+    const soon=live.filter(j=>daysLeft(j)<=5);
+    const kp=`<div class="kpi"><b>${live.length}</b><span>Live jobs</span></div><div class="kpi"><b>${pendingCount()}</b><span>Waiting for review</span></div><div class="kpi"><b>${appsN}</b><span>Quick applications</span></div><div class="kpi"><b>${money(rev,"EUR")}</b><span>Paid posts, last 30 days</span></div>`;
+    const soonHtml=soon.length?`<div class="panel" style="margin-top:14px"><div class="flabel">CLOSING IN 5 DAYS · ASK THE EMPLOYER IF THEY'RE STILL HIRING</div>${soon.map(j=>`<div class="row" style="justify-content:space-between;margin-top:8px"><span><a href="#job-${esc(j.id)}">${esc(j.title)}</a> · ${esc(j.company)} · <span class="mono">${daysLeft(j)}d</span></span><button class="btn btn-ghost btn-sm" data-act="extend" data-id="${esc(j.id)}">+30 days</button></div>`).join("")}</div>`:"";
+    if(!force&&$("#adminForm")&&$("#adminKpis")){$("#adminKpis").innerHTML=kp;$("#adminSoon").innerHTML=soonHtml;return}
+    body.innerHTML=`<div class="kpis" id="adminKpis">${kp}</div><div id="adminSoon">${soonHtml}</div>${window.havn?`<div class="panel" style="margin-top:14px" id="navPanel"></div>`:""}
+      <h3 style="margin:28px 0 6px;font-size:20px" id="adminFormTitle">Publish a job</h3><p class="muted" style="margin:0 0 14px">Jobs you publish here go live immediately. Use it for your own companies and for clients who sent you a listing.</p>
+      <div class="post"><div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+        <div class="panel" data-aionly ${S.sample?"":"hidden"}><div class="flabel">PASTE A JOB AD → FILL THE FORM</div><div class="field" style="margin-top:8px"><label for="a_paste">Job ad text, an email from a client, or notes</label><textarea id="a_paste" style="min-height:80px"></textarea></div><div class="row" style="margin-top:8px"><button class="btn btn-ai btn-sm" type="button" data-act="ai-fill" data-form="adminForm">${SPARK}Fill the form with AI</button><span class="muted" data-aimsg="adminForm" style="font-size:13px"></span></div></div>
+        ${bulkPanelHtml()}
+        <form class="form" id="adminForm" novalidate>${postFormHtml("a_",true)}</form></div>
+        <div class="preview"><div class="flabel">LIVE PREVIEW</div><div id="adminPreview"></div><div id="adminQuality"></div><div id="adminNotice"></div></div></div>`;
+    wirePostForm($("#adminForm"),$("#adminPreview"),$("#adminQuality"),$("#adminNotice"),"admin");
+    if(S.sample)body.querySelectorAll("[data-aionly]").forEach(e=>e.hidden=false);
+    renderBulk();renderNavPanel();
+    if(S.editing){const j=S.jobs.find(x=>x.id===S.editing);if(j){fillForm($("#adminForm"),j);$("#a_editBar").hidden=false;$("#adminForm button[type=submit]").textContent="Save changes";$("#adminFormTitle").textContent="Edit job";$("#adminFormTitle").scrollIntoView({block:"start"})}}
+    return;
+  }
+  if(t==="jobs"){
+    const rows=sortJobs(S.jobs,"new");
+    body.innerHTML=rows.length?`<div class="list-head"><b>${rows.length} jobs</b><button class="btn btn-ghost btn-sm" data-act="export-jobs">Export CSV</button></div><div class="tablewrap"><table><thead><tr><th>Job</th><th>Plan</th><th>Status</th><th>Closes</th><th>Contact</th><th></th></tr></thead><tbody>${rows.map(j=>{const st=jobStatus(j);return `<tr><td><a href="#job-${esc(j.id)}">${esc(j.title)}</a><div class="muted">${esc(j.company)}${j.verified?" · Verified":""}</div></td><td><select data-tier="${esc(j.id)}" aria-label="Plan">${Object.entries(TIERS).map(([k,v])=>`<option value="${k}"${j.tier===k?" selected":""}>${v.name}</option>`).join("")}</select></td><td><span class="status st-${st}">${st}</span></td><td class="mono">${st==="active"?daysLeft(j)+"d":"–"}</td><td>${esc(j.contact||"")}</td><td><div class="row" style="flex-wrap:nowrap"><button class="btn btn-ghost btn-sm" data-act="edit" data-id="${esc(j.id)}">Edit</button><button class="btn btn-ghost btn-sm" data-act="social" data-id="${esc(j.id)}">Social post</button><button class="btn btn-ghost btn-sm" data-act="verify" data-id="${esc(j.id)}">${j.verified?"Unverify":"Verify"}</button><button class="btn btn-ghost btn-sm" data-act="dup" data-id="${esc(j.id)}">Duplicate</button><button class="btn btn-ghost btn-sm" data-act="extend" data-id="${esc(j.id)}">+30 days</button>${st==="closed"?`<button class="btn btn-ghost btn-sm" data-act="reopen" data-id="${esc(j.id)}">Reopen</button>`:`<button class="btn btn-ghost btn-sm" data-act="closejob" data-id="${esc(j.id)}">Close</button>`}<button class="btn btn-danger btn-sm" data-act="del" data-id="${esc(j.id)}">Delete</button></div></td></tr>`}).join("")}</tbody></table></div>`
+      :`<div class="empty"><h3>No jobs yet</h3><p>Publish your first job from the Overview tab.</p></div>`;return;
+  }
+  if(t==="requests"){
+    const items=[];S.requests.forEach(r=>Object.entries(r.items||{}).forEach(([k,v])=>items.push(Object.assign({_uid:r.id,_k:k},v))));items.sort((a,b)=>b.submittedAt-a.submittedAt);
+    body.innerHTML=items.length?`<div class="tablewrap"><table><thead><tr><th>Job</th><th>Pay</th><th>Plan</th><th>Contact</th><th>State</th><th></th></tr></thead><tbody>${items.map(i=>`<tr><td><b>${esc(i.title)}</b><div class="muted">${esc(i.company)} · ${esc(i.workplace)} · strength ${quality(i).score}/100</div><details><summary class="muted">Read listing</summary><div class="tpl">${esc(i.description)}</div></details></td><td class="mono">${esc(payText(i))}</td><td>${esc(TIERS[i.tier]?.name||"")}</td><td>${esc(i.contact)}</td><td><span class="status st-${i.state==="pending"?"pending":i.state==="approved"?"active":"closed"}">${esc(i.state)}</span></td><td style="white-space:nowrap">${i.state==="pending"?`<button class="btn btn-primary btn-sm" data-act="approve" data-id="${esc(i._uid)}|${esc(i._k)}">Approve</button> <button class="btn btn-ghost btn-sm" data-act="reject" data-id="${esc(i._uid)}|${esc(i._k)}">Reject</button>`:""}</td></tr>`).join("")}</tbody></table></div>`
+      :`<div class="empty"><h3>No post requests</h3><p>When employers submit a job it waits here for your review.</p></div>`;return;
+  }
+  if(t==="apps"){
+    const rows=[];S.apps.forEach(a=>Object.entries(a.apps||{}).forEach(([jid,v])=>rows.push(Object.assign({jid,p:a.profile||{}},v))));rows.sort((a,b)=>b.at-a.at);
+    body.innerHTML=rows.length?`<div class="list-head"><b>${rows.length} applications</b><button class="btn btn-ghost btn-sm" data-act="export-apps">Export CSV</button></div><div class="tablewrap"><table><thead><tr><th>Candidate</th><th>Job</th><th>Note</th><th>Sent</th><th></th></tr></thead><tbody>${rows.map(r=>{const j=S.jobs.find(x=>x.id===r.jid);const fwd=`Hi! New applicant for ${r.jobTitle} via Havn:\n\nName: ${r.p.name}\nEmail: ${r.p.email}\nPhone: ${r.p.phone||"-"}\nCV/profile: ${r.p.link||"-"}\n\n${r.note}`;return `<tr><td><b>${esc(r.p.name)}</b><div>${esc(r.p.email)}</div><div class="muted">${esc(r.p.phone||"")}</div>${r.p.link?`<a href="${esc(safeUrl(r.p.link))}" target="_blank" rel="noopener">CV / profile</a>`:""}</td><td>${esc(r.jobTitle)}<div class="muted">${esc(r.company)}${j?.contact?" · "+esc(j.contact):""}</div></td><td style="max-width:360px;white-space:pre-wrap">${esc(r.note)}</td><td>${ago(r.at)}</td><td><button class="btn btn-ghost btn-sm" data-act="copy" data-text="${esc(fwd)}">Copy to forward</button></td></tr>`}).join("")}</tbody></table></div>`
+      :`<div class="empty"><h3>No applications yet</h3><p>Quick applications from candidates appear here.</p></div>`;return;
+  }
+  if(t==="reports"){
+    const rs=openReports();
+    body.innerHTML=rs.length?`<div class="tablewrap"><table><thead><tr><th>Listing</th><th>Reason</th><th>When</th><th>State</th><th></th></tr></thead><tbody>${rs.map(r=>`<tr><td><a href="#job-${esc(r.jobId)}">${esc(r.jobTitle)}</a><div class="muted">${esc(r.company)}</div></td><td>${esc(r.reason)}${r.note?`<div class="muted">${esc(r.note)}</div>`:""}</td><td>${ago(r.at)}</td><td><span class="status st-${r.state==="open"?"pending":"closed"}">${esc(r.state)}</span></td><td style="white-space:nowrap">${r.state==="open"?`<button class="btn btn-danger btn-sm" data-act="report-close" data-id="${esc(r._uid)}|${esc(r._k)}">Close the job</button> <button class="btn btn-ghost btn-sm" data-act="report-dismiss" data-id="${esc(r._uid)}|${esc(r._k)}">Dismiss</button>`:""}</td></tr>`).join("")}</tbody></table></div>`
+      :`<div class="empty"><h3>No reports</h3><p>When someone reports a listing, it shows up here.</p></div>`;return;
+  }
+  if(t==="digest"){
+    const emails=S.alerts.map(a=>a.email).filter(Boolean);
+    body.innerHTML=emails.length?`<div class="list-head"><b>${emails.length} subscribers</b><div class="row"><button class="btn btn-ghost btn-sm" data-act="export-digest">Export CSV</button><button class="btn btn-primary btn-sm" data-act="copy" data-text="${esc(emails.join(", "))}">Copy all emails</button></div></div><div class="tablewrap"><table><thead><tr><th>Email</th><th>Wants</th><th>Matching live jobs</th><th>Since</th></tr></thead><tbody>${S.alerts.map(a=>{const f={q:a.q||"",from:a.from||"",work:a.work||"",cat:a.cat||"",min:a.min||0};const n=S.jobs.filter(j=>isLive(j)&&matches(j,f)).length;return `<tr><td>${esc(a.email)}</td><td>${esc([a.q,a.from,a.work,a.cat].filter(Boolean).join(" · ")||"All jobs")}</td><td class="mono">${n}</td><td>${ago(a.at)}</td></tr>`}).join("")}</tbody></table></div>`
+      :`<div class="empty"><h3>No digest subscribers yet</h3><p>People who sign up for the weekly digest appear here, with what they're searching for.</p></div>`;return;
+  }
+  if(t==="settings"){
+    if(!force&&$("#setForm"))return;
+    body.innerHTML=`<form class="form" id="setForm" style="max-width:640px"><div class="field full"><label for="setEmail">Public contact email for employers and reports</label><input id="setEmail" type="email" value="${esc(S.settings.contactEmail||"")}" placeholder="post@yourdomain.com"></div>
+      <div class="full flabel" style="margin-top:8px">PAYMENT LINKS (STRIPE PAYMENT LINKS)</div>
+      <div class="field"><label for="payBoost">Boost €79 link</label><input id="payBoost" value="${esc((S.settings.payLinks||{}).boost||"")}" placeholder="https://buy.stripe.com/…"></div>
+      <div class="field"><label for="payFeatured">Featured €199 link</label><input id="payFeatured" value="${esc((S.settings.payLinks||{}).featured||"")}" placeholder="https://buy.stripe.com/…"></div>
+      <div class="field full"><label for="payPro">Hiring Pro link</label><input id="payPro" value="${esc((S.settings.payLinks||{}).pro||"")}" placeholder="https://buy.stripe.com/…"></div><div class="full"><button class="btn btn-primary" type="submit">Save settings</button></div><div class="full" id="setMsg"></div></form>`;
+    $("#setForm").addEventListener("submit",async e=>{e.preventDefault();try{await S.db.doc("site/settings").set({contactEmail:$("#setEmail").value.trim(),payLinks:{boost:$("#payBoost").value.trim(),featured:$("#payFeatured").value.trim(),pro:$("#payPro").value.trim()}});$("#setMsg").innerHTML=`<div class="notice ok">Saved.</div>`}catch(err){$("#setMsg").innerHTML=`<div class="notice err">Couldn't save. Try again.</div>`}});return;
+  }
+  if(t==="growth"){body.innerHTML=GROWTH;return}
+}
+const GROWTH=`<div class="play">
+<div class="panel"><h3>The model</h3><ul>
+<li><b>Seekers free forever.</b> That's the marketing promise and what brings applicants.</li>
+<li><b>Employers pay for reach:</b> Boost €79, Featured €199, Hiring Pro €349/mo or €2,990/yr.</li>
+<li><b>Side revenue:</b> digest sponsorship €149/issue, extensions €39.</li>
+<li><b>Goal year 1:</b> 20 Featured + 5 Pro per month ≈ €5,700 a month.</li></ul></div>
+<div class="panel"><h3>Launch in 4 weeks</h3><ol>
+<li>Week 1: Publish your own jobs (Velune crew, Skyline, Lidverk) so the board isn't empty.</li>
+<li>Week 1: Offer 25 local businesses in Stavanger a free Featured post (they pay from post #2).</li>
+<li>Week 2: Same offer to 25 companies in Cluj, Bucharest and Brașov that hire remote English speakers.</li>
+<li>Week 3: Start the weekly digest. Post every new job with the Social post button.</li>
+<li>Week 4: Switch on paid plans; keep Standard free.</li></ol></div>
+<div class="panel"><h3>Where job seekers come from</h3><ul>
+<li>Facebook groups: "Jobb i Stavanger", expat groups in Norway and Romania.</li>
+<li>LinkedIn: one post per Featured job, tagging the company.</li>
+<li>Instagram/TikTok: "Job of the day, salary shown" short videos.</li>
+<li>Company pages and job links work as shareable landing pages.</li>
+<li>Every job has a "Copy link" button, so people share jobs with friends.</li></ul></div>
+<div class="panel"><h3>Numbers to watch weekly</h3><ul>
+<li>Live jobs (target 50 by week 6)</li><li>Digest subscribers (target 500 by month 3)</li><li>Applications per job (target 10+)</li><li>Paid posts and repeat employers</li><li>Open reports (target: 0 older than 24 h)</li></ul></div>
+<div class="panel"><h3>Keep trust high</h3><ul>
+<li>Approve only jobs with real pay and a real company.</li>
+<li>Close any job with a scam report the same day.</li>
+<li>Mark companies Verified after a call or a paid post.</li>
+<li>Ask employers on "Closing in 5 days" if they still hire; extend or close.</li></ul></div>
+<div class="panel"><h3>Next upgrades when it grows</h3><ul>
+<li>Card payments with Stripe and employer accounts (needs the full app version).</li>
+<li>Automatic weekly digest emails.</li>
+<li>Norwegian and Romanian language versions.</li>
+<li>Own domain, e.g. havnjobs.com.</li></ul></div>
+<div class="panel" style="grid-column:1/-1"><h3>Ready-to-post copy</h3>
+<div class="flabel">EMPLOYER OUTREACH (NORWEGIAN)</div>
+<div class="tpl" id="tpl1">Hei! Jeg starter Havn, en ny jobbside der alle stillinger viser lønn og blir sjekket manuelt. Vi gir de første 25 bedriftene i Stavanger en gratis Featured-annonse (verdi €199): toppen av siden i 30 dager + deling på våre sosiale kanaler. Har dere en ledig stilling nå? Send den til meg, så publiserer jeg den i dag.</div>
+<button class="btn btn-ghost btn-sm" data-act="copyel" data-id="tpl1">Copy</button>
+<div class="flabel" style="margin-top:14px">EMPLOYER OUTREACH (ROMANIAN)</div>
+<div class="tpl" id="tpl3">Bună! Lansez Havn, o platformă de joburi unde fiecare anunț arată salariul și este verificat de un om. Primele 25 de companii primesc gratuit un anunț Featured (valoare 199 €): primul loc pe site timp de 30 de zile și promovare pe rețelele noastre sociale. Aveți un post liber acum? Trimiteți-mi-l și îl public azi.</div>
+<button class="btn btn-ghost btn-sm" data-act="copyel" data-id="tpl3">Copy</button>
+<div class="flabel" style="margin-top:14px">SOCIAL POST</div>
+<div class="tpl" id="tpl2">Tired of job ads that hide the salary?
+Havn shows the pay on every single job, and every post is checked by a real person. No ghost jobs. No spam. Free for job seekers, always.
+Remote jobs across Europe + local jobs in Norway and Romania.
+Link in bio.</div>
+<button class="btn btn-ghost btn-sm" data-act="copyel" data-id="tpl2">Copy</button></div>
+</div>`;
+async function adminAction(fn,okMsg){try{await fn();toast(okMsg)}catch(e){toast("Couldn't save. Try again.")}}
+
+/* ================= employer ROI ================= */
+function renderRoi(){const v=Math.max(0,+$("#roiSalary").value||0);$("#roiOut").innerHTML=`<div><b>${money(v*0.15,"EUR")}–${money(v*0.25,"EUR")}</b><span>Typical agency fee</span></div><div><b>${money(199,"EUR")}</b><span>Featured post on Havn</span></div>${v?`<div><b style="color:var(--good)">${money(Math.max(0,v*0.15-199),"EUR")}+</b><span>You keep</span></div>`:""}`}
+
+/* ================= admin bulk import ================= */
+const BULK={items:[]};
+function bulkPanelHtml(){return `<div class="panel" data-aionly ${S.sample?"":"hidden"} style="margin-top:14px"><div class="flabel">BULK IMPORT WITH AI</div>
+  <p class="muted" style="font-size:13px;margin:6px 0 8px">Paste several job ads at once (an email from a client, a list from a company's careers page they sent you). AI splits them into separate listings. You check each one before it goes live.</p>
+  <div class="field"><label for="bulkText">Job ads</label><textarea id="bulkText" style="min-height:110px"></textarea></div>
+  <div class="row" style="margin-top:8px"><button class="btn btn-ai btn-sm" type="button" data-act="bulk-find">${SPARK}Find the jobs in this text</button><span class="muted" id="bulkMsg" style="font-size:13px"></span></div>
+  <div id="bulkList"></div></div>`}
+function renderBulk(){
+  const box=$("#bulkList");if(!box)return;if(!BULK.items.length){box.innerHTML="";return}
+  box.innerHTML=`<div style="margin-top:12px">${BULK.items.map((o,i)=>`<label class="bulk-item"><input type="checkbox" data-bulk="${i}" ${o._on?"checked":""}><span style="min-width:0"><b>${esc(o.title||"Untitled")}</b> · ${esc(o.company||"?")}<span class="muted" style="display:block;font-size:12px">${esc(payText(o))} · ${esc(o.workplace||"")} · ${esc([o.location,o.country].filter(Boolean).join(", "))}${!o.salaryMin?" · <b style='color:var(--bad)'>no pay given</b>":""}${!o.applyUrl&&!o.applyEmail?" · no apply link":""}</span></span><button type="button" class="btn btn-ghost btn-sm" data-act="bulk-edit" data-id="${i}">Open in form</button></label>`).join("")}</div>
+  <div class="row" style="margin-top:10px"><button class="btn btn-primary btn-sm" type="button" data-act="bulk-publish">Publish selected</button><span class="muted" style="font-size:13px">Jobs without pay are left unticked. Havn's promise is pay on every listing.</span></div>`;
+}
+async function bulkFind(){
+  const txt=($("#bulkText")?.value||"").trim();const msg=$("#bulkMsg");if(txt.length<40){msg.textContent="Paste the job ads first.";return}
+  msg.textContent="Reading the ads…";
+  try{const r=await S.sample.json(`Split this text into separate job listings for a job board. Reply with only a JSON array (max 20 items), each item an object with these keys:
+${FORM_SCHEMA}
+Rules: Use "" or 0 for anything not stated. Never invent pay, company names, emails or links. Keep each listing in the language of its source text.
+
+TEXT:
+${txt.slice(0,30000)}`,{modelTier:"default"});
+    BULK.items=(Array.isArray(r)?r:[]).filter(o=>o&&o.title).map(o=>Object.assign({},o,{requirements:lines(o.requirements).join("\n"),benefits:lines(o.benefits).join("\n"),_on:!!(+o.salaryMin)}));
+    msg.textContent=BULK.items.length?`Found ${BULK.items.length} jobs.`:"No jobs found in that text.";renderBulk();
+  }catch(e){msg.textContent=aiError(e)}
+}
+async function bulkPublish(){
+  const pick=BULK.items.filter(o=>o._on);if(!pick.length){toast("Tick at least one job");return}
+  let ok=0;for(const o of pick){try{await publishJob(Object.assign({category:"Other",jobType:"Full-time",seniority:"Mid",workplace:"onsite",country:"Norway",currency:"EUR",salaryPeriod:"year",contact:S.settings.contactEmail||""},o,{salaryMin:+o.salaryMin||0,salaryMax:+o.salaryMax||0}));ok++;o._done=true}catch(e){}}
+  BULK.items=BULK.items.filter(o=>!o._done);renderBulk();toast(`Published ${ok} ${ok===1?"job":"jobs"}`);
+}
+
+/* ================= NAV status (public site) ================= */
+S.nav=null;
+async function loadNavState(){if(!S.db||!S.isOwner||!window.havn)return;try{const d=await S.db.doc("_sys/nav").get();S.nav=d.exists?d.data():{};renderNavPanel()}catch(e){}}
+function renderNavPanel(){const el=$("#navPanel");if(!el)return;const n=S.nav||{};
+  el.innerHTML=`<div class="row" style="justify-content:space-between"><div><div class="flabel">NAV JOB FEED</div><div style="margin-top:6px;font-size:14px">${n.lastRun?`<b class="mono">${n.navJobs??0}</b> NAV jobs live · last run ${ago(n.lastRun).toLowerCase()} · +${n.lastImported??0} / −${n.lastRemoved??0}${n.lastNote?` · ${esc(n.lastNote)}`:""}`:"Not run yet. It runs every hour once the schedule is set up."}</div></div><button class="btn btn-ghost btn-sm" type="button" data-act="nav-run">Run import now</button></div>`}
+
+/* ================= privacy ================= */
+function renderPrivacy(){const mail=S.settings.contactEmail||"the Havn team";$("#privBody").innerHTML=`
+  <p>Havn stores only what you give us to use the site.</p>
+  <h2>What we store</h2><ul>
+  <li><b>Your email</b>, when you sign in, so we can sign you in and send what you ask for.</li>
+  <li><b>Applications</b> you send with Quick apply: your name, email, phone, CV link and note. Only you and Havn's administrator can see them. We forward them to the employer you applied to.</li>
+  <li><b>Weekly digest</b>: your email and what you search for.</li>
+  <li><b>Job posts and reports</b> you send.</li>
+  <li>Saved jobs, your CV for matching and your application tracker stay <b>in your own browser</b> and are not sent to us, except when you use an AI tool: then the text needed for that answer is sent to our AI provider (Anthropic) to create the reply.</li></ul>
+  <h2>Jobs from NAV</h2><p>Some jobs come from NAV's public job database (arbeidsplassen.no). When you apply for those, you apply directly with the employer.</p>
+  <h2>Your rights</h2><p>You can ask to see, correct or delete your data at any time. Contact ${esc(mail)}.</p>`}
+
+/* ================= routing ================= */
+function setView(v){document.querySelectorAll("[data-view]").forEach(s=>s.hidden=s.id!=="v-"+v);document.querySelectorAll("[data-nav]").forEach(a=>a.removeAttribute("aria-current"));const n=document.querySelector(`[data-nav="${v}"]`);if(n)n.setAttribute("aria-current","page")}
+let lastView=null;
+function route(){
+  const h=(location.hash||"").slice(1);const changed=lastView!==h;
+  if(h.startsWith("job-")){setView("job");renderDetail(h.slice(4));if(changed)window.scrollTo(0,0)}
+  else if(h.startsWith("co-")){setView("co");renderCompany(h.slice(3));if(changed)window.scrollTo(0,0)}
+  else if(h==="employers"||h==="post"||h==="pricing"){setView("employers");document.querySelector('[data-nav="employers"]').setAttribute("aria-current","page");if(changed){if(h==="post")$("#postSection").scrollIntoView();else if(h==="pricing")$("#pricing").scrollIntoView();else window.scrollTo(0,0)}}
+  else if(h==="my"||h==="saved"){setView("my");renderMy();if(changed)window.scrollTo(0,0)}
+  else if(h==="salaries"){setView("salaries");renderSalaries();if(changed)window.scrollTo(0,0)}
+  else if(h==="compare"){setView("compare");renderCompare();if(changed)window.scrollTo(0,0)}
+  else if(h==="admin"){setView("admin");renderAdmin();if(changed)window.scrollTo(0,0)}
+  else if(h==="privacy"){setView("privacy");renderPrivacy();if(changed)window.scrollTo(0,0)}
+  else{setView("jobs");renderBoard()}
+  lastView=h;updateCounts();
+}
+window.addEventListener("hashchange",route);
+
+/* ================= events ================= */
+document.addEventListener("click",async e=>{
+  const el=e.target.closest("[data-act],#adminTabs button,#myTabs button,[data-bill]");if(!el)return;
+  if(el.closest("#adminTabs")){S.adminTab=el.dataset.tab;renderAdmin(true);return}
+  if(el.closest("#myTabs")){S.myTab=el.dataset.mytab;renderMy();return}
+  if(el.dataset.bill){S.bill=el.dataset.bill;renderPlans();return}
+  const a=el.dataset.act,id=el.dataset.id;const J=x=>S.db.doc("jobs/"+x);const job=S.jobs.find(x=>x.id===id);
+  switch(a){
+    case "close-scrim":if(e.target===el)closeModal();return;
+    case "close":closeModal();return;
+    case "save":e.preventDefault();e.stopPropagation();S.saved.has(id)?S.saved.delete(id):S.saved.add(id);store("havn.saved",[...S.saved]);toast(S.saved.has(id)?t("toast.saved"):t("toast.removed"));route();return;
+    case "share":e.preventDefault();copy(jobLink(id));return;
+    case "quick":quickApply(id);return;
+    case "report":reportModal(id);return;
+    case "copy":copy(el.dataset.text||"");return;
+    case "copybrief":copy(window.__brief||"");return;
+    case "copyel":copy(document.getElementById(id).textContent);return;
+    case "applysite":if(job){trackApplied(job);toast(t("toast.tracked"))}return;
+    case "mark-applied":if(job){trackApplied(job);toast(t("toast.tracked"));route()}return;
+    case "stage":S.track[id].stage=el.dataset.stage;store("havn.track",S.track);renderMy();return;
+    case "untrack":delete S.track[id];store("havn.track",S.track);renderMy();updateCounts();return;
+    case "mytab":S.myTab=id;return;
+    case "more":S.limit+=PAGE;renderBoard();return;
+    case "cmp":toggleCompare(id);route();return;
+    case "cmp-remove":toggleCompare(id);renderCompare();return;
+    case "cmp-clear":S.compare=[];store("havn.compare",[]);renderCompare();updateCounts();return;
+    case "ai-tool":aiToolModal(el.dataset.tool,id);return;
+    case "ask-open":askOpen();return;
+    case "signin":closeModal();window.havn?.signIn(id);return;
+    case "nav-run":{el.disabled=true;el.textContent="Running…";const r=await window.havn.invoke("nav-import");toast(r.error?"Import failed: "+(r.error.message||r.error):`Imported ${r.data?.imported??0}, removed ${r.data?.removed??0}`);loadNavState();return}
+    case "ask-close":askClose();return;
+    case "pick":{const r=document.querySelector(`#postForm input[name=tier][value="${id==="pro"?"featured":id}"]`);if(r){r.checked=true;$("#postForm").dispatchEvent(new Event("input"))}return}
+    case "chip":{const c=CHIPS.find(x=>x.id===id);const on=el.getAttribute("aria-pressed")!=="true";c.set(on);S.limit=PAGE;if(location.hash&&location.hash!=="#jobs")location.hash="jobs";renderBoard();return}
+    case "clear":writeFilters({});renderBoard();return;
+    case "digest":digestModal();return;
+    case "ai-search":aiSearch();return;
+    case "match":aiMatch();return;
+    case "ai-fill":aiFill(el.dataset.form,"paste");return;
+    case "ai-write":aiFill(el.dataset.form,"write");return;
+    case "bulk-find":bulkFind();return;
+    case "bulk-publish":bulkPublish();return;
+    case "bulk-edit":{const o=BULK.items[+id];if(!o)return;S.editing=null;const f=$("#adminForm");f.reset();fillForm(f,o);BULK.items.splice(+id,1);renderBulk();$("#adminFormTitle").scrollIntoView({block:"start"});return}
+    case "cancel-edit":S.editing=null;renderAdmin(true);return;
+    case "edit":S.editing=id;S.adminTab="overview";renderAdmin(true);return;
+    case "social":socialModal(id);return;
+    case "verify":adminAction(()=>J(id).update({verified:!job.verified}),job.verified?"Badge removed":"Marked as verified");return;
+    case "dup":adminAction(()=>S.db.collection("jobs").add(jobDoc(Object.assign({},job,{title:job.title+" (copy)"}))),"Duplicated. Edit the copy before sharing.");return;
+    case "extend":adminAction(()=>J(id).update({expiresAt:Math.max(job.expiresAt||0,now())+30*DAY,status:"active"}),"Extended 30 days");return;
+    case "closejob":adminAction(()=>J(id).update({status:"closed"}),"Job closed");return;
+    case "reopen":adminAction(()=>J(id).update({status:"active",expiresAt:now()+30*DAY}),"Job reopened");return;
+    case "del":if(el.dataset.armed){adminAction(()=>J(id).delete(),"Job deleted")}else{el.dataset.armed="1";el.textContent="Confirm delete";setTimeout(()=>{if(el.isConnected){delete el.dataset.armed;el.textContent="Delete"}},4000)}return;
+    case "approve":case "reject":{const [uid,k]=id.split("|");const r=S.requests.find(x=>x.id===uid);if(!r)return;const items=JSON.parse(JSON.stringify(r.items||{}));const it=items[k];if(!it)return;
+      if(a==="approve"){adminAction(async()=>{await publishJob(it);items[k].state="approved";await S.db.doc("requests/"+uid).set({items})},"Approved and published")}
+      else{items[k].state="rejected";adminAction(()=>S.db.doc("requests/"+uid).set({items}),"Rejected")}return}
+    case "report-close":case "report-dismiss":{const [uid,k]=id.split("|");const r=S.reports.find(x=>x.id===uid);if(!r)return;const items=JSON.parse(JSON.stringify(r.items||{}));const it=items[k];if(!it)return;items[k].state=a==="report-close"?"job closed":"dismissed";
+      adminAction(async()=>{if(a==="report-close"&&S.jobs.some(j=>j.id===it.jobId))await J(it.jobId).update({status:"closed"});await S.db.doc("reports/"+uid).set({items})},a==="report-close"?"Job closed":"Report dismissed");return}
+    case "export-apps":{const rows=[["Name","Email","Phone","CV link","Job","Company","Note","Sent"]];S.apps.forEach(x=>Object.values(x.apps||{}).forEach(v=>rows.push([x.profile?.name,x.profile?.email,x.profile?.phone,x.profile?.link,v.jobTitle,v.company,v.note,new Date(v.at).toISOString().slice(0,10)])));saveCsv("havn-applications.csv",rows);return}
+    case "export-digest":{const rows=[["Email","Search","From","Workplace","Category","Since"]];S.alerts.forEach(x=>rows.push([x.email,x.q,x.from,x.work,x.cat,new Date(x.at).toISOString().slice(0,10)]));saveCsv("havn-digest.csv",rows);return}
+    case "export-jobs":{const rows=[["Title","Company","Plan","Status","Pay","Workplace","Contact","Posted","Link"]];S.jobs.forEach(j=>rows.push([j.title,j.company,TIERS[j.tier]?.name,jobStatus(j),payText(j),j.workplace,j.contact,new Date(j.createdAt).toISOString().slice(0,10),jobLink(j.id)]));saveCsv("havn-jobs.csv",rows);return}
+  }
+});
+document.addEventListener("change",e=>{
+  const s=e.target.closest("[data-tier]");if(s){adminAction(()=>S.db.doc("jobs/"+s.dataset.tier).update({tier:s.value}),"Plan updated");return}
+  const b=e.target.closest("[data-bulk]");if(b){const o=BULK.items[+b.dataset.bulk];if(o)o._on=b.checked}
+});
+$("#searchForm").addEventListener("submit",e=>{e.preventDefault();S.limit=PAGE;if(location.hash&&location.hash!=="#jobs")location.hash="jobs";renderBoard();$("#jobList").scrollIntoView({behavior:"smooth",block:"start"})});
+let qTimer;$("#q").addEventListener("input",()=>{clearTimeout(qTimer);qTimer=setTimeout(()=>{S.limit=PAGE;renderBoard()},150)});
+["#fromWhere","#fWork","#fCat","#fType","#fLevel","#fMin","#fTz","#fSort","#fDirect","#fNoExp","#fVisa"].forEach(s=>$(s).addEventListener("change",()=>{S.limit=PAGE;renderBoard()}));
+$("#cvText").addEventListener("change",()=>store("havn.cv",$("#cvText").value));
+$("#roiSalary").addEventListener("input",renderRoi);
+$("#lang").addEventListener("change",e=>{LANG=e.target.value;store("havn.lang",LANG);applyI18n();lastView=null;route();window.havn?.refresh?.()});
+$("#askForm").addEventListener("submit",e=>{e.preventDefault();const q=$("#askInput").value.trim();if(ASK.ctl){ASK.ctl.abort();return}if(!q)return;$("#askInput").value="";askSend(q)});
+$("#askInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("#askForm").requestSubmit()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if($("#modalRoot").innerHTML)closeModal();else if(!$("#askPanel").hidden)askClose()}if(e.key==="/"&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();if(location.hash&&location.hash!=="#jobs")location.hash="jobs";$("#q").focus()}});
+
+/* ================= boot ================= */
+const fd=$("#filterDetails");const mq=matchMedia("(max-width:860px)");const syncFd=()=>{fd.open=!mq.matches};syncFd();mq.addEventListener?.("change",syncFd);
+S.saved=new Set(load("havn.saved",[]));S.track=load("havn.track",{});S.recent=load("havn.recent",[]);S.match=load("havn.match",{});S.compare=load("havn.compare",[]);
+S.lastVisit=load("havn.lastVisit",0);store("havn.lastVisit",now());
+if(Object.keys(S.match).length)$("#sortMatch").disabled=false;
+$("#lang").value=LANG;applyI18n();
+$("#cvText").value=load("havn.cv","");
+writeFilters(load("havn.filters",{}));
+renderPlans();renderRoi();
+$("#postForm").innerHTML=postFormHtml("p_",false);
+wirePostForm($("#postForm"),$("#postPreview"),$("#postQuality"),$("#postNotice"),"public");
+{const dr=load("havn.postDraft",null);if(dr&&window.havn)fillForm($("#postForm"),dr)}
+route();
+
+(async function connect(){
+  const C=window.claude;if(!C||!C.use){S.jobsLoaded=true;route();return}
+  C.use("sample").then(sm=>{if(sm){S.sample=sm;document.querySelectorAll("#aiSearchRow,#cvPanel,#aiFillPanel,[data-aionly]").forEach(e=>e.hidden=false);if($("#askPanel").hidden)$("#askFab").hidden=false}});
+  C.use("downloads").then(d=>{S.downloads=d});
+  const [db,user]=await Promise.all([C.use("db"),C.use("user")]);
+  S.db=db;S.user=user;
+  if(user){S.isOwner=await user.isOwner();S.uid=await user.id();S.canWrite=await user.can("data.write")}
+  $("#adminLink").hidden=!S.isOwner;
+  if(!db){S.jobsLoaded=true;route();return}
+  db.collection("jobs").onSnapshot(snap=>{S.jobs=snap.docs.map(d=>Object.assign({id:d.id},d.data()));S.jobsLoaded=true;route()},()=>{S.jobsLoaded=true;route()});
+  db.doc("site/settings").onSnapshot(d=>{S.settings=d.exists?d.data():{}});
+  if(S.uid){
+    db.doc("applications/"+S.uid).get().then(d=>{if(d.exists){S.myApps=Object.assign({},d.data().apps||{});route()}}).catch(()=>{});
+    db.doc("requests/"+S.uid).get().then(d=>{if(d.exists)S.myRequests=Object.assign({},d.data().items||{})}).catch(()=>{});
+    db.doc("reports/"+S.uid).get().then(d=>{if(d.exists)S.myReports=Object.assign({},d.data().items||{})}).catch(()=>{});
+  }
+  if(S.isOwner){
+    loadNavState();
+    const rer=()=>{updateAdminCount();if(location.hash==="#admin")renderAdmin()};
+    db.collection("applications").onSnapshot(s=>{S.apps=s.docs.map(d=>Object.assign({id:d.id},d.data()));rer()});
+    db.collection("requests").onSnapshot(s=>{S.requests=s.docs.map(d=>Object.assign({id:d.id},d.data()));rer()});
+    db.collection("alerts").onSnapshot(s=>{S.alerts=s.docs.map(d=>Object.assign({id:d.id},d.data()));rer()});
+    db.collection("reports").onSnapshot(s=>{S.reports=s.docs.map(d=>Object.assign({id:d.id},d.data()));rer()});
+  }
+})();
+})();
+</script>
+</body></html>
