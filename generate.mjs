@@ -26,7 +26,7 @@ function payText(j) {
   if (!a && !b) {
     if (!j.payEst) return "";
     const f = (n) => new Intl.NumberFormat("nb-NO").format(n);
-    return `ca. ${f(j.payEst.min)}–${f(j.payEst.max)} kr/år (estimat)`;
+    return `ca. ${f(j.payEst.min)}–${f(j.payEst.max)} kr/år (estimat · vanlig lønn, ikke bekreftet)`;
   }
   const per = { year: "/år", month: "/mnd", hour: "/time" }[j.salaryPeriod] || "";
   const f = (n) => new Intl.NumberFormat("nb-NO").format(n);
