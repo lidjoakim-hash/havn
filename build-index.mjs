@@ -86,8 +86,10 @@ const intl = (j) => {
   return (j.langs || []).includes("English") && !(j.langs || []).includes("Norwegian") && !(j.langs || []).includes("Swedish");
 };
 const files = [];
-for (let i = 0; i < shown.length; i += ROWS_PER_FILE) {
-  const rows = shown.slice(i, i + ROWS_PER_FILE).map((j) => COLS.map((c) => {
+// first file = the newest 400 jobs (small, so phones can show the list fast), then big files
+const cuts = [0, Math.min(400, shown.length)]; while (cuts[cuts.length - 1] < shown.length) cuts.push(Math.min(cuts[cuts.length - 1] + ROWS_PER_FILE, shown.length));
+for (let k = 0; k + 1 < cuts.length; k++) {
+  const rows = shown.slice(cuts[k], cuts[k + 1]).map((j) => COLS.map((c) => {
     const v = c === "_intl" ? intl(j) : j[c];
     return v === "" || v === false || v === 0 || v === undefined || (Array.isArray(v) && !v.length) ? null : v;
   }));

@@ -1606,11 +1606,14 @@ function renderPrivacy(){const mail=S.settings.contactEmail||"the Havn team";$("
   <h2>Jobs from NAV</h2><p>Some jobs come from NAV's public job database (arbeidsplassen.no). When you apply for those, you apply directly with the employer.</p>
   <h2>Your rights</h2><p>You can ask to see, correct or delete your data at any time. Contact ${esc(mail)}.</p>`}
 
-async function loadIndex(){
+async function loadIndex(onFirst){
   const p=await fetch("data/pointer.json?t="+Math.floor(Date.now()/300000),{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("pointer "+r.status);return r.json()});
   const base=`https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
-  const parts=await Promise.all(p.files.map(f=>fetch(base+f).then(r=>{if(!r.ok)throw new Error(f+" "+r.status);return r.json()})));
-  const out=[];for(const {cols,rows} of parts)for(const r of rows){const o={_payDone:true};for(let i=0;i<cols.length;i++){const v=r[i];if(v!==null)o[cols[i]]=v}if(!o.seniority)o.seniority="Mid";if(!o.status)o.status="active";out.push(o)}
+  const get=f=>fetch(base+f).then(r=>{if(!r.ok)throw new Error(f+" "+r.status);return r.json()});
+  const rowsOf=({cols,rows})=>rows.map(r=>{const o={_payDone:true};for(let i=0;i<cols.length;i++){const v=r[i];if(v!==null)o[cols[i]]=v}if(!o.seniority)o.seniority="Mid";if(!o.status)o.status="active";return o});
+  // the first file holds the newest few hundred jobs, so the list can show before the rest arrives (slow phones)
+  const rest=p.files.slice(1).map(get);const first=rowsOf(await get(p.files[0]));S.indexMeta=p;if(onFirst&&rest.length)onFirst(first);
+  const out=first.concat(...(await Promise.all(rest)).map(rowsOf));
   S.indexMeta=p;return out}
 /* ================= routing ================= */
 function setView(v){document.querySelectorAll("[data-view]").forEach(s=>s.hidden=s.id!=="v-"+v);document.querySelectorAll("[data-nav]").forEach(a=>a.removeAttribute("aria-current"));const n=document.querySelector(`[data-nav="${v}"]`);if(n)n.setAttribute("aria-current","page")}
@@ -1730,7 +1733,7 @@ route();
   if(!db){S.jobsLoaded=true;route();return}
   // Imported jobs come from the compact job index on a free CDN (fast, light); jobs posted on Havn come live from the database.
   let IDX=null,OWN=[];const merge=()=>{S.jobs=(IDX||[]).concat(OWN);S.jobsLoaded=true;route()};
-  IDX=await loadIndex().catch(e=>{console.warn("Havn index unavailable, loading from database",e);return null});
+  IDX=await loadIndex(part=>{IDX=part;merge()}).catch(e=>{console.warn("Havn index unavailable, loading from database",e);return null});
   if(IDX)window.HAVN_OWN_ONLY=true;
   db.collection("jobs").onSnapshot(snap=>{OWN=snap.docs.map(d=>{const j=Object.assign({id:d.id},d.data());return window.enrichPay?enrichPay(j):j});merge()},()=>{merge()});
   if(IDX)merge();
