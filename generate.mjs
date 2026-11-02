@@ -2,7 +2,8 @@
 // Builds a plain HTML page for every open job (with Google "JobPosting" data),
 // city and category pages, an all-jobs index and a sitemap, so search engines can find Havn.
 // Also writes health.json so the workflow can warn if the NAV import has stopped.
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile, readFile } from "node:fs/promises";
+const { enrichPay } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay };`)();
 
 const SUPABASE_URL = "https://cybrexiizqgbbtnddzjn.supabase.co";
 const KEY = "sb_publishable_i0s_T4iaXgZLrvf_x_hX5g_fLkxvZGF";
@@ -22,10 +23,14 @@ const COUNTRY_CODE = { Norway: "NO", Romania: "RO", Sweden: "SE", Denmark: "DK",
 
 function payText(j) {
   const a = +j.salaryMin || 0, b = +j.salaryMax || 0;
-  if (!a && !b) return "";
+  if (!a && !b) {
+    if (!j.payEst) return "";
+    const f = (n) => new Intl.NumberFormat("nb-NO").format(n);
+    return `ca. ${f(j.payEst.min)}–${f(j.payEst.max)} kr/år (estimat)`;
+  }
   const per = { year: "/år", month: "/mnd", hour: "/time" }[j.salaryPeriod] || "";
   const f = (n) => new Intl.NumberFormat("nb-NO").format(n);
-  return `${a && b && a !== b ? f(a) + "–" + f(b) : f(a || b)} ${j.currency || ""}${per}`;
+  return `${a && b && a !== b ? f(a) + "–" + f(b) : f(a || b)} ${j.currency || ""}${per}${j.paySrc === "ad" ? " (fra annonsen)" : ""}`;
 }
 
 async function fetchJobs() {
@@ -113,6 +118,7 @@ function jobPage(j) {
 <div class="desc">${esc(descText)}</div>
 ${req.length ? `<h2>Dette tar du med deg</h2><ul>${req.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
 ${ben.length ? `<h2>Dette får du</h2><ul>${ben.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
+${j.paySrc === "est" ? `<p class="meta">Lønnen er ikke oppgitt i annonsen. Estimatet viser vanlig årslønn for lignende heltidsjobber i Norge (SSB og offentlige lønnstabeller), og er ikke et tilbud fra arbeidsgiveren.</p>` : ""}
 ${isNav && j.sourceUrl ? `<p class="meta">Annonsen kommer fra NAVs offentlige stillingsdatabase. <a href="${esc(j.sourceUrl)}" rel="nofollow noopener" target="_blank">Se original annonse på arbeidsplassen.no</a></p>` : ""}`;
   const description = `${j.title} hos ${j.company}${where ? " i " + where : ""}. ${pay ? "Lønn: " + pay + ". " : ""}${descText.replace(/\s+/g, " ").slice(0, 120)}`;
   return page({ title: `${j.title} – ${j.company}${j.location ? " – " + j.location : ""} | Havn`, description, canonical, body, jsonld });
@@ -194,7 +200,7 @@ async function put(path, html) {
   await writeFile(`${dir}index.html`, html);
 }
 
-const all = await fetchJobs();
+const all = (await fetchJobs()).map(enrichPay);
 const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now);
 console.log(`Jobs: ${all.length} total, ${live.length} live`);
 

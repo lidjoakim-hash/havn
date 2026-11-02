@@ -7,7 +7,7 @@ function payNum(s) {
   return +s.replace(",", ".").replace(/[^\d.]/g, "") || 0;
 }
 const PAY_NUM = String.raw`(\d{1,3}(?:[ .  ,']\d{3})+|\d{2,7})(?:[.,]\d{1,2})?`;
-const PAY_RANGE = String.raw`${PAY_NUM}(?:\s*(?:-|–|—|til|to)\s*(?:kr\.?\s*|nok\s*)?${PAY_NUM})?`;
+const PAY_RANGE = String.raw`${PAY_NUM}(?:\s*(?:,-|kr\.?|nok|kroner)?\s*(?:[-–—]\s*(?:til|to)?|til|to|og|and)\s*(?:kr\.?\s*|nok\s*)?${PAY_NUM})?`;
 const PAY_PER = String.raw`\s*(?:kr\.?|nok|kroner|,-)?\s*(?:\/|per|pr\.?|i|a|an)\s*(timen|time|t|hour|h|måneden|måned|mnd|month|md|året|år|year|annum)\b`;
 const PAY_RE = [
   new RegExp(String.raw`(?:kr\.?\s*|nok\s*)?${PAY_RANGE}${PAY_PER}`, "gi"),
@@ -47,7 +47,8 @@ const PAY_EST = [
   [/(pedagogisk leder|pedagogisk leiar|barnehagelærer|barnehagelærar|preschool teacher)/, 560000, 640000],
   [/(daglig leder|daglig leiar|direktør|director|regionsjef|konsernsjef|kommunalsjef)/, 850000, 1200000],
   [/(butikksjef|butikkleder|restaurantsjef|kjøkkensjef|assisterende|nestleder|skiftleder|formann|arbeidsleder|store manager)/, 550000, 700000],
-  [/(rektor|avdelingsleder|avdelingsleiar|enhetsleder|einingsleiar|seksjonsleder|seksjonsleiar|virksomhetsleder|driftsleder|teamleder|(?<![a-zæøå])leder|(?<![a-zæøå])leiar|manager|sjef)/, 700000, 950000],
+  [/(rektor|avdelingsleder|avdelingsleiar|enhetsleder|einingsleiar|seksjonsleder|seksjonsleiar|virksomhetsleder|driftsleder|teamleder)/, 650000, 900000],
+  [/((?<!vei|prosjekt)leder\b|(?<!rett|prosjekt)leiar\b|manager|sjef)/, 580000, 800000],
   [/(jordmor|helsesykepleier|helsesjukepleiar|spesialsykepleier|intensivsykepleier|anestesisykepleier|operasjonssykepleier|fagutviklingssykepleier)/, 680000, 780000],
   [/(sykepleier|sjukepleiar|sykepleiar|nurse)/, 620000, 710000],
   [/(vernepleier|vernepleiar|miljøterapeut|barnevernspedagog|barnevernskonsulent|sosionom|social worker)/, 590000, 670000],
@@ -58,6 +59,7 @@ const PAY_EST = [
   [/(postdoktor|postdoc|forsker|researcher|førsteamanuensis|professor|universitetslektor)/, 640000, 820000],
   [/(lektor|lærer|lærar|adjunkt|teacher|spesialpedagog|instruktør)/, 600000, 720000],
   [/(barnehageassistent|barne- og ungdomsarbeider|barnehagemedarbeider|fagarbeider i barnehage|assistent i barnehage|skoleassistent|assistent skole)/, 430000, 520000],
+  [/(salgsrådgiver|kunderådgiver|salgs- og kunderådgiver|salgs- og kunderådgjevar|bilselger|kundeveileder)/, 430000, 530000],
   [/(seniorrådgiver|seniorrådgjevar|senior adviser|senior advisor)/, 780000, 920000],
   [/(jurist|advokat|lawyer|legal counsel)/, 680000, 900000],
   [/(utvikler|developer|programmerer|devops|software|data scientist|dataingeniør|it-arkitekt|platform engineer|systemutvikler|cyber|sikkerhetsrådgiver|it-konsulent|ikt-konsulent)/, 700000, 950000],
