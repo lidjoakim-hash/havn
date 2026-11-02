@@ -1,0 +1,60 @@
+name: Havn marketing drafts
+
+on:
+  schedule:
+    - cron: "7 5 * * *"   # every morning, about 06:00–07:00 in Norway
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: havn-marketing
+  cancel-in-progress: false
+
+jobs:
+  drafts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Previous drafts
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: marketing-drafts
+          path: drafts
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Tools
+        run: |
+          npm i --no-save --no-package-lock playwright-core@1.48.2
+          which ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+      - name: Make today's drafts
+        env:
+          OUT_DIR: drafts
+          CHROME_CHANNEL: chrome
+        run: node marketing.mjs
+      - name: Keep the last 10 days and publish drafts branch
+        id: drafts
+        run: |
+          cd drafts
+          rm -rf .git
+          ls -d 20??-??-?? 2>/dev/null | sort -r | tail -n +11 | xargs -r rm -rf
+          git init -q -b marketing-drafts
+          git config user.name "havn-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "Marketing drafts"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" marketing-drafts
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Update review page
+        run: |
+          node marketing-index.mjs drafts "${{ steps.drafts.outputs.sha }}"
+          git config user.name "havn-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add marketing/index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -qm "Update marketing review page"
+          git pull -q --rebase origin main
+          git push -q
