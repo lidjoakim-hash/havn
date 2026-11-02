@@ -958,10 +958,11 @@ function shareRow(j){
     <a href="https://wa.me/?text=${encodeURIComponent(text+" "+url)}" target="_blank" rel="noopener">WhatsApp</a>
     <a href="#" data-act="share" data-id="${esc(j.id)}">${esc(t("d.link"))}</a></div></div>`;
 }
+function cleanText(v){if(typeof v!=="string"||!/[<&][a-z#\/]/i.test(v))return v;const dec=x=>x.replace(/&#(\d+);/g,(m,n)=>String.fromCharCode(+n)).replace(/&#x([0-9a-f]+);/gi,(m,n)=>String.fromCharCode(parseInt(n,16))).replace(/&nbsp;/g," ").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;|&apos;|&rsquo;|&lsquo;/g,"'").replace(/&ndash;|&mdash;/g,"–").replace(/&amp;/g,"&");const strip=x=>x.replace(/<\s*(br|\/p|\/div|\/li|\/h\d|\/ul|hr)\s*\/?>/gi,"\n").replace(/<\s*li[^>]*>/gi,"• ").replace(/<[^>]+>/g,"");return dec(strip(dec(strip(v)))).replace(/\u00a0/g," ").replace(/[ \t]+/g," ").replace(/ *\n */g,"\n").replace(/\n{3,}/g,"\n\n").trim()}
 function renderDetail(id){
   const box=$("#jobDetail");const j=S.jobs.find(x=>x.id===id);
   if(!j){box.innerHTML=S.jobsLoaded?`<div class="section"><a class="back" href="#jobs">${esc(t("d.back"))}</a><div class="empty" style="margin-top:20px"><h3>${esc(t("d.gone.h"))}</h3><p>${esc(t("d.gone.p"))}</p><a class="btn btn-primary" href="#jobs">${esc(t("d.see"))}</a></div></div>`:`<div class="section"><div class="empty"><h3>${esc(t("loading"))}</h3></div></div>`;return}
-  if(j.hasText&&!j._textLoaded&&S.db){if(!j._textLoading){j._textLoading=true;S.db.doc("jobtext/"+id).get().then(d=>{const x=d.exists?d.data():{};j.description=x.description||j.summary||"";j.requirements=x.requirements||j.requirements;j.benefits=x.benefits||j.benefits;j._textLoaded=true;if(location.hash==="#job-"+id)renderDetail(id)}).catch(()=>{j._textLoaded=true;j.description=j.summary||""})}if(!j.description)j.description=t("d.loadtext")}
+  if(j.hasText&&!j._textLoaded&&S.db){if(!j._textLoading){j._textLoading=true;S.db.doc("jobtext/"+id).get().then(d=>{const x=d.exists?d.data():{};j.description=cleanText(x.description||j.summary||"");j.requirements=cleanText(x.requirements)||j.requirements;j.benefits=cleanText(x.benefits)||j.benefits;j._textLoaded=true;if(location.hash==="#job-"+id)renderDetail(id)}).catch(()=>{j._textLoaded=true;j.description=j.summary||""})}if(!j.description)j.description=t("d.loadtext")}
   S.recent=[id,...S.recent.filter(x=>x!==id)].slice(0,8);store("havn.recent",S.recent);
   const st=jobStatus(j);const left=daysLeft(j);const applied=S.myApps[j.id]||S.track[j.id];
   const req=lines(j.requirements),ben=lines(j.benefits);const m=S.match[j.id];
@@ -986,7 +987,7 @@ function renderDetail(id){
       <div class="tags" style="margin-top:14px">${badges(j)}${j.seniority?`<span class="tag">${esc(vt(j.seniority))}</span>`:""}${(j.languages||"").split(",").map(s=>s.trim()).filter(Boolean).map(l=>`<span class="tag">${esc(l)}</span>`).join("")}</div>
       ${m?`<div class="notice" style="margin-top:16px"><b>${esc(t("d.match",{n:Math.round(m.score)}))}</b> ${esc(m.reason||"")}</div>`:""}
       <div class="prose">
-        <h2>${esc(t("d.about"))}</h2><p>${esc(j.description)}</p>
+        <h2>${esc(t("d.about"))}</h2><p>${esc(cleanText(j.description))}</p>
         ${req.length?`<h2>${esc(t("d.bring"))}</h2><ul>${req.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
         ${ben.length?`<h2>${esc(t("d.get"))}</h2><ul>${ben.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}
         ${j.process||j.replyDays?`<h2>${esc(t("d.process"))}</h2><p>${esc(j.process||"")}${j.replyDays?`${j.process?"\n":""}${esc(t("d.promise",{co:j.company,n:j.replyDays}))}`:""}</p>`:""}

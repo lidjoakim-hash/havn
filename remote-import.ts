@@ -24,11 +24,10 @@ function decode(s: string) {
     .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;|&apos;|&rsquo;|&lsquo;/g, "'").replace(/&ndash;|&mdash;/g, "–");
 }
 function htmlToText(html: string): string {
-  return decode(String(html || "")
-    .replace(/<\s*(br|\/p|\/div|\/li|\/h\d)\s*\/?>/gi, "\n")
-    .replace(/<\s*li[^>]*>/gi, "• ")
-    .replace(/<[^>]+>/g, ""))
-    .replace(/[ \t]+/g, " ").replace(/\n\s*\n\s*\n+/g, "\n\n").trim();
+  // some sources send HTML that is itself entity-escaped (&lt;p&gt;), so strip, decode, then strip again
+  const strip = (h: string) => h.replace(/<\s*(br|\/p|\/div|\/li|\/h\d|\/ul|hr)\s*\/?>/gi, "\n").replace(/<\s*li[^>]*>/gi, "• ").replace(/<[^>]+>/g, "");
+  return decode(strip(decode(strip(String(html || "")))))
+    .replace(/ /g, " ").replace(/[ \t]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 function category(text: string): string {
   const t = text.toLowerCase();
