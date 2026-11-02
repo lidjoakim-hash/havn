@@ -103,10 +103,10 @@ function payEstimate(j) {
 function enrichPay(j) {
   if (j._payDone) return j; j._payDone = true;
   if (+j.salaryMin || +j.salaryMax) { j.paySrc = j.paySrc || "listed"; return j; }
-  if (j.country && j.country !== "Norway") return j;
+  if (j.country !== "Norway") return j; // pay rules and estimates are for Norwegian jobs only
   const found = payFromText(`${j.title || ""}\n${j.description || ""}\n${j.benefits || ""}`);
   if (found) { j.salaryMin = found.min; j.salaryMax = found.max; j.salaryPeriod = found.period; j.currency = "NOK"; j.paySrc = "ad"; return j; }
   const est = payEstimate(j);
-  if (est && (!j.country || j.country === "Norway")) { j.payEst = est; j.paySrc = "est"; }
+  if (est) { j.payEst = est; j.paySrc = "est"; }
   return j;
 }
