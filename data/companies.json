@@ -1348,5 +1348,385 @@
 "p": "rc",
 "t": "holded",
 "name": "Holded"
+},
+{
+"p": "gh",
+"t": "dremio",
+"name": "Dremio"
+},
+{
+"p": "gh",
+"t": "singlestore",
+"name": "SingleStore"
+},
+{
+"p": "gh",
+"t": "yugabyte",
+"name": "Yugabyte"
+},
+{
+"p": "gh",
+"t": "starburst",
+"name": "Starburst"
+},
+{
+"p": "gh",
+"t": "circleci",
+"name": "CircleCI"
+},
+{
+"p": "gh",
+"t": "imply",
+"name": "Imply"
+},
+{
+"p": "gh",
+"t": "roku",
+"name": "Roku"
+},
+{
+"p": "gh",
+"t": "twitch",
+"name": "Twitch"
+},
+{
+"p": "gh",
+"t": "glossier",
+"name": "Glossier"
+},
+{
+"p": "gh",
+"t": "zocdoc",
+"name": "Zocdoc"
+},
+{
+"p": "gh",
+"t": "oscar",
+"name": "Oscar Health"
+},
+{
+"p": "gh",
+"t": "boxinc",
+"name": "Box"
+},
+{
+"p": "gh",
+"t": "digitalocean98",
+"name": "DigitalOcean"
+},
+{
+"p": "gh",
+"t": "chainguard",
+"name": "Chainguard"
+},
+{
+"p": "gh",
+"t": "tanium",
+"name": "Tanium"
+},
+{
+"p": "gh",
+"t": "dashlane",
+"name": "Dashlane"
+},
+{
+"p": "gh",
+"t": "proton",
+"name": "Proton"
+},
+{
+"p": "gh",
+"t": "blockchain",
+"name": "Blockchain.com"
+},
+{
+"p": "gh",
+"t": "ripple",
+"name": "Ripple"
+},
+{
+"p": "gh",
+"t": "consensys",
+"name": "Consensys"
+},
+{
+"p": "gh",
+"t": "fireblocks",
+"name": "Fireblocks"
+},
+{
+"p": "gh",
+"t": "vtex",
+"name": "VTEX"
+},
+{
+"p": "gh",
+"t": "quintoandar",
+"name": "QuintoAndar"
+},
+{
+"p": "gh",
+"t": "gympass",
+"name": "Wellhub"
+},
+{
+"p": "gh",
+"t": "stone",
+"name": "Stone"
+},
+{
+"p": "gh",
+"t": "ebanx",
+"name": "EBANX"
+},
+{
+"p": "gh",
+"t": "solarisbank",
+"name": "Solaris"
+},
+{
+"p": "gh",
+"t": "commercetools",
+"name": "commercetools"
+},
+{
+"p": "gh",
+"t": "staffbase",
+"name": "Staffbase"
+},
+{
+"p": "gh",
+"t": "ivalua",
+"name": "Ivalua"
+},
+{
+"p": "ab",
+"t": "forto",
+"name": "Forto"
+},
+{
+"p": "ab",
+"t": "ledger",
+"name": "Ledger"
+},
+{
+"p": "ab",
+"t": "backmarket",
+"name": "Back Market"
+},
+{
+"p": "ab",
+"t": "qonto",
+"name": "Qonto"
+},
+{
+"p": "ab",
+"t": "shift",
+"name": "Shift Technology"
+},
+{
+"p": "ab",
+"t": "doctolib",
+"name": "Doctolib"
+},
+{
+"p": "ab",
+"t": "pennylane",
+"name": "Pennylane"
+},
+{
+"p": "ab",
+"t": "sorare",
+"name": "Sorare"
+},
+{
+"p": "ab",
+"t": "ogury",
+"name": "Ogury"
+},
+{
+"p": "lv",
+"t": "younited",
+"name": "Younited"
+},
+{
+"p": "tt",
+"t": "tibber",
+"name": "Tibber"
+},
+{
+"p": "tt",
+"t": "spond",
+"name": "Spond"
+},
+{
+"p": "tt",
+"t": "itera",
+"name": "Itera"
+},
+{
+"p": "tt",
+"t": "remarkable",
+"name": "reMarkable"
+},
+{
+"p": "tt",
+"t": "vipps",
+"name": "Vipps MobilePay"
+},
+{
+"p": "tt",
+"t": "norlandia",
+"name": "Norlandia"
+},
+{
+"p": "tt",
+"t": "fremtind",
+"name": "Fremtind"
+},
+{
+"p": "tt",
+"t": "sats",
+"name": "SATS"
+},
+{
+"p": "tt",
+"t": "storytel",
+"name": "Storytel"
+},
+{
+"p": "tt",
+"t": "sellpy",
+"name": "Sellpy"
+},
+{
+"p": "tt",
+"t": "tradera",
+"name": "Tradera"
+},
+{
+"p": "tt",
+"t": "templafy",
+"name": "Templafy"
+},
+{
+"p": "tt",
+"t": "podimo",
+"name": "Podimo"
+},
+{
+"p": "tt",
+"t": "monese",
+"name": "Monese"
+},
+{
+"p": "tt",
+"t": "starship",
+"name": "Starship Technologies"
+},
+{
+"p": "tt",
+"t": "norgesgruppen",
+"name": "NorgesGruppen"
+},
+{
+"p": "tt",
+"t": "rema1000",
+"name": "REMA 1000"
+},
+{
+"p": "tt",
+"t": "drdropin",
+"name": "Dr.Dropin"
+},
+{
+"p": "tt",
+"t": "apotek1",
+"name": "Apotek 1"
+},
+{
+"p": "tt",
+"t": "intersport",
+"name": "Intersport"
+},
+{
+"p": "tt",
+"t": "vitusapotek",
+"name": "Vitusapotek"
+},
+{
+"p": "tt",
+"t": "power",
+"name": "POWER"
+},
+{
+"p": "tt",
+"t": "fjordkraft",
+"name": "Fjordkraft"
+},
+{
+"p": "tt",
+"t": "veidekke",
+"name": "Veidekke"
+},
+{
+"p": "tt",
+"t": "lindex",
+"name": "Lindex"
+},
+{
+"p": "tt",
+"t": "maersk",
+"name": "Maersk"
+},
+{
+"p": "tt",
+"t": "securitas",
+"name": "Securitas"
+},
+{
+"p": "tt",
+"t": "matas",
+"name": "Matas"
+},
+{
+"p": "tt",
+"t": "doktor",
+"name": "Doktor.se"
+},
+{
+"p": "tt",
+"t": "mindler",
+"name": "Mindler"
+},
+{
+"p": "tt",
+"t": "hemfrid",
+"name": "Hemfrid"
+},
+{
+"p": "tt",
+"t": "mathem",
+"name": "Mathem"
+},
+{
+"p": "sr",
+"t": "Kpn",
+"name": "KPN"
+},
+{
+"p": "sr",
+"t": "Asos",
+"name": "ASOS"
+},
+{
+"p": "sr",
+"t": "Asics",
+"name": "ASICS"
+},
+{
+"p": "sr",
+"t": "Dominos",
+"name": "Domino's"
 }
 ]
