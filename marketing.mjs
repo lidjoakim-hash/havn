@@ -9,7 +9,7 @@ import { execFileSync } from "node:child_process";
 
 const SUPABASE_URL = "https://cybrexiizqgbbtnddzjn.supabase.co";
 const KEY = "sb_publishable_i0s_T4iaXgZLrvf_x_hX5g_fLkxvZGF";
-const SITE = process.env.HAVN_SITE || "https://lidjoakim-hash.github.io/havn";
+const SITE = process.env.HAVN_SITE || "https://havncareerhub.com";
 const OUT = process.env.OUT_DIR || "drafts";
 const now = Date.now();
 const DAY = 86400000;

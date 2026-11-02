@@ -7,7 +7,7 @@ const { enrichPay } = new Function(`${await readFile(new URL("./pay-core.js", im
 
 const SUPABASE_URL = "https://cybrexiizqgbbtnddzjn.supabase.co";
 const KEY = "sb_publishable_i0s_T4iaXgZLrvf_x_hX5g_fLkxvZGF";
-const SITE = "https://lidjoakim-hash.github.io/havn";
+const SITE = "https://havncareerhub.com";
 const now = Date.now();
 const DAY = 86400000;
 
