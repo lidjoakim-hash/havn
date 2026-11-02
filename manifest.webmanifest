@@ -1,0 +1,26 @@
+{
+  "name": "Havn – Jobs in Norway & Europe",
+  "short_name": "Havn",
+  "description": "Calm job search: jobs in Norway, Romania and remote across Europe, with the pay shown. Free for job seekers.",
+  "id": "./",
+  "start_url": "./?source=app",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F1E7",
+  "theme_color": "#F6F1E7",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Find jobs", "url": "./#jobs", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Work in Norway (no Norwegian needed)", "url": "./?intl=1", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "My jobs", "url": "./#my", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Post a job", "url": "./#post", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

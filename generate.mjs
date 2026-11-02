@@ -71,7 +71,7 @@ const UI = {
 function page({ title, description, canonical, body, jsonld, lang = "nb", alternates = null }) {
   const u = UI[lang] || UI.nb;
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(canonical)}">
+<title>${esc(title)}</title><link rel="icon" href="${SITE}/icons/favicon-32.png"><link rel="apple-touch-icon" href="${SITE}/icons/apple-touch-icon.png"><link rel="manifest" href="${SITE}/manifest.webmanifest"><meta name="theme-color" content="#F6F1E7"><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(canonical)}">
 ${alternates ? Object.entries(alternates).map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="${h}">`).join("") : ""}
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:site_name" content="Havn">
 ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>` : ""}
@@ -243,6 +243,10 @@ await put(GUIDE.en.path, guidePage(GUIDE.en, intl, GUIDE.ro.path));
 await put(GUIDE.ro.path, guidePage(GUIDE.ro, intl, GUIDE.en.path));
 urls.push(`${SITE}${GUIDE.en.path}`, `${SITE}${GUIDE.ro.path}`);
 console.log(`International jobs: ${intl.length}`);
+
+// small sample of real jobs (used for app-store screenshots and previews)
+await writeFile("jobs-sample.json", JSON.stringify(live.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 80).map((j) => ({ ...j, description: String(j.description || "").slice(0, 1500) }))));
+urls.push(`${SITE}/privacy.html`);
 
 const lastmod = new Date().toISOString().slice(0, 10);
 await writeFile("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `<url><loc>${u}</loc><lastmod>${lastmod}</lastmod></url>`).join("\n")}\n</urlset>\n`);
