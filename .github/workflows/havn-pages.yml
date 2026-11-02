@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "23 */3 * * *"
   workflow_dispatch:
+    inputs:
+      full:
+        description: "Rebuild every job page (1)"
+        required: false
+        default: "0"
 
 permissions:
   contents: write
@@ -21,6 +26,8 @@ jobs:
         with:
           node-version: "20"
       - name: Build job pages
+        env:
+          FULL: ${{ github.event.inputs.full || '0' }}
         run: node generate.mjs
       - name: Publish changes
         run: |
