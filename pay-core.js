@@ -162,38 +162,75 @@ function seniorityOf(j, text) {
   if (/([5-9]\+?\s*(years|års|år)|minst [5-9] år|at least [5-9] years)/.test(x)) return "Senior";
   return "Mid";
 }
-const LANGS = [["Norwegian", /(norsk|norwegian|skandinavisk|scandinavian)/], ["English", /(english|engelsk|englisch)/], ["German", /(german|deutsch|tysk)/], ["Swedish", /(swedish|svensk)/], ["Danish", /(danish|dansk)/],
+const LANGS = [["Norwegian", /(norsk|norwegian)/], ["English", /(english|engelsk|englisch)/], ["German", /(german|deutsch|tysk)/], ["Swedish", /(swedish|svensk)/], ["Danish", /(danish|dansk)/],
   ["Polish", /(polish|polsk|polski)/], ["Romanian", /(romanian|rumensk|română|limba română)/], ["French", /(french|fransk|français)/], ["Spanish", /(spanish|spansk|español)/], ["Dutch", /(dutch|nederlands)/], ["Lithuanian", /(lithuanian|litauisk)/], ["Ukrainian", /(ukrainian|ukrainsk)/]];
+// Language of the ad text itself, from words that are typical for one language only (shared words like "vi", "med", "som", "på" are left out on purpose).
+const STOP = {
+  Norwegian: /^(og|ikke|ikkje|eller|deg|dere|skal|vår|våre|også|hos|stilling|arbeidsoppgaver|søker|søknad|frå|vere|eit|ein|kvalifikasjoner|erfaring)$/,
+  Swedish: /^(och|att|är|inte|för|ett|eller|dig|ska|vår|våra|också|hos|tjänst|arbetsuppgifter|söker|ansökan|erfarenhet|kvalifikationer|av|kommer|samt)$/,
+  Danish: /^(og|ikke|eller|dig|skal|vores|også|hos|stilling|arbejdsopgaver|søger|ansøgning|erfaring|af|jeg|kan|være|med)$/,
+  English: /^(the|and|you|we|with|our|will|your|are|this|for|of)$/,
+  German: /^(und|die|der|wir|sie|mit|für|das|ist|ihre|bei|nicht)$/,
+  Romanian: /^(și|în|pentru|cu|este|sau|care|la)$/, Polish: /^(jest|oraz|dla|się|nie|lub)$/,
+};
 function adLanguage(text) {
-  const c = { Norwegian: 0, English: 0, German: 0, Swedish: 0, Romanian: 0, Polish: 0 };
-  for (const w of String(text || "").toLowerCase().split(/[^a-zæøåäöüßăâîșț]+/)) {
-    if (/^(og|du|vi|med|er|på|som|har|deg|ikke|ikkje|eller|hos|skal|eg|ein|eit|frå|vere|til|av|vår|våre)$/.test(w)) c.Norwegian++;
-    else if (/^(the|and|you|we|with|our|will|your|are|this)$/.test(w)) c.English++;
-    else if (/^(und|die|der|wir|sie|mit|für|das|ist|ihre|bei)$/.test(w)) c.German++;
-    else if (/^(och|att|vi|med|är|för|som|på|inte)$/.test(w)) c.Swedish++;
-    else if (/^(și|în|pentru|cu|este|sau|care|la)$/.test(w)) c.Romanian++;
-    else if (/^(i|w|z|na|do|jest|oraz|dla)$/.test(w)) c.Polish++;
-  }
+  const c = {}; for (const k in STOP) c[k] = 0;
+  const words = String(text || "").toLowerCase().split(/[^a-zæøåäöüßăâîșț]+/);
+  for (const w of words) for (const k in STOP) if (STOP[k].test(w)) c[k]++;
+  // Norwegian vs Danish share many words; letters and spellings decide it
+  const x = String(text || "").toLowerCase();
+  if (/\b(af|jeg|vores|arbejde|virksomhed|medarbejder)\b/.test(x)) c.Danish += 3;
+  if (/\b(ikke|arbeid|bedrift|medarbeider|stillingen)\b/.test(x)) c.Norwegian += 2;
+  if (/[äö]/.test(x)) c.Swedish += 3; if (/[æø]/.test(x)) { c.Norwegian += 2; c.Danish += 2; }
   const best = Object.entries(c).sort((a, b) => b[1] - a[1])[0];
-  return best[1] >= 2 ? best[0] : "";
+  return best[1] >= 3 ? best[0] : "";
 }
 function languagesOf(j, text) {
   const hay = `${j.title || ""} ${j.languages || ""} ${text || ""}`.toLowerCase();
-  const need = LANGS.filter(([, re]) => re.test(hay)).map(([n]) => n);
   const ad = adLanguage(`${j.title || ""} ${text || ""}`);
-  if (ad === "Swedish" && j.country === "Norway") return need.length ? need : ["Norwegian"];
-  if (!need.length && ad) need.push(ad);
-  if (!need.length && ["jobicy", "ats"].includes(j.source)) need.push("English");
-  if (!need.length && j.source === "nav") need.push("Norwegian");
-  if (ad && !need.includes(ad) && ad !== "Swedish") need.unshift(ad);
-  return [...new Set(need)].slice(0, 4);
+  const out = ad ? [ad] : [];
+  for (const [n, re] of LANGS) {
+    if (!re.test(hay) || out.includes(n)) continue;
+    // Never show Norwegian unless the ad is Norwegian, or an English ad clearly asks for Norwegian
+    if (n === "Norwegian" && ad !== "Norwegian" && !(ad === "English" && /(norwegian[- ]speaking|fluent (in )?norwegian|norwegian (is |language |skills|required))/.test(hay))) continue;
+    out.push(n);
+  }
+  if (!out.length) out.push(j.source === "nav" ? "Norwegian" : j.source === "jobtech" ? "Swedish" : "English");
+  return out.slice(0, 4);
 }
+// ---------- category: title first, then source category, then description ----------
+const CAT_RULES = [
+  ["Engineering", /(engineer|developer|software|programm|devops|python|javascript|typescript|\bjava\b|golang|frontend|front-end|backend|back-end|full[- ]?stack|data scien|data engineer|data analyst|machine learning|\bml\b|\bai\b|\bsre\b|cloud|cyber|utvikler|ingeniør|ingenjör|utvecklare|systemutvikler|it-konsulent|tech lead|\bqa\b|test automation)/],
+  ["Customer support", /(customer (service|support|success|care)|helpdesk|help desk|service desk|support (agent|specialist|representative|associate|advisor)|\bsupport\b|kundeservice|kundesenter|kundtjänst|kundeservicemedarbeider|call ?cent)/],
+  ["Construction & trades", /(technician|tekniker|installer|installatør|montør|elektriker|electrician|snekker|tømrer|carpenter|plumber|rørlegger|welder|sveiser|mechanic|mekaniker|maler\b|murer|byggearbeider|anleggsarbeider|stillas|maskinfører|byggnads|vvs|håndverker)/],
+  ["Operations", /(planner|planlegger|planerare|coordinator|koordinator|operations|driftsleder|dispatcher|scheduler)/],
+  ["Healthcare", /(sykepleier|sjukepleiar|nurse|\blege\b|doctor|physician|helsefag|tannlege|dentist|pharmac|farmasøyt|fysioterapeut|psykolog|sjuksköterska|undersköterska|vårdbiträde|omsorg|care worker|carer)/],
+  ["Education", /(lærer|teacher|lektor|barnehage|pedagog|tutor|lärare|förskollärare|instructor|trainer\b)/],
+  ["Maritime", /(matros|skipper|maskinist|deckhand|seaman|styrmann|kaptein|captain|vessel|offshore)/],
+  ["Design", /(designer|\bux\b|\bui\b|grafisk|illustrat)/],
+  ["Product", /(product manager|product owner|produktleder|produktansvarlig)/],
+  ["Sales", /(sales|selger|säljare|account executive|account manager|business development|key account)/],
+  ["Marketing", /(marketing|markedsfør|\bseo\b|content|social media|brand|kommunikasjon|communications)/],
+  ["Hospitality & events", /(kokk|\bcook\b|servitør|waiter|bartender|barista|hotel|hotell|resepsjon|receptionist|kjøkken|restaurant|event)/],
+  ["Logistics & warehouse", /(lager|warehouse|truck|sjåfør|driver|courier|\bbud\b|lastebil|terminal|logisti|plukker|lagerarbetare)/],
+  ["Admin & office", /(sekretær|secretary|\badmin|kontor|office manager|regnskap|accountant|bookkeep|økonomi|finance|controller|\bhr\b|recruiter|rekrutter|payroll|jurist|lawyer|advokat|assistant)/],
+  ["Creative & media", /(photographer|fotograf|video|journalist|copywriter|editor|redaktør|animator|writer)/],
+];
+function categoryOf(text) { const t = String(text || "").toLowerCase(); for (const [c, re] of CAT_RULES) if (re.test(t)) return c; return ""; }
+// ---------- "no experience needed" ----------
+const EXP_YES = /(junior|entry[- ]level|\bgraduate\b|trainee|\bintern\b|internship|no experience|no prior experience|ingen erfaring|uten erfaring|lærling|nyutdannet|0\s*[-–]\s*1 years?)/i;
+const EXP_NO = /(\b([2-9]|[1-9]\d)\s*\+\s*(years?|yrs|år)|\b([2-9]|[1-9]\d)\s*(\+|[-–]\s*\d+)?\s*(years?|yrs|år)\s+(of\s+)?(relevant\s+|professional\s+|work\s+|hands-on\s+)?(experience|erfaring|erfarenhet))/i;
+function noExperienceOf(title, text) { const x = `${title || ""}\n${text || ""}`; return EXP_YES.test(x) && !EXP_NO.test(x); }
 function enrichPay(j) {
   if (j._payDone) return j; j._payDone = true;
   const text = j.description || `${j.summary || ""} | ${j.hints || ""}`;
+  if (j.source) { // imported jobs: title decides the category; the source's own category only when the title says nothing
+    const c = categoryOf(j.title) || (j.category && j.category !== "Other" ? j.category : categoryOf(String(text).slice(0, 800)));
+    if (c) j.category = c;
+  }
   if (!j.seniority) j.seniority = seniorityOf(j, text);
-  if (!j.langs) { j.langs = languagesOf(j, text); if (!j.languages && j.langs.length) j.languages = j.langs.join(", "); }
-  if (j.seniority === "Entry" && /(ingen erfaring|uten erfaring|no experience|opplæring gis|training (is )?provided)/i.test(text)) j.noExperience = true;
+  if (!j.langs) { j.langs = languagesOf(j, text); if (j.source || !j.languages) j.languages = j.langs.join(", "); }
+  if (j.source || !j.noExperience) j.noExperience = noExperienceOf(j.title, text);
   if (+j.salaryMin || +j.salaryMax) { j.paySrc = j.paySrc || "listed"; return j; }
   const src = `${j.title || ""}\n${text}\n${j.benefits || ""}`;
   const found = (!j.country || j.country === "Norway") && j.workplace !== "remote" ? payFromText(src) : null;

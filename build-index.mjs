@@ -74,6 +74,8 @@ for (const j of raw.values()) {
 }
 const shown = [...best.values()].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 console.log(`Shown: ${shown.length} jobs (${dupes} duplicates removed)`);
+const noExp = shown.filter((j) => j.noExperience).length, noExpRemote = shown.filter((j) => j.noExperience && j.workplace === "remote").length;
+console.log(`"No experience needed" flag: ${noExp} jobs (${noExpRemote} remote)`);
 
 // ---------- write ----------
 for (const f of await readdir(DIR)) if (/^(jobs|raw)-\d+\.json$/.test(f)) await rm(`${DIR}/${f}`);
@@ -101,6 +103,6 @@ await rm(`${DIR}/raw.json`, { force: true });
 const bySource = {}; for (const j of shown) bySource[j.source] = (bySource[j.source] || 0) + 1;
 const newMeta = { lastSync: syncStart, fullAt: full ? syncStart : meta.fullAt, updated: new Date().toISOString(), count: shown.length, duplicatesRemoved: dupes,
   bySource, new24h: shown.filter((j) => now - (j.createdAt || 0) < DAY).length, remote: shown.filter((j) => j.workplace === "remote").length,
-  companies: new Set(shown.map((j) => norm(j.company))).size, countries: new Set(shown.map((j) => j.country).filter(Boolean)).size, files, raw: rawFiles };
+  noExperience: noExp, noExperienceRemote: noExpRemote, companies: new Set(shown.map((j) => norm(j.company))).size, countries: new Set(shown.map((j) => j.country).filter(Boolean)).size, files, raw: rawFiles };
 await writeFile(`${DIR}/meta.json`, JSON.stringify(newMeta, null, 1));
 console.log(JSON.stringify({ ...newMeta, files: files.length, raw: rawFiles.length }));
