@@ -168,7 +168,7 @@ const LANGS = [["Norwegian", /(norsk|norwegian)/], ["English", /(english|engelsk
 const STOP = {
   Norwegian: /^(og|ikke|ikkje|eller|deg|dere|skal|vår|våre|også|hos|stilling|arbeidsoppgaver|søker|søknad|frå|vere|eit|ein|kvalifikasjoner|erfaring)$/,
   Swedish: /^(och|att|är|inte|för|ett|eller|dig|ska|vår|våra|också|hos|tjänst|arbetsuppgifter|söker|ansökan|erfarenhet|kvalifikationer|av|kommer|samt)$/,
-  Danish: /^(og|ikke|eller|dig|skal|vores|også|hos|stilling|arbejdsopgaver|søger|ansøgning|erfaring|af|jeg|kan|være|med)$/,
+  Danish: /^(af|jeg|vores|søger|ansøgning|arbejde|arbejdsopgaver|virksomhed|medarbejder|nogle|mellem|hvis|ansøg|dygtig)$/, // only words Norwegian does not use
   English: /^(the|and|you|we|with|our|will|your|are|this|for|of)$/,
   German: /^(und|die|der|wir|sie|mit|für|das|ist|ihre|bei|nicht)$/,
   Romanian: /^(și|în|pentru|cu|este|sau|care|la)$/, Polish: /^(jest|oraz|dla|się|nie|lub)$/,
@@ -179,7 +179,6 @@ function adLanguage(text) {
   for (const w of words) for (const k in STOP) if (STOP[k].test(w)) c[k]++;
   // Norwegian vs Danish share many words; letters and spellings decide it
   const x = String(text || "").toLowerCase();
-  if (/\b(af|jeg|vores|arbejde|virksomhed|medarbejder)\b/.test(x)) c.Danish += 3;
   if (/\b(ikke|arbeid|bedrift|medarbeider|stillingen)\b/.test(x)) c.Norwegian += 2;
   if (/[äö]/.test(x)) c.Swedish += 3; if (/[æø]/.test(x)) { c.Norwegian += 2; c.Danish += 2; }
   const best = Object.entries(c).sort((a, b) => b[1] - a[1])[0];
