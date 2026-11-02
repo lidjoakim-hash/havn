@@ -43,4 +43,5 @@ ${days.length ? days.map((d) => `<h2>${esc(new Date(d.date + "T12:00:00Z").toLoc
 </div><script>document.addEventListener("click",e=>{const b=e.target.closest("[data-copy]");if(!b)return;const t=document.getElementById(b.dataset.copy);navigator.clipboard.writeText(t.value).then(()=>{b.textContent="Copied ✓";setTimeout(()=>b.textContent="Copy text",1600)})})</script></body></html>`;
 await mkdir("marketing", { recursive: true });
 await writeFile("marketing/index.html", html);
+await writeFile("marketing/feed.json", JSON.stringify({ cdn: CDN, days }, null, 1));
 console.log(`Review page: ${days.length} days`);

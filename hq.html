@@ -1,0 +1,183 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Havn HQ</title><link rel="icon" href="icons/favicon-32.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><meta name="theme-color" content="#F6F1E7">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#F6F1E7;--card:#FFFDF8;--soft:#EFE8DA;--fg:#2E2B27;--muted:#6E675D;--line:#E6DDCC;--sage:#4F7A5A;--sage2:#E3EEDD;--peach:#EFA77E;--butter:#FBEBC8;--sky:#DCE8EF;--shadow:0 1px 2px rgba(46,43,39,.04),0 8px 24px rgba(46,43,39,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15.5px/1.55 "DM Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 16px 80px}h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em;margin:0}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}header h1{font-size:28px}header .sp{flex:1}
+a{color:var(--sage)}.muted{color:var(--muted)}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 20px;position:sticky;top:0;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);padding:8px 0;z-index:5}
+nav.tabs button{border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:9px 16px;font:600 14px "DM Sans",sans-serif;cursor:pointer;color:var(--fg)}
+nav.tabs button[aria-selected="true"]{background:var(--sage);color:#fff}
+section[hidden]{display:none}section{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:18px 20px}
+.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.stat .n{font-family:Fraunces,Georgia,serif;font-size:38px;font-weight:600;color:var(--sage);line-height:1.1}.stat .l{color:var(--muted);font-size:14px}
+.bar{height:10px;border-radius:999px;background:var(--soft);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--sage);border-radius:999px}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:14px;margin-top:10px}
+.pill{display:inline-block;border-radius:999px;padding:3px 10px;font-size:12.5px;font-weight:600;background:var(--sage2);color:#3F6649}.pill.warn{background:var(--butter);color:#7A5A1A}.pill.bad{background:#F8DDD3;color:#9A4A33}
+.check{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line)}.check:first-child{border-top:0}
+.check input{width:22px;height:22px;accent-color:var(--sage);margin-top:3px;flex:none}.check b{display:block}.check p{margin:2px 0 6px;color:var(--muted);font-size:14.5px}
+.check.done b{text-decoration:line-through;color:var(--muted)}.who{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.btn{display:inline-block;border:0;background:var(--sage);color:#fff;border-radius:999px;padding:8px 16px;font:600 14px "DM Sans",sans-serif;cursor:pointer;text-decoration:none}
+.btn.ghost{background:var(--card);color:var(--sage);box-shadow:var(--shadow)}
+.item{overflow:hidden;padding:0}.item .media{background:var(--soft)}.item img,.item video{display:block;width:100%;max-height:520px;object-fit:contain}.item .b{padding:14px 18px 18px}
+textarea{width:100%;min-height:130px;border:1px solid var(--line);border-radius:14px;padding:10px 12px;font:14px/1.5 "DM Sans",sans-serif;background:var(--bg);resize:vertical}
+.copyrow{display:flex;justify-content:space-between;align-items:center;margin:14px 0 6px}.copyrow h3{font-size:17px}
+.lang{display:flex;gap:6px;margin:8px 0}.lang button{border:0;background:var(--soft);border-radius:999px;padding:5px 12px;font:600 13px "DM Sans";cursor:pointer}.lang button[aria-pressed="true"]{background:var(--sage);color:#fff}
+.tl{display:grid;grid-template-columns:110px 1fr;gap:6px 14px;font-size:14.5px}.tl b{color:var(--sage)}
+.progress{display:flex;align-items:center;gap:12px}.progress .bar{flex:1;height:12px}
+.art{width:150px;height:auto}
+@media (max-width:600px){.tl{grid-template-columns:1fr}.art{width:110px}}
+@media (prefers-reduced-motion:reduce){section{animation:none}}
+</style></head><body><div class="wrap">
+<header><svg width="40" height="40" viewBox="0 0 1024 1024" aria-hidden="true"><rect width="1024" height="1024" rx="230" fill="#4F7A5A"/><circle cx="512" cy="480" r="260" fill="#F6E3B4"/><g stroke="#2E2B27" stroke-width="34" stroke-linejoin="round"><path d="M500 300 L 500 560 L 360 560 Z" fill="#FFFDF8"/><path d="M524 340 L 524 560 L 630 560 Z" fill="#EFA77E"/><path d="M330 590 L 694 590 L 650 650 L 374 650 Z" fill="#E7C9A9"/></g><path d="M250 712 C 330 670, 410 670, 512 712 S 694 754, 774 712" stroke="#A9C49B" stroke-width="44" fill="none" stroke-linecap="round"/></svg>
+<div><h1>Havn HQ</h1><div class="muted" style="font-size:14px">Your control room: live numbers, today's marketing, launch steps and store texts.</div></div><div class="sp"></div>
+<a class="btn ghost" href="./">Open Havn</a></header>
+
+<nav class="tabs" role="tablist">
+<button role="tab" data-tab="today" aria-selected="true">Today</button>
+<button role="tab" data-tab="marketing">Marketing</button>
+<button role="tab" data-tab="launch">Launch steps</button>
+<button role="tab" data-tab="store">Store texts</button>
+<button role="tab" data-tab="plan">Growth plan</button>
+</nav>
+
+<!-- TODAY -->
+<section id="today">
+<div class="grid g4" id="stats"><div class="card stat"><div class="n">…</div><div class="l">Loading live numbers</div></div></div>
+<div class="grid g2" style="margin-top:14px">
+<div class="card"><h3>Where the jobs come from</h3><div id="sources" class="muted" style="margin-top:6px">…</div></div>
+<div class="card"><h3>Health</h3><div id="health" style="margin-top:6px" class="muted">…</div>
+<div style="margin-top:14px" class="progress"><span class="muted" style="font-size:14px">Launch steps done</span><div class="bar"><i id="launchBar" style="width:0"></i></div><b id="launchPct">0%</b></div></div>
+</div>
+<div class="card" style="margin-top:14px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+<div style="flex:1;min-width:240px"><h3>Today's posts</h3><p class="muted" id="todayNote" style="margin:6px 0 12px">Checking for today's drafts…</p><button class="btn" data-go="marketing">Review today's posts</button></div>
+<div id="todayThumb" style="width:180px"></div></div>
+</section>
+
+<!-- MARKETING -->
+<section id="marketing" hidden>
+<div class="card" style="margin-bottom:14px"><b>How it works:</b> every morning Havn makes fresh posts from the newest jobs. Nothing is posted automatically. Pick a language, copy the text, download the image or video and post it at the suggested time. <a href="marketing/" target="_blank">See all days</a></div>
+<div id="mkt" class="grid g2"><div class="card muted">Loading drafts…</div></div>
+</section>
+
+<!-- LAUNCH -->
+<section id="launch" hidden>
+<div class="card"><div class="progress" style="margin-bottom:6px"><b>Progress</b><div class="bar"><i id="launchBar2" style="width:0"></i></div><b id="launchPct2">0%</b></div>
+<p class="muted" style="margin:0 0 4px;font-size:14px">Tick things off as you go – it's saved on this device. <span class="who" style="color:#9A4A33">You</span> = only you can do it. <span class="who" style="color:#3F6649">Claude</span> = tell me when the step before is done.</p>
+<div id="checks"></div></div>
+</section>
+
+<!-- STORE -->
+<section id="store" hidden>
+<div class="card" style="margin-bottom:14px;display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+<img src="icons/icon-512.png" alt="Havn app icon" width="96" height="96" style="border-radius:22px;box-shadow:var(--shadow)">
+<div style="flex:1;min-width:220px"><b>App icon and links</b><p class="muted" style="margin:4px 0 8px;font-size:14px">512 px for Google Play, 1024 px for the App Store.</p>
+<a class="btn ghost" href="icons/icon-512.png" download>Icon 512</a> <a class="btn ghost" href="icons/icon-1024.png" download>Icon 1024</a> <a class="btn ghost" href="privacy.html" target="_blank">Privacy policy</a></div></div>
+<div class="card"><div class="lang" id="storeLang"><button data-l="en" aria-pressed="true">English</button><button data-l="no">Norsk</button><button data-l="ro">Română</button></div><div id="storeTexts"></div></div>
+<div class="card" style="margin-top:14px"><h3>Google Play – Data safety answers</h3><div id="safety" style="margin-top:8px"></div></div>
+</section>
+
+<!-- PLAN -->
+<section id="plan" hidden>
+<div class="grid g2">
+<div class="card"><h3>Every week (about 3 hours)</h3><div class="tl" style="margin-top:10px">
+<b>Every day</b><span>Post today's image at 13:00 (Instagram + Facebook) and the video at 19:00 (TikTok + Reels). Reply to comments the same evening.</span>
+<b>Monday</b><span>LinkedIn post for employers 08:00 and the weekly newsletter 07:30 (both made for you).</span>
+<b>Tuesday</b><span>Share the Romanian post in 2–3 Facebook groups for Romanians in Norway (follow each group's rules).</span>
+<b>Wednesday</b><span>Send 10 employer emails using the template (start with Stavanger companies already on Havn).</span>
+<b>Friday</b><span>Look at what worked (views, clicks, new jobs posted) and tell me – I adjust the posts.</span></div></div>
+<div class="card"><h3>Goals for the first 90 days</h3><div class="tl" style="margin-top:10px">
+<b>Month 1</b><span>Own domain, Google Play app live, 4 social accounts active, first 5 employers posting for free.</span>
+<b>Month 2</b><span>1,000 visitors a week, 300 newsletter subscribers, first paid Featured post.</span>
+<b>Month 3</b><span>3,000 visitors a week, 10 paying employers, iPhone app submitted.</span>
+<b>If not</b><span>Under 500 visitors a week after 60 days: rethink before spending more time.</span></div></div>
+</div>
+</section>
+</div>
+
+<script>
+const SB="https://cybrexiizqgbbtnddzjn.supabase.co",K="sb_publishable_i0s_T4iaXgZLrvf_x_hX5g_fLkxvZGF";
+const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const nf=n=>new Intl.NumberFormat("en-GB").format(n);
+/* tabs */
+function tab(t){document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));document.querySelectorAll("section").forEach(s=>s.hidden=s.id!==t);store.set("hq.tab",t);if(t==="marketing")loadMkt()}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-tab],[data-go]");if(b)tab(b.dataset.tab||b.dataset.go);
+ const c=e.target.closest("[data-copy]");if(c){const el=document.getElementById(c.dataset.copy);navigator.clipboard.writeText(el.value).then(()=>{const t=c.textContent;c.textContent="Copied ✓";setTimeout(()=>c.textContent=t,1500)})}});
+
+/* live numbers */
+(async()=>{
+ let rows=[];try{for(let o=0;o<6000;o+=1000){const r=await fetch(`${SB}/rest/v1/docs?collection=eq.jobs&select=s:data->>source,c:data->>createdAt,p:data->>salaryMin,st:data->>status,w:data->>workplace`,{headers:{apikey:K,Range:`${o}-${o+999}`}});const a=await r.json();rows=rows.concat(a);if(a.length<1000)break}}catch(e){$("#stats").innerHTML='<div class="card">Could not load live numbers right now.</div>';return}
+ const live=rows.filter(r=>r.st==="active"),day=Date.now()-86400000,week=Date.now()-7*86400000;
+ const by={};live.forEach(r=>{const s=r.s||"havn";by[s]=(by[s]||0)+1});
+ const stat=(n,l)=>`<div class="card stat"><div class="n">${n}</div><div class="l">${l}</div></div>`;
+ $("#stats").innerHTML=stat(nf(live.length),"live jobs")+stat(nf(live.filter(r=>+r.c>day).length),"new in the last 24 h")+stat(nf(live.filter(r=>r.w==="remote").length),"remote jobs")+stat(nf(by.havn||0),"posted directly on Havn");
+ const names={nav:"NAV (Norway)",jobicy:"Jobicy (remote)",arbeitnow:"Arbeitnow (Europe)",havn:"Employers on Havn"};
+ const max=Math.max(...Object.values(by));$("#sources").innerHTML=Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<div class="row"><span>${esc(names[s]||s)}</span><b>${nf(n)}</b></div><div class="bar"><i style="width:${Math.round(100*n/max)}%"></i></div>`).join("");
+})();
+fetch("health.json?x="+Date.now()).then(r=>r.json()).then(h=>{$("#health").innerHTML=`<div class="row"><span>NAV import</span><span class="pill ${h.ok?"":"bad"}">${h.ok?"Running":"Needs a look"}</span></div><div class="row"><span>Newest NAV job</span><b>${h.newestNavHoursAgo} h ago</b></div><div class="row"><span>Last check</span><b>${new Date(h.checkedAt).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})}</b></div>`}).catch(()=>{$("#health").textContent="No health report yet."});
+
+/* marketing */
+let feed=null,mktDone=false;const LN={no:"Norsk",en:"English",ro:"Română"};
+async function getFeed(){if(feed)return feed;try{feed=await fetch("marketing/feed.json?x="+Date.now()).then(r=>r.json())}catch(e){feed={days:[]}}return feed}
+let cid=0;
+function itemHtml(cdn,d,it){const url=`${cdn}/${d.date}/${it.file}`;
+ const media=it.type==="video"?`<video controls playsinline preload="none" poster="${cdn}/${d.date}/${it.poster}" src="${url}"></video>`:it.type==="newsletter"?`<iframe src="${url}" style="width:100%;height:360px;border:0" sandbox="" title="Newsletter"></iframe>`:`<img loading="lazy" src="${url}" alt="">`;
+ const langs=Object.keys(it.captions||{});const id="t"+(++cid);
+ return `<div class="card item"><div class="media">${media}</div><div class="b"><b>${esc(it.label)}</b><div class="muted" style="font-size:14px">Post at ${esc(it.time)}</div>${it.note?`<p class="pill warn" style="margin:8px 0 0;display:inline-block">${esc(it.note)}</p>`:""}
+ <div class="lang" data-for="${id}">${langs.map(l=>`<button data-cap="${esc(l)}" aria-pressed="${l===it.lang}">${LN[l]||l}</button>`).join("")}</div>
+ <textarea id="${id}" readonly data-caps='${esc(JSON.stringify(it.captions))}'>${esc(it.captions[it.lang]||it.captions[langs[0]])}</textarea>
+ <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn" data-copy="${id}">Copy text</button><a class="btn ghost" href="${url}" target="_blank" rel="noopener">Download</a></div></div></div>`}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-cap]");if(!b)return;const g=b.parentElement,ta=document.getElementById(g.dataset.for);g.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));ta.value=JSON.parse(ta.dataset.caps)[b.dataset.cap]});
+async function loadMkt(){if(mktDone)return;mktDone=true;const f=await getFeed();const d=f.days&&f.days[0];
+ $("#mkt").innerHTML=d?d.items.map(it=>itemHtml(f.cdn,d,it)).join(""):'<div class="card">No drafts yet – they appear every morning.</div>'}
+getFeed().then(f=>{const d=f.days&&f.days[0];if(!d){$("#todayNote").textContent="No drafts yet. The first ones appear tomorrow morning.";return}
+ const isToday=d.date===new Date().toISOString().slice(0,10);$("#todayNote").textContent=`${d.items.length} drafts ${isToday?"ready for today":"from "+d.date} · theme: ${d.theme}.`;
+ const p=d.items.find(i=>i.type==="post");if(p)$("#todayThumb").innerHTML=`<img src="${f.cdn}/${d.date}/${p.file}" alt="" style="width:100%;border-radius:14px;box-shadow:var(--shadow)">`});
+
+/* launch steps */
+const STEPS=[
+ ["you","Buy the domain havnjobs.com","About 120 kr a year at Domeneshop or Namecheap. Then tell me and I connect it (needed for Google Play and looks more trustworthy).","https://www.domeneshop.no/"],
+ ["you","Sign in on Havn with your Gmail","Press Sign in on Havn and click the link in your email. Then tell me – I make you admin.","./"],
+ ["claude","Connect the domain and make you admin","I point havnjobs.com to the site, update all links and switch on HTTPS.",""],
+ ["you","Create the social accounts","Instagram @havnjobs, a Facebook page 'Havn Jobs', TikTok @havnjobs and a LinkedIn company page 'Havn'. Use the app icon as profile picture and the website as link.",""],
+ ["you","Google Play developer account (25 USD once)","Sign up as an organisation with LID CREATIVE CO. It asks for a free D-U-N-S number (takes a few days). A personal account instead needs 12 testers for 14 days before going public.","https://play.google.com/console/signup"],
+ ["claude","Package the Android app","When the domain works, I make the Android app with PWABuilder and the files Google needs to trust the site.",""],
+ ["you","Upload the app to Google Play","Upload the file, paste the texts from 'Store texts', add screenshots and send for review (usually 1–7 days).","https://play.google.com/console"],
+ ["you","Google Search Console","Add the website, verify it and submit sitemap.xml so Google finds all job pages faster.","https://search.google.com/search-console"],
+ ["you","Newsletter account (Brevo, free)","Create a free Brevo account (300 emails a day). Then tell me – I connect the weekly newsletter.","https://www.brevo.com/"],
+ ["you","Anthropic API key","Lets Havn's AI features work (CV match, AI search, writing job posts). Add it as a secret in Supabase.","https://console.anthropic.com/"],
+ ["you","Forward NAV's reply","When NAV answers your email with an access key, forward it to me.",""],
+ ["you","Apple Developer account (99 USD a year)","For the iPhone app, after Google Play is live. Also as an organisation with the same D-U-N-S number.","https://developer.apple.com/programs/enroll/"],
+ ["claude","iPhone app","I package Havn for iPhone and prepare the App Store listing and screenshots.",""]];
+function renderChecks(){const done=store.get("hq.done",{});
+ $("#checks").innerHTML=STEPS.map((s,i)=>`<label class="check ${done[i]?"done":""}"><input type="checkbox" data-i="${i}" ${done[i]?"checked":""}><div><span class="who" style="color:${s[0]==="you"?"#9A4A33":"#3F6649"}">${s[0]==="you"?"You":"Claude"}</span><b>${esc(s[1])}</b><p>${esc(s[2])}</p>${s[3]?`<a href="${s[3]}" target="_blank" rel="noopener">Open →</a>`:""}</div></label>`).join("");
+ const pct=Math.round(100*Object.values(done).filter(Boolean).length/STEPS.length)+"%";["#launchBar","#launchBar2"].forEach(x=>$(x).style.width=pct);["#launchPct","#launchPct2"].forEach(x=>$(x).textContent=pct)}
+document.addEventListener("change",e=>{if(!e.target.matches("[data-i]"))return;const d=store.get("hq.done",{});d[e.target.dataset.i]=e.target.checked;store.set("hq.done",d);renderChecks()});
+renderChecks();
+
+/* store texts */
+const TX={
+ en:{name:"Havn: Jobs in Norway & Europe",short:"Calm job search in Norway & Europe. See the pay, apply direct. Free to use.",
+  full:"Havn is a calm, honest job search app for Norway and Europe.\n\nFind thousands of open jobs in one place – from Norway's public job database (NAV), remote jobs you can do from anywhere in Europe, and companies that post directly on Havn. New jobs arrive several times a day, and closed jobs disappear automatically.\n\nWHY PEOPLE LIKE HAVN\n• See the pay: salary is shown when the ad has it – and when it doesn't, Havn gives a clearly marked estimate of typical pay\n• No Norwegian needed: one tap shows jobs that are open to foreign workers\n• Work from home: remote jobs for people in Norway, Romania and the rest of Europe\n• Apply directly with the employer – no middlemen\n• Save jobs, compare up to three side by side, and track your applications\n• Available in English, Norwegian and Romanian\n• Moving to Norway? Simple guide to work permits, D-number, tax card, pay and housing\n\nFOR EMPLOYERS\nPost a job for free and reach people who already know what you pay. Featured posts put your job at the top for 30 days.\n\nHavn is always free for job seekers. No ads, no tracking cookies, no spam."},
+ no:{name:"Havn: Jobber i Norge og Europa",short:"Rolig jobbsøk i Norge og Europa. Se lønnen og søk direkte. Gratis for jobbsøkere.",
+  full:"Havn er en rolig og ærlig jobbsøk-app for Norge og Europa.\n\nFinn tusenvis av ledige stillinger på ett sted – fra NAVs offentlige stillingsdatabase, fjernjobber du kan gjøre hvor som helst i Europa, og bedrifter som legger ut stillinger direkte på Havn. Nye jobber kommer flere ganger om dagen, og stillinger som er besatt forsvinner automatisk.\n\nDERFOR LIKER FOLK HAVN\n• Se lønnen: lønn vises når annonsen oppgir den – og ellers et tydelig merket estimat av vanlig lønn\n• Norsk ikke påkrevd: ett trykk viser jobber som er åpne for utenlandske søkere\n• Jobb hjemmefra: fjernjobber for deg i Norge, Romania og resten av Europa\n• Søk direkte hos arbeidsgiveren – ingen mellomledd\n• Lagre jobber, sammenlign tre side om side og følg søknadene dine\n• På norsk, engelsk og rumensk\n\nFOR ARBEIDSGIVERE\nLegg ut stillinger gratis og nå folk som allerede vet hva dere betaler. Fremhevede annonser ligger øverst i 30 dager.\n\nHavn er alltid gratis for jobbsøkere. Ingen reklame, ingen sporingscookies, ingen spam."},
+ ro:{name:"Havn: Joburi în Norvegia",short:"Joburi în Norvegia și Europa. Vezi salariul și aplică direct. Gratuit.",
+  full:"Havn este o aplicație liniștită și sinceră pentru căutarea unui loc de muncă în Norvegia și Europa.\n\nGăsește mii de joburi într-un singur loc – din baza publică de joburi a Norvegiei (NAV), joburi remote pe care le poți face de oriunde din Europa și companii care publică direct pe Havn. Joburi noi apar de mai multe ori pe zi, iar cele ocupate dispar automat.\n\nDE CE ÎȚI VA PLĂCEA HAVN\n• Vezi salariul: afișat când anunțul îl are – altfel, o estimare clar marcată a salariului obișnuit\n• Fără norvegiană: o singură apăsare arată joburile deschise pentru străini\n• Lucru de acasă: joburi remote pentru cei din Norvegia, România și restul Europei\n• Aplici direct la angajator – fără intermediari\n• Salvezi joburi, compari până la trei și îți urmărești aplicările\n• În română, engleză și norvegiană\n• Te muți în Norvegia? Ghid simplu despre permis, număr D, card fiscal, salarii și locuință\n\nHavn este mereu gratuit pentru candidați. Fără reclame, fără cookie-uri de urmărire, fără spam."}};
+const LBL={name:"App name (max 30)",short:"Short description (max 80)",full:"Full description (max 4,000)"};
+function renderStore(l){$("#storeTexts").innerHTML=Object.entries(TX[l]).map(([k,v])=>`<div class="copyrow"><h3>${LBL[k]} <span class="muted" style="font-size:13px;font-family:'DM Sans'">${v.length} chars</span></h3><button class="btn" data-copy="st-${k}">Copy</button></div><textarea id="st-${k}" readonly style="min-height:${k==="full"?300:60}px">${esc(v)}</textarea>`).join("")+`<div class="row" style="margin-top:14px"><span>Category</span><b>Business</b></div><div class="row"><span>Tags</span><b>Jobs, Job search, Careers</b></div><div class="row"><span>Contact email</span><b>lidjoakim@gmail.com</b></div><div class="row"><span>Privacy policy URL</span><b>${esc(new URL("privacy.html",location.href).href)}</b></div><div class="row"><span>Target age</span><b>18+</b></div>`}
+document.addEventListener("click",e=>{const b=e.target.closest("#storeLang button");if(!b)return;document.querySelectorAll("#storeLang button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderStore(b.dataset.l)});
+renderStore("en");
+$("#safety").innerHTML=[["Does the app collect or share user data?","Yes – collects (only what users give). Shares only applications, with the employer the user applies to."],
+ ["Email address","Collected · optional · used for sign-in and the weekly digest (Account management, App functionality)"],
+ ["Name and phone number","Collected · optional · only when using Quick apply (App functionality)"],
+ ["Files and docs","Not collected (CV text stays on the device; users may paste a CV link in applications)"],
+ ["Location, contacts, photos, health, financial info","Not collected"],
+ ["App activity / analytics","Not collected"],
+ ["Data encrypted in transit","Yes"],["Users can ask for deletion","Yes – by email (see privacy policy)"],["Ads","No ads"]]
+ .map(([q,a])=>`<div class="row" style="border-top:1px solid var(--line);padding-top:10px"><span>${esc(q)}</span><b style="text-align:right;max-width:60%">${esc(a)}</b></div>`).join("");
+tab(store.get("hq.tab","today"));
+</script></body></html>
