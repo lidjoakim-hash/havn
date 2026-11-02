@@ -531,7 +531,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 </div>
 <div id="modalRoot"></div>
 
-<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=1"></script><script src="havn-backend.js?v=3"></script>
+<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=2"></script><script src="havn-backend.js?v=3"></script>
 <script>
 (function(){
 "use strict";
@@ -606,7 +606,7 @@ en:{
 "sal.title":"Havn salary index","sal.sub":"Real pay from every open job on Havn, converted to euros per year. Updated live as jobs are posted.","sal.cat":"BY CATEGORY","sal.where":"BY WHERE YOU WORK","sal.jobs":"{n} jobs","sal.few":"few jobs, rough number","sal.empty":"Salary data appears here as soon as jobs are posted.","sal.median":"median","sal.remote":"Remote","sal.norway":"In Norway","sal.romania":"In Romania","sal.other":"Elsewhere in Europe","sal.note":"Converted with fixed rates (1 NOK ≈ €0.085, 1 RON ≈ €0.20). Hourly pay × 1,650 hours, monthly × 12.",
 "cmp.title":"Compare jobs","cmp.sub":"Up to 3 jobs side by side.","cmp.empty":"Add jobs with the Compare button on a job page.","cmp.tray":"Compare ({n})","cmp.clear":"Clear","cmp.pay":"Pay","cmp.eur":"Per year in EUR","cmp.match":"CV match","cmp.remove":"Remove","cmp.full":"You can compare 3 jobs at a time.",
 "ask.btn":"Ask Havn","ask.title":"Ask Havn","ask.sub":"Tell me what you're looking for. I only suggest jobs that are on Havn right now.","ask.ph":"e.g. Part-time jobs in Stavanger for a student","ask.send":"Send","ask.stop":"Stop","ask.hello":"Hi! What kind of job are you looking for? Tell me where you live, what you're good at and what pay you need.",
-"foot.free":"Free for job seekers, always.","pay.none":"Pay not listed","b.nav":"via NAV","chip.paid":"Pay shown","pay.estnote":"Estimate: typical pay for similar jobs in Norway","pay.adnote":"from the ad text","chip.intl":"🌍 Open to foreign workers","b.intl":"No Norwegian needed","foot.workno":"Work in Norway","d.navfull":"See the full ad on arbeidsplassen.no","d.navapply":"Apply on the employer's page","d.navnote":"This ad comes from NAV's public job database. Apply directly with the employer.","d.signapply":"Sign in to Quick apply","priv":"Privacy","u.yr":"/yr","u.mo":"/mo","u.hr":"/hr","foot.search":"to search","toast.saved":"Saved","toast.removed":"Removed","toast.tracked":"Added to My jobs","toast.copied":"Copied"
+"foot.free":"Free for job seekers, always.","pay.none":"Pay not listed","b.nav":"via NAV","chip.paid":"Pay shown","d.extapply":"Apply on {src}","d.extnote":"This job comes from {src}. Read the full ad and apply on their page.","pay.estnote":"Estimate: typical pay for similar jobs in Norway","pay.adnote":"from the ad text","chip.intl":"🌍 Open to foreign workers","b.intl":"No Norwegian needed","foot.workno":"Work in Norway","d.navfull":"See the full ad on arbeidsplassen.no","d.navapply":"Apply on the employer's page","d.navnote":"This ad comes from NAV's public job database. Apply directly with the employer.","d.signapply":"Sign in to Quick apply","priv":"Privacy","u.yr":"/yr","u.mo":"/mo","u.hr":"/hr","foot.search":"to search","toast.saved":"Saved","toast.removed":"Removed","toast.tracked":"Added to My jobs","toast.copied":"Copied"
 },
 no:{
 "nav.jobs":"Finn jobb","nav.my":"Mine jobber","nav.salaries":"Lønninger","nav.employers":"For arbeidsgivere","nav.post":"Legg ut jobb",
@@ -635,7 +635,7 @@ no:{
 "sal.title":"Havns lønnsindeks","sal.sub":"Ekte lønn fra alle ledige jobber på Havn, regnet om til euro per år. Oppdateres når nye jobber legges ut.","sal.cat":"ETTER KATEGORI","sal.where":"ETTER HVOR DU JOBBER","sal.jobs":"{n} jobber","sal.few":"få jobber, grovt tall","sal.empty":"Lønnsdata vises her så snart jobber legges ut.","sal.median":"median","sal.remote":"Fjernarbeid","sal.norway":"I Norge","sal.romania":"I Romania","sal.other":"Ellers i Europa","sal.note":"Regnet om med faste kurser (1 NOK ≈ €0,085, 1 RON ≈ €0,20). Timelønn × 1 650 timer, månedslønn × 12.",
 "cmp.title":"Sammenlign jobber","cmp.sub":"Opptil 3 jobber side om side.","cmp.empty":"Legg til jobber med Sammenlign-knappen på en jobbside.","cmp.tray":"Sammenlign ({n})","cmp.clear":"Tøm","cmp.pay":"Lønn","cmp.eur":"Per år i EUR","cmp.match":"CV-match","cmp.remove":"Fjern","cmp.full":"Du kan sammenligne 3 jobber om gangen.",
 "ask.btn":"Spør Havn","ask.title":"Spør Havn","ask.sub":"Fortell hva du ser etter. Jeg foreslår bare jobber som ligger på Havn nå.","ask.ph":"f.eks. Deltidsjobber i Stavanger for student","ask.send":"Send","ask.stop":"Stopp","ask.hello":"Hei! Hva slags jobb ser du etter? Fortell hvor du bor, hva du er god på og hvilken lønn du trenger.",
-"foot.free":"Alltid gratis for jobbsøkere.","pay.none":"Lønn ikke oppgitt","b.nav":"via NAV","chip.paid":"Lønn oppgitt","pay.estnote":"Estimat: vanlig lønn for lignende jobber i Norge","pay.adnote":"fra annonseteksten","chip.intl":"🌍 Åpen for utenlandske søkere","b.intl":"Norsk ikke påkrevd","foot.workno":"Jobb i Norge for utlendinger","d.navfull":"Se hele annonsen på arbeidsplassen.no","d.navapply":"Søk hos arbeidsgiveren","d.navnote":"Annonsen kommer fra NAVs offentlige stillingsdatabase. Søk direkte hos arbeidsgiveren.","d.signapply":"Logg inn for hurtigsøk","priv":"Personvern","u.yr":"/år","u.mo":"/mnd","u.hr":"/t","foot.search":"for å søke","toast.saved":"Lagret","toast.removed":"Fjernet","toast.tracked":"Lagt til i Mine jobber","toast.copied":"Kopiert"
+"foot.free":"Alltid gratis for jobbsøkere.","pay.none":"Lønn ikke oppgitt","b.nav":"via NAV","chip.paid":"Lønn oppgitt","d.extapply":"Søk via {src}","d.extnote":"Jobben kommer fra {src}. Les hele annonsen og søk på deres side.","pay.estnote":"Estimat: vanlig lønn for lignende jobber i Norge","pay.adnote":"fra annonseteksten","chip.intl":"🌍 Åpen for utenlandske søkere","b.intl":"Norsk ikke påkrevd","foot.workno":"Jobb i Norge for utlendinger","d.navfull":"Se hele annonsen på arbeidsplassen.no","d.navapply":"Søk hos arbeidsgiveren","d.navnote":"Annonsen kommer fra NAVs offentlige stillingsdatabase. Søk direkte hos arbeidsgiveren.","d.signapply":"Logg inn for hurtigsøk","priv":"Personvern","u.yr":"/år","u.mo":"/mnd","u.hr":"/t","foot.search":"for å søke","toast.saved":"Lagret","toast.removed":"Fjernet","toast.tracked":"Lagt til i Mine jobber","toast.copied":"Kopiert"
 },
 ro:{
 "nav.jobs":"Caută joburi","nav.my":"Joburile mele","nav.salaries":"Salarii","nav.employers":"Pentru angajatori","nav.post":"Publică un job",
@@ -664,7 +664,7 @@ ro:{
 "sal.title":"Indexul de salarii Havn","sal.sub":"Salarii reale din toate joburile disponibile pe Havn, convertite în euro pe an. Se actualizează când apar joburi noi.","sal.cat":"PE CATEGORII","sal.where":"DUPĂ LOCUL DE MUNCĂ","sal.jobs":"{n} joburi","sal.few":"puține joburi, cifră aproximativă","sal.empty":"Datele despre salarii apar aici imediat ce sunt publicate joburi.","sal.median":"median","sal.remote":"Remote","sal.norway":"În Norvegia","sal.romania":"În România","sal.other":"În restul Europei","sal.note":"Convertit la cursuri fixe (1 NOK ≈ 0,085 €, 1 RON ≈ 0,20 €). Plata pe oră × 1.650 ore, lunară × 12.",
 "cmp.title":"Compară joburi","cmp.sub":"Până la 3 joburi unul lângă altul.","cmp.empty":"Adaugă joburi cu butonul Compară de pe pagina unui job.","cmp.tray":"Compară ({n})","cmp.clear":"Golește","cmp.pay":"Salariu","cmp.eur":"Pe an în EUR","cmp.match":"Potrivire CV","cmp.remove":"Elimină","cmp.full":"Poți compara 3 joburi odată.",
 "ask.btn":"Întreabă Havn","ask.title":"Întreabă Havn","ask.sub":"Spune-mi ce cauți. Sugerez doar joburi care sunt acum pe Havn.","ask.ph":"ex. Joburi part-time în Cluj pentru studenți","ask.send":"Trimite","ask.stop":"Oprește","ask.hello":"Salut! Ce fel de job cauți? Spune-mi unde locuiești, la ce te pricepi și de ce salariu ai nevoie.",
-"foot.free":"Mereu gratuit pentru candidați.","pay.none":"Salariu nespecificat","b.nav":"via NAV","chip.paid":"Cu salariu afișat","pay.estnote":"Estimare: salariu obișnuit pentru joburi similare în Norvegia","pay.adnote":"din textul anunțului","chip.intl":"🌍 Deschis pentru străini","b.intl":"Fără norvegiană","foot.workno":"Lucru în Norvegia","d.navfull":"Vezi anunțul complet pe arbeidsplassen.no","d.navapply":"Aplică pe pagina angajatorului","d.navnote":"Anunțul vine din baza publică de joburi NAV (Norvegia). Aplică direct la angajator.","d.signapply":"Autentifică-te pentru aplicare rapidă","priv":"Confidențialitate","u.yr":"/an","u.mo":"/lună","u.hr":"/oră","foot.search":"pentru căutare","toast.saved":"Salvat","toast.removed":"Eliminat","toast.tracked":"Adăugat la Joburile mele","toast.copied":"Copiat"
+"foot.free":"Mereu gratuit pentru candidați.","pay.none":"Salariu nespecificat","b.nav":"via NAV","chip.paid":"Cu salariu afișat","d.extapply":"Aplică pe {src}","d.extnote":"Jobul provine de pe {src}. Citește anunțul complet și aplică pe pagina lor.","pay.estnote":"Estimare: salariu obișnuit pentru joburi similare în Norvegia","pay.adnote":"din textul anunțului","chip.intl":"🌍 Deschis pentru străini","b.intl":"Fără norvegiană","foot.workno":"Lucru în Norvegia","d.navfull":"Vezi anunțul complet pe arbeidsplassen.no","d.navapply":"Aplică pe pagina angajatorului","d.navnote":"Anunțul vine din baza publică de joburi NAV (Norvegia). Aplică direct la angajator.","d.signapply":"Autentifică-te pentru aplicare rapidă","priv":"Confidențialitate","u.yr":"/an","u.mo":"/lună","u.hr":"/oră","foot.search":"pentru căutare","toast.saved":"Salvat","toast.removed":"Eliminat","toast.tracked":"Adăugat la Joburile mele","toast.copied":"Copiat"
 }};
 const VT={
 no:{"Full-time":"Heltid","Part-time":"Deltid","Contract":"Kontrakt","Freelance":"Frilans","Seasonal":"Sesong","Internship":"Praksis","Entry":"Junior","Mid":"Erfaren","Senior":"Senior","Lead":"Leder",
@@ -759,6 +759,7 @@ const BM='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="cu
 const BM_ON='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg>';
 function workLabel(w){return t(w==="remote"?"remote":w==="hybrid"?"hybrid":"onsite")}
 function workTag(j){if(j.workplace==="remote")return `<span class="tag remote">${esc(t("remote"))} · ${esc(vt(j.remoteFrom||"Worldwide"))}</span>`;return `<span class="tag">${esc(workLabel(j.workplace))} · ${esc(j.location||vt(j.country)||"")}</span>`}
+const EXT={nav:"NAV",jobicy:"Jobicy",arbeitnow:"Arbeitnow"};function isExt(j){return !!EXT[j&&j.source]}
 function intlJob(j){if(j._intl!==undefined)return j._intl;if(j.openToForeign){j._intl=true;return true}
   const tx=((j.title||"")+" "+(j.description||"")+" "+(j.requirements||"")+" "+(j.languages||"")).toLowerCase();
   let en=0,no=0;for(const x of tx.split(/[^a-zæøåäöü]+/)){if(/^(the|and|you|we|with|our|will|your|are|this|have)$/.test(x))en++;else if(/^(og|du|vi|med|er|på|som|har|deg|det|ikke|eller)$/.test(x))no++}
@@ -780,7 +781,7 @@ function badges(j,preview){
   if(j.noExperience)out.push(`<span class="tag">${esc(t("b.noexp"))}</span>`);
   if(j.visa)out.push(`<span class="tag">${esc(t("b.visa"))}</span>`);
   if(j.employerType==="agency")out.push(`<span class="tag">${esc(t("b.agency"))}</span>`);
-  if(j.source==="nav")out.push(`<span class="tag">${esc(t("b.nav"))}</span>`);
+  if(isExt(j))out.push(`<span class="tag">${esc(j.source==="nav"?t("b.nav"):"via "+EXT[j.source])}</span>`);
   return out.join("");
 }
 function card(j,opts){
@@ -848,9 +849,9 @@ function renderDetail(id){
   const similar=sortJobs(S.jobs.filter(x=>x.id!==j.id&&isLive(x)&&(x.category===j.category||x.company===j.company)),"new").slice(0,3);
   const coCount=S.jobs.filter(x=>isLive(x)&&x.company===j.company).length;const inCmp=S.compare.includes(j.id);
   const applyBtn=st!=="active"?`<button class="btn btn-ghost" disabled>${esc(t("d.noacc"))}</button>`
-    :j.source==="nav"?`<a class="btn btn-primary" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl||j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.navapply"))}</a>
-      ${j.sourceUrl?`<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.navfull"))}</a>`:""}
-      <p class="muted" style="font-size:13px;margin:0">${esc(t("d.navnote"))}</p>
+    :isExt(j)?`<a class="btn btn-primary" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl||j.sourceUrl))}" target="_blank" rel="noopener">${esc(j.source==="nav"?t("d.navapply"):t("d.extapply",{src:EXT[j.source]}))}</a>
+      ${j.sourceUrl&&j.source==="nav"?`<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.navfull"))}</a>`:""}
+      <p class="muted" style="font-size:13px;margin:0">${esc(j.source==="nav"?t("d.navnote"):t("d.extnote",{src:EXT[j.source]}))}</p>
       ${!applied?`<button class="btn btn-ghost btn-sm" type="button" data-act="mark-applied" data-id="${esc(j.id)}">${esc(t("d.mark"))}</button>`:""}`
     :`${j.applyUrl?`<a class="btn btn-primary" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl))}" target="_blank" rel="noopener">${esc(t("d.applysite",{co:j.company}))}</a>`:""}
       ${!S.uid&&window.havn?`<button class="btn ${j.applyUrl?"btn-ghost":"btn-primary"}" type="button" data-act="signin" data-id="apply">${esc(t("d.signapply"))}</button>`:""}
@@ -884,7 +885,7 @@ function renderDetail(id){
           ${j.workplace==="remote"?`<dt>${esc(t("d.from"))}</dt><dd>${esc(vt(j.remoteFrom))}</dd>`:""}
           ${j.workplace==="remote"&&j.tz?`<dt>${esc(t("d.hours"))}</dt><dd>${esc(vt(j.tz))}</dd>`:""}
           ${j.location||j.country?`<dt>${esc(t("d.loc"))}</dt><dd>${esc([j.location,vt(j.country)].filter(Boolean).join(", "))}</dd>`:""}
-          ${j.source==="nav"?"":`<dt>${esc(t("d.by"))}</dt><dd>${esc(j.employerType==="agency"?t("d.agency"):t("d.direct"))}</dd>`}
+          ${isExt(j)?"":`<dt>${esc(t("d.by"))}</dt><dd>${esc(j.employerType==="agency"?t("d.agency"):t("d.direct"))}</dd>`}
           ${j.replyDays?`<dt>${esc(t("d.reply"))}</dt><dd>${esc(t("d.days",{n:j.replyDays}))}</dd>`:""}
           <dt>${esc(t("d.posted"))}</dt><dd>${ago(j.createdAt)}</dd>
           <dt>${esc(t("d.closes"))}</dt><dd>${esc(st==="active"?(left<=1?t("d.tomorrow"):t("d.in",{n:left})):t("d.closed"))}</dd>

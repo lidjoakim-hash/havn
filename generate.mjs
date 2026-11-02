@@ -201,7 +201,9 @@ async function put(path, html) {
 }
 
 const all = (await fetchJobs()).map(enrichPay);
-const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now);
+// Jobs from partner feeds (Jobicy, Arbeitnow) stay in the app only and link back to the original ad; no copies for search engines.
+const PARTNER = new Set(["jobicy", "arbeitnow"]);
+const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && !PARTNER.has(j.source));
 console.log(`Jobs: ${all.length} total, ${live.length} live`);
 
 for (const d of ["job", "jobs", "by", "en", "ro"]) await rm(d, { recursive: true, force: true });

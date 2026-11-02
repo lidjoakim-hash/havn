@@ -103,6 +103,7 @@ function payEstimate(j) {
 function enrichPay(j) {
   if (j._payDone) return j; j._payDone = true;
   if (+j.salaryMin || +j.salaryMax) { j.paySrc = j.paySrc || "listed"; return j; }
+  if (j.country && j.country !== "Norway") return j;
   const found = payFromText(`${j.title || ""}\n${j.description || ""}\n${j.benefits || ""}`);
   if (found) { j.salaryMin = found.min; j.salaryMax = found.max; j.salaryPeriod = found.period; j.currency = "NOK"; j.paySrc = "ad"; return j; }
   const est = payEstimate(j);
