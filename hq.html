@@ -110,13 +110,12 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-tab],[data
 
 /* live numbers */
 (async()=>{
- let rows=[];try{for(let o=0;o<6000;o+=1000){const r=await fetch(`${SB}/rest/v1/docs?collection=eq.jobs&select=s:data->>source,c:data->>createdAt,p:data->>salaryMin,st:data->>status,w:data->>workplace`,{headers:{apikey:K,Range:`${o}-${o+999}`}});const a=await r.json();rows=rows.concat(a);if(a.length<1000)break}}catch(e){$("#stats").innerHTML='<div class="card">Could not load live numbers right now.</div>';return}
- const live=rows.filter(r=>r.st==="active"),day=Date.now()-86400000,week=Date.now()-7*86400000;
- const by={};live.forEach(r=>{const s=r.s||"havn";by[s]=(by[s]||0)+1});
+ let p;try{p=await fetch("data/pointer.json?x="+Date.now()).then(r=>r.json())}catch(e){$("#stats").innerHTML='<div class="card">Could not load live numbers right now.</div>';return}
  const stat=(n,l)=>`<div class="card stat"><div class="n">${n}</div><div class="l">${l}</div></div>`;
- $("#stats").innerHTML=stat(nf(live.length),"live jobs")+stat(nf(live.filter(r=>+r.c>day).length),"new in the last 24 h")+stat(nf(live.filter(r=>r.w==="remote").length),"remote jobs")+stat(nf(by.havn||0),"posted directly on Havn");
- const names={nav:"NAV (Norway)",jobicy:"Jobicy (remote)",arbeitnow:"Arbeitnow (Europe)",ats:"Direct from company career pages",havn:"Employers on Havn"};
- const max=Math.max(...Object.values(by));$("#sources").innerHTML=Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<div class="row"><span>${esc(names[s]||s)}</span><b>${nf(n)}</b></div><div class="bar"><i style="width:${Math.round(100*n/max)}%"></i></div>`).join("");
+ $("#stats").innerHTML=stat(nf(p.count),"live jobs")+stat(nf(p.new24h),"new in the last 24 h")+stat(nf(p.remote),"remote jobs")+stat(nf(p.companies),"companies hiring");
+ const names={nav:"NAV (Norway)",jobicy:"Jobicy (remote)",arbeitnow:"Arbeitnow (Europe)",ats:"Direct from company career pages",remoteok:"Remote OK (remote)",jobtech:"Arbetsförmedlingen (Sweden)",havn:"Employers on Havn"};
+ const by=p.bySource||{};const max=Math.max(1,...Object.values(by));
+ $("#sources").innerHTML=Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`<div class="row"><span>${esc(names[s]||s)}</span><b>${nf(n)}</b></div><div class="bar"><i style="width:${Math.round(100*n/max)}%"></i></div>`).join("")+`<div class="row muted" style="margin-top:12px"><span>Duplicates removed</span><b>${nf(p.duplicatesRemoved||0)}</b></div><div class="row muted"><span>Index updated</span><b>${new Date(p.updated).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})}</b></div>`;
 })();
 fetch("health.json?x="+Date.now()).then(r=>r.json()).then(h=>{$("#health").innerHTML=`<div class="row"><span>NAV import</span><span class="pill ${h.ok?"":"bad"}">${h.ok?"Running":"Needs a look"}</span></div><div class="row"><span>Newest NAV job</span><b>${h.newestNavHoursAgo} h ago</b></div><div class="row"><span>Last check</span><b>${new Date(h.checkedAt).toLocaleString("en-GB",{dateStyle:"medium",timeStyle:"short"})}</b></div>`}).catch(()=>{$("#health").textContent="No health report yet."});
 

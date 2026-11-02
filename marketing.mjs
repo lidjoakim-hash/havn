@@ -26,14 +26,19 @@ const nf = (n) => new Intl.NumberFormat("nb-NO").format(Math.round(n));
 
 async function fetchJobs() {
   if (process.env.MOCK_JOBS) return JSON.parse(await readFile(process.env.MOCK_JOBS, "utf8"));
-  const [jobs, texts] = await Promise.all([fetchCol("jobs"), fetchCol("jobtext").catch(() => [])]);
-  const byId = new Map(texts.map((t) => [t.id, t]));
-  return jobs.map((j) => { const t = byId.get(j.id); return t ? { ...j, description: t.description, requirements: t.requirements || j.requirements, benefits: t.benefits || j.benefits } : j; });
+  const p = await (await fetch(`https://raw.githubusercontent.com/lidjoakim-hash/havn/main/data/pointer.json?x=${now}`)).json();
+  const base = `https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
+  const out = [];
+  for (const f of p.files) {
+    const { cols, rows } = await (await fetch(base + f)).json();
+    for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); }
+  }
+  return out.concat(await fetchCol("jobs", "&data->>source=is.null"));
 }
-async function fetchCol(col) {
+async function fetchCol(col, extra = "") {
     const out = [];
   for (let from = 0; ; from += 1000) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.${col}&select=id,data&order=id`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, Range: `${from}-${from + 999}`, "Range-Unit": "items" } });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.${col}&select=id,data&order=id${extra}`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, Range: `${from}-${from + 999}`, "Range-Unit": "items" } });
     if (!res.ok) throw new Error(`Supabase answered ${res.status}`);
     const rows = await res.json();
     out.push(...rows.map((r) => ({ id: r.id, ...r.data })));
@@ -42,6 +47,7 @@ async function fetchCol(col) {
   return out;
 }
 function intlJob(j) {
+  if (j._intl !== undefined) return !!j._intl;
   if (j.source === "jobicy" || j.source === "arbeitnow" || j.source === "ats") return true;
   const tx = `${j.title || ""} ${j.description || ""}`.toLowerCase();
   let en = 0, no = 0;
@@ -77,7 +83,7 @@ function pick(list, n = 5) {
 }
 
 // ---------- today's theme ----------
-const all = (await fetchJobs()).map(enrichPay);
+const all = (await fetchJobs()).map((j) => (j._payDone ? j : enrichPay(j)));
 const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now);
 const fresh = live.filter((j) => now - (j.createdAt || 0) < 4 * DAY);
 const pool = fresh.length > 40 ? fresh : live;

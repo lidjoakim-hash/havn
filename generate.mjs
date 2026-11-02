@@ -35,15 +35,31 @@ function payText(j) {
   return `${a && b && a !== b ? f(a) + "–" + f(b) : f(a || b)} ${j.currency || ""}${per}${j.paySrc === "ad" ? " (fra annonsen)" : ""}`;
 }
 
+// The job list comes from the compact job index (built every 30 min, served by jsDelivr); jobs posted on Havn itself come from the database.
 async function fetchJobs() {
-  const [jobs, texts] = await Promise.all([fetchCol("jobs"), fetchCol("jobtext").catch(() => [])]);
-  const byId = new Map(texts.map((t) => [t.id, t]));
-  return jobs.map((j) => { const t = byId.get(j.id); return t ? { ...j, description: t.description, requirements: t.requirements || j.requirements, benefits: t.benefits || j.benefits } : j; });
+  const p = await (await fetch(`https://raw.githubusercontent.com/lidjoakim-hash/havn/main/data/pointer.json?x=${now}`)).json();
+  const base = `https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
+  const out = [];
+  for (const f of p.files) {
+    const { cols, rows } = await (await fetch(base + f)).json();
+    for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); }
+  }
+  const own = await fetchCol("jobs", "&data->>source=is.null");
+  return out.concat(own);
 }
-async function fetchCol(col) {
+async function fetchTexts(ids) {
+  const out = new Map();
+  for (let i = 0; i < ids.length; i += 80) {
+    const list = ids.slice(i, i + 80).map((x) => `"${x}"`).join(",");
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.jobtext&id=in.(${encodeURIComponent(list)})&select=id,data`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } });
+    if (res.ok) for (const r of await res.json()) out.set(r.id, r.data);
+  }
+  return out;
+}
+async function fetchCol(col, extra = "") {
   const out = [];
   for (let from = 0; ; from += 1000) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.${col}&select=id,data&order=id`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.${col}&select=id,data&order=id${extra}`, {
       headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, Range: `${from}-${from + 999}`, "Range-Unit": "items" },
     });
     if (!res.ok) throw new Error(`Supabase answered ${res.status}: ${await res.text()}`);
@@ -90,7 +106,8 @@ ${body}
 function jobRow(j) {
   const where = [j.location, j.country].filter(Boolean).join(", ");
   const pay = payText(j);
-  return `<li><a href="${SITE}/job/${esc(j.id)}/">${esc(j.title)}</a><span>${esc(j.company)}${where ? " · " + esc(where) : ""}${pay ? " · " + esc(pay) : ""}</span></li>`;
+  const href = !j.source || j.source === "nav" ? `${SITE}/job/${esc(j.id)}/` : `${SITE}/#job-${esc(j.id)}`;
+  return `<li><a href="${href}">${esc(j.title)}</a><span>${esc(j.company)}${where ? " · " + esc(where) : ""}${pay ? " · " + esc(pay) : ""}</span></li>`;
 }
 
 function jobPage(j) {
@@ -143,6 +160,7 @@ function listPage(title, intro, path, jobs) {
 
 // Jobs that suit people from abroad: English-language ads, or ads that say Norwegian isn't required. Same rules as the app.
 function intlJob(j) {
+  if (j._intl !== undefined) return !!j._intl;
   if (j.openToForeign) return true;
   const tx = `${j.title || ""} ${j.description || ""} ${j.requirements || ""} ${j.languages || ""}`.toLowerCase();
   let en = 0, no = 0;
@@ -212,16 +230,26 @@ async function put(path, html) {
   await writeFile(`${dir}index.html`, html);
 }
 
-const all = (await fetchJobs()).map(enrichPay);
+const all = (await fetchJobs()).map((j) => (j._payDone ? j : enrichPay(j)));
 // Jobs from partner feeds (Jobicy, Arbeitnow) stay in the app only and link back to the original ad; no copies for search engines.
-const PARTNER = new Set(["jobicy", "arbeitnow", "ats"]);
-const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && !PARTNER.has(j.source));
+const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && (!j.source || j.source === "nav"));
 console.log(`Jobs: ${all.length} total, ${live.length} live`);
 
-for (const d of ["job", "jobs", "by", "en", "ro"]) await rm(d, { recursive: true, force: true });
+for (const d of ["jobs", "by", "en", "ro"]) await rm(d, { recursive: true, force: true });
 const urls = [`${SITE}/`, `${SITE}/jobs/`];
 
-for (const j of live) { await put(`/job/${j.id}/`, jobPage(j)); urls.push(`${SITE}/job/${j.id}/`); }
+// job pages: keep the ones that exist, add new ones, remove closed ones (full rebuild once a week or with FULL=1)
+const { readdir } = await import("node:fs/promises");
+await mkdir("job", { recursive: true });
+const existing = new Set(await readdir("job").catch(() => []));
+const liveIds = new Set(live.map((j) => j.id));
+for (const d of existing) if (!liveIds.has(d)) await rm(`job/${d}`, { recursive: true, force: true });
+const rebuild = process.env.FULL === "1" || new Date().getUTCDay() === 0 && new Date().getUTCHours() < 3;
+const need = live.filter((j) => rebuild || !existing.has(j.id));
+const texts = await fetchTexts(need.filter((j) => j.hasText).map((j) => j.id));
+for (const j of need) { const t = texts.get(j.id); if (t) Object.assign(j, { description: t.description, requirements: t.requirements, benefits: t.benefits }); if (!j.description) j.description = j.summary || ""; await put(`/job/${j.id}/`, jobPage(j)); }
+for (const j of live) urls.push(`${SITE}/job/${j.id}/`);
+console.log(`Job pages: ${need.length} written, ${existing.size} existed`);
 
 const byCat = {}, byCity = {};
 for (const j of live) {
@@ -245,14 +273,14 @@ const indexBody = `<h1>Alle ledige jobber på Havn</h1><p class="meta">${live.le
 <h2>Nyeste jobber</h2><ul class="jobs">${live.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).map(jobRow).join("")}</ul>`;
 await put(`/jobs/`, page({ title: "Alle ledige jobber | Havn", description: `${live.length} ledige stillinger i Norge, Romania og fjernarbeid i Europa. Gratis for jobbsøkere.`, canonical: `${SITE}/jobs/`, body: indexBody }));
 
-const intl = live.filter(intlJob);
+const intl = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && j.country === "Norway" && intlJob(j)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 400);
 await put(GUIDE.en.path, guidePage(GUIDE.en, intl, GUIDE.ro.path));
 await put(GUIDE.ro.path, guidePage(GUIDE.ro, intl, GUIDE.en.path));
 urls.push(`${SITE}${GUIDE.en.path}`, `${SITE}${GUIDE.ro.path}`);
 console.log(`International jobs: ${intl.length}`);
 
 // small sample of real jobs (used for app-store screenshots and previews)
-await writeFile("jobs-sample.json", JSON.stringify(live.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 80).map((j) => ({ ...j, description: String(j.description || "").slice(0, 1500) }))));
+await writeFile("jobs-sample.json", JSON.stringify(live.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 80).map((j) => ({ ...j, description: undefined }))));
 urls.push(`${SITE}/privacy.html`);
 
 const lastmod = new Date().toISOString().slice(0, 10);

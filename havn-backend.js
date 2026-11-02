@@ -23,7 +23,7 @@
   async function fetchCol(col){
     const out=[];const size=1000;
     for(let from=0;;from+=size){
-      const {data,error}=await sb.from(T).select("id,data").eq("collection",col).range(from,from+size-1);
+      let q=sb.from(T).select("id,data").eq("collection",col);if(col==="jobs"&&window.HAVN_OWN_ONLY)q=q.is("data->>source",null);const {data,error}=await q.range(from,from+size-1);
       if(error)throw err(error);out.push(...data);if(data.length<size)break;
     }
     const docs=out.map(r=>docSnap(r.id,r.data));return {docs,size:docs.length,empty:!docs.length,docChanges:()=>[],metadata:{fromCache:false,hasPendingWrites:false}};
