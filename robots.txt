@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lidjoakim-hash.github.io/havn/sitemap.xml
