@@ -1,0 +1,58 @@
+name: Havn job index
+
+on:
+  schedule:
+    - cron: "11,41 * * * *"   # every 30 minutes
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Re-read every job (1) instead of only changes"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: havn-index
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Previous index
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: job-index
+          path: idx
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Build index
+        env:
+          FULL: ${{ github.event.inputs.full || '0' }}
+        run: node build-index.mjs idx
+      - name: Publish index branch
+        id: pub
+        run: |
+          cd idx
+          rm -rf .git
+          git init -q -b job-index
+          git config user.name "havn-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "Job index"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" job-index
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Update pointer
+        run: |
+          mkdir -p data
+          node -e "const m=require('./idx/meta.json');delete m.raw;m.sha='${{ steps.pub.outputs.sha }}';require('fs').writeFileSync('data/pointer.json',JSON.stringify(m))"
+          git config user.name "havn-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/pointer.json
+          git commit -qm "Update job index pointer"
+          for i in 1 2 3; do git pull -q --rebase origin main && git push -q && break; sleep 5; done

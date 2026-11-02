@@ -31,7 +31,7 @@ jobs:
             echo "No changes"
           else
             git commit -m "Update job pages"
-            git push
+            for i in 1 2 3; do git pull -q --rebase origin main && git push -q && break; sleep 5; done
           fi
       - name: Check NAV import is running
         run: |
