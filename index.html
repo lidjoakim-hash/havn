@@ -646,7 +646,7 @@ nav.main a.cta{background:var(--accent);color:var(--accent-ink);box-shadow:0 4px
 </div>
 <div id="modalRoot"></div>
 
-<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=9"></script><script src="havn-backend.js?v=5"></script>
+<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=9"></script><script src="i18n-phrases.js?v=1"></script><script src="havn-backend.js?v=5"></script>
 <script>
 (function(){
 "use strict";
@@ -792,11 +792,13 @@ let LANG=(()=>{try{const s=localStorage.getItem("havn.lang");if(s)return JSON.pa
 if(!T[LANG])LANG="en";
 function t(k,v){let s=(T[LANG]&&T[LANG][k])??T.en[k]??k;if(v)for(const [a,b] of Object.entries(v))s=s.split("{"+a+"}").join(b);return s}
 function vt(x){return (VT[LANG]&&VT[LANG][x])||x}
+window.havnVt=x=>vt(x);
 function applyI18n(){
   document.documentElement.lang=LANG==="no"?"nb":LANG;
   document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n)});
   document.querySelectorAll("[data-i18n-html]").forEach(el=>{el.innerHTML=t(el.dataset.i18nHtml)});
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>{el.placeholder=t(el.dataset.i18nPh)});
+  window.havnTranslate&&window.havnTranslate(LANG);
   document.querySelectorAll("#fCat option").forEach(o=>{if(o.value)o.textContent=vt(o.value)});
   document.querySelectorAll("#fType option,#fLevel option").forEach(o=>{if(o.value)o.textContent=vt(o.value)});
 }
@@ -805,7 +807,7 @@ function applyI18n(){
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const now=()=>Date.now();
-function toast(msg){const t=document.createElement("div");t.className="toast";t.textContent=msg;t.setAttribute("role","status");document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+function toast(msg){if(window.havnTr)msg=window.havnTr(msg);const t=document.createElement("div");t.className="toast";t.textContent=msg;t.setAttribute("role","status");document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
 function hue(str){let h=0;for(const c of String(str))h=(h*31+c.charCodeAt(0))%360;return h}
 function slug(s){return String(s||"").toLowerCase().normalize("NFKD").replace(/[^\w\s-]/g,"").trim().replace(/[\s_]+/g,"-").replace(/-+/g,"-").slice(0,60)||"company"}
 function markHtml(co,big){const h=hue(co);return `<div class="mark" style="background:hsl(${h} 42% 88%);color:hsl(${h} 32% 30%)" aria-hidden="true">${esc((co||"?").trim().charAt(0).toUpperCase())}</div>`}
