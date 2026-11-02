@@ -107,7 +107,8 @@ nav.main a.cta{background:var(--accent);color:var(--accent-ink);font-weight:600}
 .detail{display:grid;grid-template-columns:1fr 320px;gap:32px;padding-block:28px 60px}
 @media (max-width:860px){.detail{grid-template-columns:1fr}}
 .detail-main{min-width:0}
-.detail>.similar{grid-column:1/-1;border-top:1px solid var(--line);padding-top:22px}
+#jobDetail>.similar{border-top:1px solid var(--line);padding:22px 0 70px}
+@media (max-width:860px){#jobDetail>.similar{padding-bottom:120px}}
 .detail h1{font-size:clamp(28px,4.4vw,40px);letter-spacing:-.02em;margin-top:10px}
 .prose{max-width:68ch}
 .prose h2{font-size:19px;margin:26px 0 8px}
@@ -427,7 +428,7 @@ nav.main a.cta{background:var(--accent);color:var(--accent-ink);box-shadow:0 4px
 .mbar{display:none}
 @media (max-width:860px){.mbar{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;gap:8px;align-items:center;justify-content:space-between;background:var(--surface);border-radius:999px;box-shadow:var(--shadow-up);padding:8px 8px 8px 18px;animation:barin .5s .3s cubic-bezier(.2,.7,.2,1) both}
 .mbar .t{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-.detail{padding-bottom:110px}}
+.detail{padding-bottom:30px}}
 @keyframes barin{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}.hero h1 em{animation:none;background-size:100% 100%}.detail .panel,.detail .prose,.big-pay,.mbar{animation:none!important}}
 </style>
@@ -1057,8 +1058,8 @@ function renderDetail(id){
       <p class="muted" style="font-size:13px;margin:0">${esc(t("d.never"))} <button type="button" class="btn btn-ghost btn-sm" data-act="report" data-id="${esc(j.id)}" style="margin-top:6px">${esc(t("d.report"))}</button></p>
     </aside>
     ${st==="active"&&(j.applyUrl||j.sourceUrl)?`<div class="mbar"><span class="t">${esc(j.company)}</span><a class="btn btn-primary btn-sm" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl||j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.applyshort"))} ↗</a></div>`:""}
-    ${similar.length?`<section class="similar"><h2 style="font-size:20px;margin:8px 0 12px">${esc(t("d.similar"))}</h2><div class="list">${similar.map(x=>card(x)).join("")}</div></section>`:""}
-  </div>`;
+  </div>
+    ${similar.length?`<section class="similar"><h2 style="font-size:20px;margin:8px 0 12px">${esc(t("d.similar"))}</h2><div class="list">${similar.map(x=>card(x)).join("")}</div></section>`:""}`;
 }
 
 /* ================= company ================= */
