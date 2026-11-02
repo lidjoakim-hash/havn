@@ -6,7 +6,7 @@
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const DAY = 86_400_000;
-const PER_RUN = 6;
+const PER_RUN = 8;
 const MAX_PER_COMPANY = 200;
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type" };
 
@@ -76,8 +76,9 @@ function category(text: string): string {
   const t = text.toLowerCase();
   const rules: [RegExp, string][] = [
     [/(product manager|product owner|\bpm\b|product lead)/, "Product"], [/(design|ux|ui\b|brand designer|creative director)/, "Design"],
-    [/(engineer|developer|software|devops|sre|data scien|machine learning|\bml\b|\bai\b|security|infrastructure|platform|backend|frontend|full.?stack|mobile|ios|android|qa|analyst|data)/, "Engineering"],
-    [/(marketing|growth|seo|content|communications|pr\b|social media|brand)/, "Marketing"], [/(sales|account executive|business development|\bsdr\b|\bbdr\b|partnerships|account manager)/, "Sales"],
+    [/(sales|account executive|business development|\bsdr\b|\bbdr\b|partnerships|account manager|solutions consultant)/, "Sales"],
+    [/(marketing|growth|seo|content|communications|\bpr\b|social media|brand)/, "Marketing"],
+    [/(engineer|developer|software|devops|\bsre\b|data scien|machine learning|\bml\b|\bai\b|security|infrastructure|backend|frontend|full.?stack|mobile|\bios\b|android|\bqa\b|data)/, "Engineering"],
     [/(support|customer success|customer experience|onboarding|implementation)/, "Customer support"], [/(recruit|talent|people|hr\b|finance|accounting|legal|counsel|office|executive assistant|payroll|tax)/, "Admin & office"],
     [/(operations|ops\b|program manager|project manager|strategy|supply|procurement)/, "Operations"], [/(writer|editor|video|producer|community)/, "Creative & media"],
   ];
@@ -86,12 +87,12 @@ function category(text: string): string {
 }
 function jobType(s: string) {
   const t = String(s || "").toLowerCase();
-  if (/intern/.test(t)) return "Internship"; if (/part/.test(t)) return "Part-time"; if (/contract|temporary|fixed/.test(t)) return "Contract"; if (/freelance/.test(t)) return "Freelance"; return "Full-time";
+  if (/\bintern(ship)?\b|praktikum|werkstudent/.test(t)) return "Internship"; if (/part/.test(t)) return "Part-time"; if (/contract|temporary|fixed/.test(t)) return "Contract"; if (/freelance/.test(t)) return "Freelance"; return "Full-time";
 }
 function base(extra: Record<string, unknown>) {
   return { seniority: "", employerType: "direct", tz: "", county: "", languages: "", replyDays: 0, noExperience: false, visa: /visa|relocation/i.test(String(extra.description || "")),
     salaryMin: 0, salaryMax: 0, currency: "EUR", salaryPeriod: "year", requirements: "", benefits: "", process: "", applyEmail: "", contact: "",
-    tier: "standard", status: "active", verified: true, companyUrl: "", source: "ats", ...extra };
+    tier: "standard", status: "active", verified: false, companyUrl: "", source: "ats", ...extra };
 }
 const per = (s: string) => (/hour/i.test(s) ? "hour" : /month/i.test(s) ? "month" : "year");
 
@@ -103,11 +104,11 @@ async function greenhouse(c: { token: string; name: string }) {
   const out: [string, Record<string, unknown>][] = [];
   for (const x of d.jobs ?? []) {
     const loc = [x.location?.name, ...(x.offices ?? []).map((o: { name?: string }) => o.name)].filter(Boolean).join(" · ");
-    const p = place(loc, false); if (!p.keep) continue;
+    const pl = place(loc, false); if (!pl.keep) continue; const { keep: _k, ...p } = pl;
     const created = Date.parse(x.first_published || x.updated_at) || Date.now();
     const description = htmlToText(decode(x.content || "")).slice(0, 4000);
     out.push([`ats-gh-${c.token}-${x.id}`, base({ title: decode(x.title), company: c.name, category: category(`${x.title} ${(x.departments ?? []).map((q: { name?: string }) => q.name).join(" ")}`),
-      jobType: jobType(description.slice(0, 400)), location: String(x.location?.name || "").slice(0, 80), ...p, description,
+      jobType: jobType(`${x.title} ${(x.metadata ?? []).map((m: { value?: unknown }) => String(m.value ?? "")).join(" ")}`), location: String(x.location?.name || "").slice(0, 80), ...p, description,
       applyUrl: x.absolute_url, sourceUrl: x.absolute_url, createdAt: created, expiresAt: Date.now() + 30 * DAY })]);
   }
   return out;
@@ -119,7 +120,7 @@ async function lever(c: { token: string; name: string }) {
   const out: [string, Record<string, unknown>][] = [];
   for (const x of d ?? []) {
     const loc = [x.categories?.location, ...(x.categories?.allLocations ?? [])].filter(Boolean).join(" · ");
-    const p = place(`${loc} ${x.workplaceType === "remote" ? "remote" : ""}`, x.workplaceType === "remote"); if (!p.keep) continue;
+    const pl = place(`${loc} ${x.workplaceType === "remote" ? "remote" : ""}`, x.workplaceType === "remote"); if (!pl.keep) continue; const { keep: _k, ...p } = pl;
     const lists = (x.lists ?? []).map((l: { text?: string; content?: string }) => `${l.text}\n${htmlToText(l.content || "")}`).join("\n\n");
     const description = `${x.descriptionPlain || ""}\n\n${lists}\n\n${x.additionalPlain || ""}`.trim().slice(0, 4000);
     const s = x.salaryRange || {};
@@ -138,7 +139,7 @@ async function ashby(c: { token: string; name: string }) {
   for (const x of d.jobs ?? []) {
     if (x.isListed === false) continue;
     const loc = [x.location, ...(x.secondaryLocations ?? []).map((l: { location?: string }) => l.location), x.address?.postalAddress?.addressCountry].filter(Boolean).join(" · ");
-    const p = place(`${loc} ${x.isRemote ? "remote" : ""}`, !!x.isRemote); if (!p.keep) continue;
+    const pl = place(`${loc} ${x.isRemote ? "remote" : ""}`, !!x.isRemote); if (!pl.keep) continue; const { keep: _k, ...p } = pl;
     const comp = (x.compensation?.summaryComponents ?? []).find((q: { compensationType?: string }) => q.compensationType === "Salary") || {};
     const description = String(x.descriptionPlain || htmlToText(x.descriptionHtml || "")).slice(0, 4000);
     out.push([`ats-ab-${c.token}-${x.id}`, base({ title: x.title, company: c.name, category: category(`${x.title} ${x.department || ""} ${x.team || ""}`), jobType: jobType(x.employmentType),

@@ -133,7 +133,7 @@ const COUNTRY = { // pay level vs Norway for the same job, and the currency show
   Poland: [0.35, "PLN"], Romania: [0.28, "EUR"], Czechia: [0.4, "EUR"], Estonia: [0.45, "EUR"], Lithuania: [0.4, "EUR"], Latvia: [0.38, "EUR"], Greece: [0.38, "EUR"], Hungary: [0.33, "EUR"], Bulgaria: [0.25, "EUR"], Croatia: [0.38, "EUR"],
   "United States": [1.15, "USD"], Canada: [0.8, "USD"], Australia: [0.85, "USD"], Singapore: [0.85, "USD"], Japan: [0.6, "USD"], India: [0.15, "USD"], Brazil: [0.2, "USD"], Mexico: [0.2, "USD"], UAE: [0.85, "USD"], Israel: [0.85, "USD"],
 };
-const REMOTE_LEVEL = { Worldwide: [0.85, "USD"], Europe: [0.75, "EUR"], Nordics: [0.9, "EUR"], Norway: [1, "NOK"], Romania: [0.3, "EUR"] };
+const REMOTE_LEVEL = { Worldwide: [0.85, "USD"], Europe: [0.75, "EUR"], Nordics: [0.9, "EUR"], Norway: [1, "NOK"], Romania: [0.5, "EUR"] };
 const CAT_EST = { Engineering: [700000, 900000], Design: [560000, 720000], Product: [750000, 950000], Marketing: [560000, 700000], Sales: [480000, 650000], "Customer support": [420000, 500000],
   Operations: [520000, 700000], "Admin & office": [480000, 580000], "Hospitality & events": [400000, 480000], "Creative & media": [520000, 680000], "Logistics & warehouse": [450000, 530000],
   Maritime: [520000, 720000], Healthcare: [520000, 680000], Education: [520000, 680000], "Construction & trades": [500000, 610000], Other: [450000, 600000] };
@@ -142,7 +142,7 @@ function estimateAny(j) {
   const t = `${j.title || ""}`.toLowerCase();
   if (/(sommerjobb|summer job|ekstrahjelp|extra help|student|tilkalling|ringevikar|deltid|part[- ]time|werkstudent|helgejobb)/.test(t) && (!j.country || j.country === "Norway")) return { min: 180, max: 230, period: "hour", currency: "NOK" };
   if (/(lærling|apprentice|ausbildung)/.test(t)) { const [f, c] = COUNTRY[j.country] || [1, "NOK"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(260000 * f * r / 1000) * 1000, max: Math.round(380000 * f * r / 1000) * 1000, period: "year", currency: c }; }
-  if (/(intern|internship|praktikant|trainee)/.test(t)) { const [f, c] = (j.workplace === "remote" ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || [0.8, "EUR"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(300000 * f * r / 1000) * 1000, max: Math.round(420000 * f * r / 1000) * 1000, period: "year", currency: c }; }
+  if (/(\bintern\b|\binternship|praktikant|trainee)/.test(t)) { const [f, c] = (j.workplace === "remote" ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || [0.8, "EUR"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(300000 * f * r / 1000) * 1000, max: Math.round(420000 * f * r / 1000) * 1000, period: "year", currency: c }; }
   let base = payEstimate(j);
   if (!base) { const c = CAT_EST[j.category] || CAT_EST.Other; base = { min: c[0], max: c[1], period: "year" }; }
   let [f, cur] = (j.workplace === "remote" && j.remoteFrom ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || (j.workplace === "remote" ? REMOTE_LEVEL.Europe : COUNTRY.Norway);
@@ -154,7 +154,7 @@ function estimateAny(j) {
 // ---------- seniority and languages ----------
 function seniorityOf(j, text) {
   const t = `${j.title || ""}`.toLowerCase(), x = String(text || "").toLowerCase();
-  if (/(junior|trainee|graduate|entry[- ]level|lærling|apprentice|intern\b|internship|praktikant|student|sommerjobb|ekstrahjelp|tilkalling|ringevikar|werkstudent|assistent|assistant|medarbeider|butikk|servitør|oppvask|renhold|cleaner|kjøkkenhjelp|hjelpearbeider|lagerarbeider|plukker|warehouse worker|helgejobb)/.test(t)) return "Entry";
+  if (/(junior|trainee|graduate|entry[- ]level|lærling|apprentice|\bintern\b|internship|praktikant|student|sommerjobb|ekstrahjelp|tilkalling|ringevikar|werkstudent|assistent|assistant|medarbeider|butikk|servitør|oppvask|renhold|cleaner|kjøkkenhjelp|hjelpearbeider|lagerarbeider|plukker|warehouse worker|helgejobb)/.test(t)) return "Entry";
   if (/(\bhead of|director|direktør|\bchief|\bvp\b|vice president|\bcto\b|\bceo\b|daglig leder|leder\b|leiar\b|manager|sjef\b|principal|\blead\b|team lead)/.test(t)) return "Lead";
   if (/(senior|\bsr\.?\b|erfaren|experienced|overlege|staff engineer|ekspert|expert)/.test(t)) return "Senior";
   if (/(ingen erfaring|uten erfaring|no experience|opplæring gis|training (is )?provided|nyutdannet|newly graduated|0-2 years|0–2 years)/.test(x)) return "Entry";
