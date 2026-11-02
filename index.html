@@ -695,6 +695,8 @@ const S={intl:/[?&#]intl\b/.test(location.search+location.hash),db:null,user:nul
 /* ================= i18n ================= */
 const T={
 en:{
+"d.checked":"Still open at the source, checked {when}",
+"d.who":"Check the ad: some employers only hire in certain countries.","d.jobicynote":"Jobicy may ask you to sign in before it shows the apply link.",
 "meta.title":"Havn – international jobs that show the pay","meta.desc":"Jobs in Norway, Romania and remote across Europe. Every job shows the pay, stated by the employer or clearly marked as an estimate. Free for job seekers.",
 "nav.jobs":"Find jobs","nav.my":"My jobs","nav.salaries":"Salaries","nav.employers":"For employers","nav.post":"Post a job",
 "hero.eyebrow":"Norway · Romania · Remote across Europe",
@@ -725,6 +727,8 @@ en:{
 "foot.free":"Free for job seekers, always.","pay.none":"Pay not listed","pay.estlbl":"Estimate","pay.esttip":"Havn\u2019s estimate of typical pay for this kind of job and place. The employer has not stated the pay.","b.nav":"via NAV","chip.paid":"Pay shown","f.lang":"Language","b.direct":"Direct from employer","d.atsnote":"This job is taken straight from {co}'s own careers page. Apply there.","d.loadtext":"Loading the full ad…","lang.English":"English","lang.Norwegian":"Norwegian","lang.German":"German","lang.Swedish":"Swedish","lang.Danish":"Danish","lang.Polish":"Polish","lang.Romanian":"Romanian","lang.French":"French","lang.Spanish":"Spanish","lang.Dutch":"Dutch","lang.Lithuanian":"Lithuanian","lang.Ukrainian":"Ukrainian","d.extapply":"Apply on {src}","d.extnote":"This job comes from {src}. Read the full ad and apply on their page.","pay.estnote":"Estimate · typical pay, not confirmed","pay.adnote":"from the ad text","chip.intl":"🌍 Open to foreign workers","b.intl":"No Norwegian needed","foot.workno":"Work in Norway","d.navfull":"See the full ad on arbeidsplassen.no","d.navapply":"Apply on the employer's page","d.navnote":"This ad comes from NAV's public job database. Apply directly with the employer.","d.signapply":"Sign in to Quick apply","priv":"Privacy","u.yr":"/yr","u.mo":"/mo","u.hr":"/hr","foot.search":"to search","toast.saved":"Saved","toast.removed":"Removed","toast.tracked":"Added to My jobs","toast.copied":"Copied"
 },
 no:{
+"d.checked":"Fortsatt åpen hos kilden, sjekket {when}",
+"d.who":"Sjekk annonsen: noen arbeidsgivere ansetter bare i bestemte land.","d.jobicynote":"Jobicy kan be deg logge inn før søknadslenken vises.",
 "meta.title":"Havn – jobber som viser lønnen","meta.desc":"Jobber i Norge, Romania og fjernarbeid i hele Europa. Hver jobb viser lønn, oppgitt av arbeidsgiver eller tydelig merket som estimat. Gratis for jobbsøkere.",
 "nav.jobs":"Finn jobb","nav.my":"Mine jobber","nav.salaries":"Lønninger","nav.employers":"For arbeidsgivere","nav.post":"Legg ut jobb",
 "hero.eyebrow":"Norge · Romania · Fjernarbeid i hele Europa",
@@ -755,6 +759,8 @@ no:{
 "foot.free":"Alltid gratis for jobbsøkere.","pay.none":"Lønn ikke oppgitt","pay.estlbl":"Estimat","pay.esttip":"Havns estimat av vanlig lønn for denne typen jobb og sted. Arbeidsgiveren har ikke oppgitt lønn.","b.nav":"via NAV","chip.paid":"Lønn oppgitt","f.lang":"Spr\u00e5k","b.direct":"Direkte fra arbeidsgiver","d.atsnote":"Jobben er hentet direkte fra karrieresiden til {co}. Søk der.","d.loadtext":"Henter hele annonsen…","lang.English":"Engelsk","lang.Norwegian":"Norsk","lang.German":"Tysk","lang.Swedish":"Svensk","lang.Danish":"Dansk","lang.Polish":"Polsk","lang.Romanian":"Rumensk","lang.French":"Fransk","lang.Spanish":"Spansk","lang.Dutch":"Nederlandsk","lang.Lithuanian":"Litauisk","lang.Ukrainian":"Ukrainsk","d.extapply":"Søk via {src}","d.extnote":"Jobben kommer fra {src}. Les hele annonsen og søk på deres side.","pay.estnote":"Estimat · vanlig lønn, ikke bekreftet","pay.adnote":"fra annonseteksten","chip.intl":"🌍 Åpen for utenlandske søkere","b.intl":"Norsk ikke påkrevd","foot.workno":"Jobb i Norge for utlendinger","d.navfull":"Se hele annonsen på arbeidsplassen.no","d.navapply":"Søk hos arbeidsgiveren","d.navnote":"Annonsen kommer fra NAVs offentlige stillingsdatabase. Søk direkte hos arbeidsgiveren.","d.signapply":"Logg inn for hurtigsøk","priv":"Personvern","u.yr":"/år","u.mo":"/mnd","u.hr":"/t","foot.search":"for å søke","toast.saved":"Lagret","toast.removed":"Fjernet","toast.tracked":"Lagt til i Mine jobber","toast.copied":"Kopiert"
 },
 ro:{
+"d.checked":"Încă deschis la sursă, verificat {when}",
+"d.who":"Verifică anunțul: unii angajatori angajează doar în anumite țări.","d.jobicynote":"Jobicy îți poate cere să te autentifici înainte să arate linkul de aplicare.",
 "meta.title":"Havn – joburi care arată salariul","meta.desc":"Joburi în Norvegia, România și remote în toată Europa. Fiecare job arată salariul, declarat de angajator sau marcat clar ca estimare. Gratuit pentru candidați.",
 "nav.jobs":"Caută joburi","nav.my":"Joburile mele","nav.salaries":"Salarii","nav.employers":"Pentru angajatori","nav.post":"Publică un job",
 "hero.eyebrow":"Norvegia · România · Remote în toată Europa",
@@ -980,7 +986,7 @@ function renderDetail(id){
   const applyBtn=st!=="active"?`<button class="btn btn-ghost" disabled>${esc(t("d.noacc"))}</button>`
     :isExt(j)?`<a class="btn btn-primary" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl||j.sourceUrl))}" target="_blank" rel="noopener">${esc(j.source==="nav"?t("d.navapply"):t("d.extapply",{src:j.source==="ats"?j.company:EXT[j.source]}))}</a>
       ${j.sourceUrl&&j.source==="nav"?`<a class="btn btn-ghost btn-sm" href="${esc(safeUrl(j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.navfull"))}</a>`:""}
-      <p class="muted" style="font-size:13px;margin:0">${esc(j.source==="nav"?t("d.navnote"):(j.source==="ats"?t("d.atsnote",{co:j.company}):t("d.extnote",{src:EXT[j.source]})))}</p>
+      <p class="muted" style="font-size:13px;margin:0">${esc(j.source==="nav"?t("d.navnote"):(j.source==="ats"?t("d.atsnote",{co:j.company}):t("d.extnote",{src:EXT[j.source]})))}${j.source==="jobicy"?" "+esc(t("d.jobicynote")):""}</p>${j.source&&S.indexMeta&&S.indexMeta.updated?`<p class="muted" style="font-size:12px;margin:4px 0 0">✓ ${esc(t("d.checked",{when:String(ago(Date.parse(S.indexMeta.updated))).toLowerCase()}))}</p>`:""}
       ${!applied?`<button class="btn btn-ghost btn-sm" type="button" data-act="mark-applied" data-id="${esc(j.id)}">${esc(t("d.mark"))}</button>`:""}`
     :`${j.applyUrl?`<a class="btn btn-primary" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl))}" target="_blank" rel="noopener">${esc(t("d.applysite",{co:j.company}))}</a>`:""}
       ${!S.uid&&window.havn?`<button class="btn ${j.applyUrl?"btn-ghost":"btn-primary"}" type="button" data-act="signin" data-id="apply">${esc(t("d.signapply"))}</button>`:""}
@@ -1011,7 +1017,7 @@ function renderDetail(id){
         <div class="flabel">${esc(t("d.pay"))}</div>${payHtml(j,"big-pay")}${convText(j)?`<div class="conv">${esc(convText(j))}</div>`:""}
         <dl class="facts" style="margin-top:14px">
           <dt>${esc(t("d.work"))}</dt><dd>${esc(workLabel(j.workplace))}</dd>
-          ${j.workplace==="remote"?`<dt>${esc(t("d.from"))}</dt><dd>${esc(vt(j.remoteFrom))}</dd>`:""}
+          ${j.workplace==="remote"?`<dt>${esc(t("d.from"))}</dt><dd>${esc(vt(j.remoteFrom))}<div class="muted" style="font-size:12px;margin-top:2px">${esc(t("d.who"))}</div></dd>`:""}
           ${j.workplace==="remote"&&j.tz?`<dt>${esc(t("d.hours"))}</dt><dd>${esc(vt(j.tz))}</dd>`:""}
           ${j.location||j.country?`<dt>${esc(t("d.loc"))}</dt><dd>${esc([j.location,vt(j.country)].filter(Boolean).join(", "))}</dd>`:""}
           ${isExt(j)?"":`<dt>${esc(t("d.by"))}</dt><dd>${esc(j.employerType==="agency"?t("d.agency"):t("d.direct"))}</dd>`}

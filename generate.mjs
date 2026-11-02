@@ -96,17 +96,19 @@ function page({ title, description, canonical, body, jsonld, lang = "nb", altern
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><link rel="icon" href="${SITE}/icons/favicon-32.png"><link rel="apple-touch-icon" href="${SITE}/icons/apple-touch-icon.png"><link rel="manifest" href="${SITE}/manifest.webmanifest"><meta name="theme-color" content="#F6F1E7"><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(canonical)}">
 ${alternates ? Object.entries(alternates).map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="${h}">`).join("") : ""}
-<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:site_name" content="Havn">
+<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:site_name" content="Havn"><meta property="og:image" content="${SITE}/og-image.png"><meta name="twitter:card" content="summary_large_image">
 ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>` : ""}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=DM+Sans:opsz,wght@9..40,400..700&display=swap"><style>${CSS}</style></head><body><div class="wrap"><header><a class="logo" href="${SITE}/">Havn</a><nav><a href="${SITE}/jobs/">${u.all}</a> · <a href="${SITE}/en/work-in-norway/">Work in Norway</a> · <a href="${SITE}/ro/lucru-in-norvegia/">RO</a> · <a href="${SITE}/#employers">${u.emp}</a></nav></header>
 ${body}
 <footer>${u.foot} <a href="${SITE}/#privacy">${u.priv}</a></footer></div></body></html>`;
 }
 
+function isPublic(j) { return !j.source || ["nav", "jobtech", "ats"].includes(j.source); }
+const WHO = { Worldwide: "fra hele verden", Europe: "bor du i Europa", Nordics: "bor du i Norden", Norway: "bor du i Norge", Romania: "bor du i Romania", "EU": "bor du i EU" };
 function jobRow(j) {
   const where = [j.location, j.country].filter(Boolean).join(", ");
   const pay = payText(j);
-  const href = !j.source || j.source === "nav" ? `${SITE}/job/${esc(j.id)}/` : `${SITE}/#job-${esc(j.id)}`;
+  const href = isPublic(j) ? `${SITE}/job/${esc(j.id)}/` : `${SITE}/#job-${esc(j.id)}`;
   return `<li><a href="${href}">${esc(j.title)}</a><span>${esc(j.company)}${where ? " · " + esc(where) : ""}${pay ? " · " + esc(pay) : ""}</span></li>`;
 }
 
@@ -141,12 +143,14 @@ function jobPage(j) {
   const cat = CAT_NO[j.category] || j.category || "";
   const body = `<p class="meta"><a href="${SITE}/jobs/">Alle jobber</a>${j.category ? ` › <a href="${SITE}/jobs/${slug(j.category)}/">${esc(cat)}</a>` : ""}${j.location ? ` › <a href="${SITE}/by/${slug(j.location)}/">${esc(j.location)}</a>` : ""}</p>
 <h1>${esc(j.title)}</h1><p class="meta"><strong>${esc(j.company)}</strong>${where ? " · " + esc(where) : ""}</p>
-<div class="tags">${pay ? `<span class="tag">💰 ${esc(pay)}</span>` : `<span class="tag">Lønn ikke oppgitt</span>`}${j.jobType ? `<span class="tag">${esc(TYPE_NO[j.jobType] || j.jobType)}</span>` : ""}${j.workplace === "remote" ? `<span class="tag">Fjernarbeid${j.remoteFrom ? " · " + esc(j.remoteFrom) : ""}</span>` : ""}${isNav ? `<span class="tag">via NAV</span>` : ""}<span class="tag">Frist ${esc(new Date(j.expiresAt || now).toLocaleDateString("nb-NO"))}</span></div>
+<div class="tags">${pay ? `<span class="tag">💰 ${esc(pay)}</span>` : `<span class="tag">Lønn ikke oppgitt</span>`}${j.jobType ? `<span class="tag">${esc(TYPE_NO[j.jobType] || j.jobType)}</span>` : ""}${j.workplace === "remote" ? `<span class="tag">Fjernarbeid${j.remoteFrom ? " · " + esc(j.remoteFrom) : ""}</span>` : ""}${{ nav: `<span class="tag">via NAV</span>`, jobtech: `<span class="tag">via Arbetsförmedlingen</span>`, ats: `<span class="tag">Direkte fra arbeidsgiver</span>` }[j.source] || ""}<span class="tag">Frist ${esc(new Date(j.expiresAt || now).toLocaleDateString("nb-NO"))}</span></div>
 <p><a class="btn" href="${esc(applyUrl)}" rel="nofollow noopener" target="_blank">Søk på stillingen</a><a class="btn ghost" href="${SITE}/#job-${esc(j.id)}">Åpne i Havn (lagre, sammenlign, KI-hjelp)</a></p>
 <div class="desc">${esc(descText)}</div>
 ${req.length ? `<h2>Dette tar du med deg</h2><ul>${req.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
 ${ben.length ? `<h2>Dette får du</h2><ul>${ben.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
-${j.paySrc === "est" ? `<p class="meta">Lønnen er ikke oppgitt i annonsen. Estimatet viser vanlig årslønn for lignende heltidsjobber i Norge (SSB og offentlige lønnstabeller), og er ikke et tilbud fra arbeidsgiveren.</p>` : ""}
+${j.paySrc === "est" ? `<p class="meta">Lønnen er ikke oppgitt i annonsen. Estimatet viser vanlig lønn for lignende jobber i samme land eller region, og er ikke et tilbud fra arbeidsgiveren.</p>` : ""}
+${j.workplace === "remote" ? `<p class="meta">Hvem kan søke: ${esc(WHO[j.remoteFrom] || j.remoteFrom || "se annonsen")}. Sjekk alltid annonsen, noen arbeidsgivere ansetter bare i bestemte land.</p>` : ""}
+${j.source === "jobtech" && j.sourceUrl ? `<p class="meta">Annonsen kommer fra Arbetsförmedlingens åpne data (JobTech). <a href="${esc(j.sourceUrl)}" rel="nofollow noopener" target="_blank">Se original annonse</a></p>` : ""}${j.source === "ats" ? `<p class="meta">Jobben er hentet fra ${esc(j.company)} sin egen karriereside. Du søker direkte hos arbeidsgiveren.</p>` : ""}
 ${isNav && j.sourceUrl ? `<p class="meta">Annonsen kommer fra NAVs offentlige stillingsdatabase. <a href="${esc(j.sourceUrl)}" rel="nofollow noopener" target="_blank">Se original annonse på arbeidsplassen.no</a></p>` : ""}`;
   const description = `${j.title} hos ${j.company}${where ? " i " + where : ""}. ${pay ? "Lønn: " + pay + ". " : ""}${descText.replace(/\s+/g, " ").slice(0, 120)}`;
   return page({ title: `${j.title} – ${j.company}${j.location ? " – " + j.location : ""} | Havn`, description, canonical, body, jsonld });
@@ -231,8 +235,9 @@ async function put(path, html) {
 }
 
 const all = (await fetchJobs()).map((j) => (j._payDone ? j : enrichPay(j)));
-// Jobs from partner feeds (Jobicy, Arbeitnow) stay in the app only and link back to the original ad; no copies for search engines.
-const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && (!j.source || j.source === "nav"));
+// Jobs from partner feeds (Jobicy, Arbeitnow, Remote OK) stay in the app only and link back to the original ad; no copies for search engines.
+// NAV, Arbetsförmedlingen (CC0) and companies' own career pages get their own pages.
+const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && isPublic(j));
 console.log(`Jobs: ${all.length} total, ${live.length} live`);
 
 for (const d of ["jobs", "by", "en", "ro"]) await rm(d, { recursive: true, force: true });
@@ -244,7 +249,7 @@ await mkdir("job", { recursive: true });
 const existing = new Set(await readdir("job").catch(() => []));
 const liveIds = new Set(live.map((j) => j.id));
 for (const d of existing) if (!liveIds.has(d)) await rm(`job/${d}`, { recursive: true, force: true });
-const rebuild = process.env.FULL === "1" || new Date().getUTCDay() === 0 && new Date().getUTCHours() < 3;
+const rebuild = process.env.FULL === "1"; // only on request, to keep the repository small
 const need = live.filter((j) => rebuild || !existing.has(j.id));
 const texts = await fetchTexts(need.filter((j) => j.hasText).map((j) => j.id));
 for (const j of need) { const t = texts.get(j.id); if (t) Object.assign(j, { description: t.description, requirements: t.requirements, benefits: t.benefits }); if (!j.description) j.description = j.summary || ""; await put(`/job/${j.id}/`, jobPage(j)); }
