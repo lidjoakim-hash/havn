@@ -47,17 +47,21 @@ async function fetchJobs() {
   return out;
 }
 
-const CSS = `:root{--bg:#F1F4F3;--fg:#0D2224;--muted:#4F6466;--line:#D3DDDB;--card:#fff;--primary:#0B4A48;--accent:#F2C230}
-@media (prefers-color-scheme:dark){:root{--bg:#0B1416;--fg:#E4EEEC;--muted:#93A8A6;--line:#22393B;--card:#122022;--primary:#5CC3B4}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+const CSS = `:root{--bg:#F6F1E7;--fg:#2E2B27;--muted:#6E675D;--line:#E6DDCC;--card:#FFFDF8;--primary:#4F7A5A;--accent:#EFA77E;--shadow:0 1px 2px rgba(46,43,39,.04),0 8px 24px rgba(46,43,39,.06);color-scheme:light}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 "DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
 a{color:var(--primary)}.wrap{max-width:860px;margin:0 auto;padding:24px 16px 64px}
 header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
-.logo{font-weight:800;font-size:22px;text-decoration:none;color:var(--fg)}h1{font-size:clamp(26px,5vw,38px);line-height:1.15;margin:8px 0}
-.meta{color:var(--muted);font-size:15px}.tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.tag{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:13px}
-.btn{display:inline-block;background:var(--primary);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;margin:6px 8px 6px 0}
-.btn.ghost{background:transparent;color:var(--primary);border:1px solid var(--line)}.desc{white-space:pre-wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
-ul.jobs{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}ul.jobs li{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
-ul.jobs a{font-weight:600;text-decoration:none;color:var(--fg)}ul.jobs span{display:block;color:var(--muted);font-size:14px}.links{columns:2 220px;font-size:15px}footer{margin-top:40px;color:var(--muted);font-size:14px}`;
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em}
+.logo{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:24px;text-decoration:none;color:var(--fg)}h1{font-size:clamp(28px,5vw,42px);line-height:1.15;margin:8px 0}
+.meta{color:var(--muted);font-size:15px}.tags{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.tag{background:#EFE8DA;border-radius:999px;padding:3px 10px;font-size:13px}
+.btn{display:inline-block;background:var(--primary);color:#fff;padding:11px 20px;border-radius:999px;text-decoration:none;font-weight:600;margin:6px 8px 6px 0;box-shadow:0 6px 18px rgba(79,122,90,.25)}
+.btn.ghost{background:var(--card);color:var(--primary);box-shadow:var(--shadow)}.desc{white-space:pre-wrap;background:var(--card);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+ul.jobs{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}ul.jobs li{background:var(--card);border-radius:16px;padding:12px 16px;box-shadow:var(--shadow)}
+ul.jobs a{font-weight:600;text-decoration:none;color:var(--fg)}ul.jobs span{display:block;color:var(--muted);font-size:14px}.links{columns:2 220px;font-size:15px}footer{margin-top:40px;color:var(--muted);font-size:14px}
+.art{display:block;width:min(260px,70%);height:auto;margin:8px auto 0}
+.art .float2{animation:float 7s ease-in-out infinite alternate}.art .hop{animation:hop 4s ease-in-out infinite}.art .nod{animation:nod 8s ease-in-out infinite alternate}.art .blink{transform-box:fill-box;transform-origin:center;animation:blink 6s infinite}
+@keyframes float{from{transform:translateY(-6px)}to{transform:translateY(6px)}}@keyframes hop{0%,70%,100%{transform:none}78%{transform:translateY(-6px)}}@keyframes nod{from{transform:rotate(-2deg)}to{transform:rotate(2.5deg)}}@keyframes blink{0%,94%,100%{transform:scaleY(1)}96%{transform:scaleY(.15)}}
+@media (prefers-reduced-motion:reduce){.art *{animation:none!important}}`;
 
 const UI = {
   nb: { all: "Alle jobber", emp: "For arbeidsgivere", foot: "Havn – jobber i Norge, Romania og fjernarbeid i Europa. Alltid gratis for jobbsøkere.", priv: "Personvern" },
@@ -71,7 +75,7 @@ function page({ title, description, canonical, body, jsonld, lang = "nb", altern
 ${alternates ? Object.entries(alternates).map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="${h}">`).join("") : ""}
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:type" content="website"><meta property="og:site_name" content="Havn">
 ${jsonld ? `<script type="application/ld+json">${JSON.stringify(jsonld).replace(/</g, "\\u003c")}</script>` : ""}
-<style>${CSS}</style></head><body><div class="wrap"><header><a class="logo" href="${SITE}/">Havn</a><nav><a href="${SITE}/jobs/">${u.all}</a> · <a href="${SITE}/en/work-in-norway/">Work in Norway</a> · <a href="${SITE}/ro/lucru-in-norvegia/">RO</a> · <a href="${SITE}/#employers">${u.emp}</a></nav></header>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=DM+Sans:opsz,wght@9..40,400..700&display=swap"><style>${CSS}</style></head><body><div class="wrap"><header><a class="logo" href="${SITE}/">Havn</a><nav><a href="${SITE}/jobs/">${u.all}</a> · <a href="${SITE}/en/work-in-norway/">Work in Norway</a> · <a href="${SITE}/ro/lucru-in-norvegia/">RO</a> · <a href="${SITE}/#employers">${u.emp}</a></nav></header>
 ${body}
 <footer>${u.foot} <a href="${SITE}/#privacy">${u.priv}</a></footer></div></body></html>`;
 }
@@ -142,6 +146,7 @@ function intlJob(j) {
   return (j.workplace === "remote" && j.source !== "nav") || ((english || mentions) && !needNo);
 }
 
+const ART_SEARCH = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 230" class="art" role="img" aria-label="A person looking through a magnifying glass while a small bird watches"> <g fill="none" stroke="#2E2B27" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"> <circle cx="132" cy="112" r="92" fill="#DCE8EF" stroke="none"/> <ellipse cx="130" cy="214" rx="96" ry="9" fill="#E6DCC9" stroke="none"/> <!-- legs --> <path d="M112 160 L 108 208 L 122 208 L 126 168 L 132 208 L 146 208 L 144 160 Z" fill="#7F8FA6"/> <path d="M104 208 C 104 200, 124 200, 124 210 L 104 210 Z M 130 210 C 130 200, 150 200, 150 210 Z" fill="#2E2B27"/> <!-- body --> <path d="M106 108 C 112 96, 146 94, 152 108 C 158 126, 156 150, 150 166 L 108 166 C 102 146, 100 124, 106 108 Z" fill="#F4B48E"/> <!-- back arm --> <path d="M110 110 C 96 124, 92 144, 98 156 C 102 162, 110 160, 110 152 C 108 140, 112 128, 118 120" fill="#F4B48E"/> <!-- arm with glass --> <path d="M146 108 C 160 112, 166 102, 168 94 C 170 88, 178 88, 178 96 C 176 110, 166 124, 150 126" fill="#F4B48E"/> <ellipse cx="174" cy="90" rx="6" ry="6" fill="#C99572"/> <circle cx="192" cy="70" r="20" fill="#F7F1E6" fill-opacity=".7"/> <path d="M180 84 L 174 90" stroke-width="5"/> <path d="M184 62 q 6 -6 14 -2" stroke-width="1.8" opacity=".6"/> <!-- head --> <path d="M122 96 L 122 88 L 136 88 L 136 96" fill="#B98563"/> <g class="nod" style="transform-origin:129px 88px"> <circle cx="129" cy="64" r="26" fill="#C99572"/> <path d="M104 62 C 102 40, 120 32, 134 36 C 150 40, 158 52, 154 64 C 146 54, 132 50, 118 54 C 112 56, 108 60, 104 62 Z" fill="#2E2B27"/> <circle class="blink" cx="122" cy="68" r="2.4" fill="#2E2B27" stroke="none"/> <circle class="blink" cx="140" cy="68" r="2.4" fill="#2E2B27" stroke="none"/> <path d="M126 78 q 4 3 8 0" stroke-width="2"/> <circle cx="116" cy="76" r="4" fill="#F09A86" stroke="none" opacity=".45"/> <circle cx="146" cy="76" r="4" fill="#F09A86" stroke="none" opacity=".45"/> </g> <!-- bird --> <g class="hop" style="transform-origin:58px 150px"> <path d="M40 150 C 40 132, 62 126, 72 138 C 80 148, 74 162, 58 162 C 46 162, 40 158, 40 150 Z" fill="#9BB5CC"/> <path d="M72 140 L 82 142 L 72 146" fill="#F5C96B"/> <circle cx="64" cy="141" r="2" fill="#2E2B27" stroke="none"/> <path d="M48 148 C 52 154, 60 154, 62 148" stroke-width="1.8"/> <path d="M40 150 L 30 144" /> <path d="M54 162 L 54 170 M 62 162 L 62 170" stroke-width="2"/> </g> <path d="M24 172 L 96 172" stroke-width="2.4"/> <path class="float2" d="M206 140 C 214 128, 228 132, 224 142 C 218 150, 208 148, 206 140 Z" fill="#B7CFA6"/> </g> </svg>`;
 const GUIDE = {
   en: {
     path: "/en/work-in-norway/", lang: "en",
@@ -185,7 +190,7 @@ function guidePage(g, jobs, otherPath) {
   const sorted = jobs.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   const canonical = `${SITE}${g.path}`;
   const body = `<p class="meta"><a href="${SITE}${otherPath}">${g.other}</a></p>
-<h1>${esc(g.h1)}</h1><p class="meta">${esc(g.intro(sorted.length))}</p>
+${ART_SEARCH}<h1>${esc(g.h1)}</h1><p class="meta">${esc(g.intro(sorted.length))}</p>
 <p><a class="btn" href="${SITE}/?intl=1">${esc(g.cta)}</a></p>
 <h2>${esc(g.guideH)}</h2>${g.faq.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("")}
 <h2>${esc(g.jobsH)} (${sorted.length})</h2><ul class="jobs">${sorted.map(jobRow).join("")}</ul>`;
