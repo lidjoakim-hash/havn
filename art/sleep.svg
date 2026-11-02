@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 130" class="art" role="img" aria-label="A cat napping on a cushion">
+  <g fill="none" stroke="#2E2B27" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="100" cy="112" rx="70" ry="12" fill="#9BB5CC"/>
+    <g class="breathe" style="transform-origin:100px 108px">
+      <path d="M50 104 C 46 78, 76 64, 104 66 C 136 68, 152 86, 148 104 Z" fill="#F2C48F"/>
+      <path d="M148 104 C 160 104, 166 94, 158 88" />
+      <path d="M58 92 C 52 82, 56 72, 66 70 L 64 58 L 74 66 C 80 64, 88 66, 92 70 L 98 60 L 100 74 C 104 82, 100 94, 90 98 C 80 102, 64 100, 58 92 Z" fill="#F2C48F"/>
+      <path d="M68 86 q 4 2 8 0 M 82 86 q 4 2 8 0" stroke-width="2"/>
+      <path d="M104 78 C 112 82, 120 82, 128 78" stroke-width="1.8" opacity=".5"/>
+    </g>
+    <g class="zz" font-family="Georgia, serif" font-size="16" fill="#7F8FA6" stroke="none">
+      <text x="112" y="44">z</text><text x="126" y="30" font-size="12">z</text><text x="138" y="18" font-size="9">z</text>
+    </g>
+  </g>
+</svg>

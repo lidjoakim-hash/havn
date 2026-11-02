@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 240" class="art" role="img" aria-label="A friendly employer waving next to a small dog">
+  <g fill="none" stroke="#2E2B27" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="150" cy="118" r="98" fill="#F2D9CC" stroke="none"/>
+    <ellipse cx="150" cy="226" rx="120" ry="9" fill="#E6DCC9" stroke="none"/>
+    <!-- desk -->
+    <path d="M60 170 L 240 170 L 240 182 L 60 182 Z" fill="#E7C9A9"/>
+    <path d="M74 182 L 74 224 M 226 182 L 226 224" stroke-width="3"/>
+    <!-- person behind desk -->
+    <path d="M120 120 C 126 106, 172 104, 180 120 C 186 136, 186 156, 184 170 L 116 170 C 114 154, 114 136, 120 120 Z" fill="#9BB5CC"/>
+    <path d="M150 116 L 150 170" stroke-width="1.8" opacity=".45"/>
+    <!-- waving arm -->
+    <g class="wave" style="transform-origin:178px 124px">
+      <path d="M176 122 C 196 116, 206 100, 208 82 C 210 76, 220 76, 220 84 C 218 104, 206 124, 182 136" fill="#9BB5CC"/>
+      <ellipse cx="214" cy="74" rx="8" ry="9" fill="#E2B08C"/>
+      <path d="M208 68 l -3 -6 M 214 66 l 0 -7 M 220 68 l 3 -6" stroke-width="1.8"/>
+    </g>
+    <!-- other arm on desk -->
+    <path d="M124 122 C 110 136, 108 156, 116 166 C 122 170, 136 170, 140 164 C 136 156, 128 156, 124 154" fill="#9BB5CC"/>
+    <ellipse cx="142" cy="164" rx="7" ry="5" fill="#E8B48F"/>
+    <!-- mug on desk -->
+    <path d="M90 150 L 108 150 L 106 170 L 92 170 Z" fill="#A9C49B"/>
+    <path class="steam" d="M96 144 c -3 -6 3 -8 0 -14 M 102 144 c -3 -6 3 -8 0 -14" stroke-width="1.6" opacity=".5"/>
+    <!-- head -->
+    <path d="M143 106 L 143 98 L 157 98 L 157 106" fill="#D9A07A"/>
+    <g class="nod" style="transform-origin:150px 98px">
+      <circle cx="150" cy="74" r="26" fill="#E8B48F"/>
+      <path d="M124 72 C 120 50, 138 40, 154 44 C 170 46, 178 60, 176 74 C 172 66, 168 62, 162 60 C 150 60, 136 64, 124 72 Z" fill="#B5643D"/>
+      <path d="M178 70 C 186 82, 184 96, 176 102" fill="#B5643D"/>
+      <circle class="blink" cx="142" cy="78" r="2.4" fill="#2E2B27" stroke="none"/>
+      <circle class="blink" cx="160" cy="78" r="2.4" fill="#2E2B27" stroke="none"/>
+      <path d="M144 88 q 6 6 12 0" stroke-width="2"/>
+      <circle cx="136" cy="86" r="4" fill="#F09A86" stroke="none" opacity=".5"/>
+      <circle cx="166" cy="86" r="4" fill="#F09A86" stroke="none" opacity=".5"/>
+    </g>
+    <!-- dog -->
+    <g>
+      <path class="tail" style="transform-origin:270px 206px" d="M270 206 C 282 200, 288 190, 286 182" stroke-width="3"/>
+      <path d="M236 222 C 232 204, 240 192, 256 192 C 272 192, 278 206, 274 222 Z" fill="#F7F1E6"/>
+      <path d="M226 190 C 222 176, 234 166, 246 168 C 258 170, 262 182, 256 192 C 250 200, 232 200, 226 190 Z" fill="#F7F1E6"/>
+      <path d="M230 172 C 222 172, 218 184, 222 192 C 228 192, 232 182, 232 176" fill="#C98F65"/>
+      <path d="M250 170 C 258 168, 264 178, 260 186 C 254 186, 250 178, 250 172" fill="#C98F65"/>
+      <circle cx="236" cy="182" r="2" fill="#2E2B27" stroke="none"/>
+      <circle cx="248" cy="182" r="2" fill="#2E2B27" stroke="none"/>
+      <path d="M240 188 q 2 2 4 0" stroke-width="1.8"/>
+      <circle cx="242" cy="186" r="2.4" fill="#2E2B27" stroke="none"/>
+    </g>
+    <path class="float1" d="M60 70 C 68 58, 82 62, 78 72 C 72 80, 62 78, 60 70 Z" fill="#B7CFA6"/>
+    <circle class="float3" cx="250" cy="52" r="5" fill="#F5C96B" stroke="none"/>
+  </g>
+</svg>

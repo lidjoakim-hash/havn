@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 380" class="art" role="img" aria-label="A person relaxing with a laptop and a cup of tea, a cat and a plant beside them">
+  <g fill="none" stroke="#2E2B27" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- soft sun behind -->
+    <circle cx="232" cy="168" r="138" fill="#F6E3B4" stroke="none"/>
+    <!-- floor shadow -->
+    <ellipse cx="226" cy="338" rx="168" ry="14" fill="#E6DCC9" stroke="none"/>
+
+    <!-- plant -->
+    <g class="sway" style="transform-origin:72px 300px">
+      <path d="M72 300 C 66 262, 52 240, 34 226" />
+      <path d="M34 226 C 30 210, 44 200, 56 212 C 62 222, 50 232, 34 226 Z" fill="#9DBB8E"/>
+      <path d="M72 300 C 74 258, 86 236, 104 222" />
+      <path d="M104 222 C 112 206, 128 212, 122 228 C 116 238, 102 236, 104 222 Z" fill="#B7CFA6"/>
+      <path d="M72 300 C 70 270, 72 246, 76 226" />
+      <path d="M76 226 C 66 210, 74 192, 86 200 C 94 210, 88 226, 76 226 Z" fill="#8FB089"/>
+      <path d="M58 262 C 46 256, 40 262, 44 270 C 52 274, 58 270, 58 262 Z" fill="#B7CFA6"/>
+    </g>
+    <path d="M48 298 L 96 298 L 90 336 L 54 336 Z" fill="#E9A47E"/>
+    <path d="M46 298 L 98 298" />
+
+    <!-- beanbag -->
+    <path d="M150 336 C 120 334, 116 290, 150 272 C 186 254, 286 252, 318 276 C 346 298, 336 336, 300 337 Z" fill="#E7C9A9"/>
+    <path d="M176 300 C 196 292, 232 290, 262 296" stroke-width="1.8" opacity=".55"/>
+
+    <!-- person -->
+    <g class="breathe" style="transform-origin:232px 300px">
+      <!-- back leg -->
+      <path d="M210 284 C 238 292, 278 290, 300 300 C 312 306, 310 322, 296 322 L 248 318" fill="#8EA9C1"/>
+      <path d="M296 322 C 306 322, 316 320, 318 312 C 316 304, 306 302, 300 304" fill="#F7F1E6"/>
+      <!-- body / sweater -->
+      <path d="M196 206 C 206 192, 250 190, 262 206 C 272 222, 274 262, 268 290 L 196 292 C 188 262, 188 224, 196 206 Z" fill="#A9C49B"/>
+      <path d="M212 236 C 214 252, 214 266, 212 280" stroke-width="1.8" opacity=".5"/>
+      <!-- front leg -->
+      <path d="M200 292 C 232 300, 262 306, 282 312 C 296 316, 296 332, 282 332 L 214 328 C 196 326, 190 300, 200 292 Z" fill="#9BB5CC"/>
+      <path d="M282 332 C 294 334, 304 330, 304 322 C 300 314, 290 314, 284 316" fill="#F7F1E6"/>
+      <!-- laptop -->
+      <path d="M204 282 L 214 236 L 270 238 L 262 284 Z" fill="#F7F1E6"/>
+      <path d="M196 288 L 270 288" stroke-width="3"/>
+      <path d="M236 256 C 233 252, 228 256, 236 263 C 244 256, 239 252, 236 256 Z" fill="#E9A47E" stroke-width="1.6"/>
+      <!-- arm + mug -->
+      <path d="M200 214 C 182 236, 176 258, 186 272 C 194 280, 206 276, 210 270" fill="#A9C49B"/>
+      <path d="M250 208 C 270 222, 284 242, 280 258 C 277 266, 266 266, 264 258 C 264 246, 256 234, 244 226" fill="#A9C49B"/>
+      <path d="M268 254 L 292 254 L 290 276 C 290 282, 270 282, 270 276 Z" fill="#F4B48E"/>
+      <path d="M292 260 C 300 260, 300 270, 291 270" />
+      <ellipse cx="270" cy="266" rx="7" ry="6" fill="#EDC19D"/>
+      <g class="steam">
+        <path d="M276 246 C 272 238, 280 234, 276 226" stroke-width="1.8" opacity=".55"/>
+        <path d="M285 246 C 281 238, 289 234, 285 226" stroke-width="1.8" opacity=".55"/>
+      </g>
+      <!-- neck + head -->
+      <path d="M222 196 L 222 186 L 238 186 L 238 196" fill="#E2B08C"/>
+      <g class="nod" style="transform-origin:230px 186px">
+        <ellipse cx="230" cy="156" rx="30" ry="32" fill="#EDC19D"/>
+        <!-- hair -->
+        <path d="M200 156 C 196 124, 222 112, 240 118 C 258 122, 266 140, 260 154 C 250 140, 232 136, 216 142 C 210 146, 206 152, 200 156 Z" fill="#4A3A33"/>
+        <circle cx="252" cy="118" r="13" fill="#4A3A33"/>
+        <!-- face -->
+        <path class="blink" d="M218 160 q 3 3 6 0" stroke-width="2.2"/>
+        <path class="blink" d="M238 160 q 3 3 6 0" stroke-width="2.2"/>
+        <path d="M226 172 q 5 4 10 0" stroke-width="2"/>
+        <circle cx="214" cy="170" r="5" fill="#F09A86" stroke="none" opacity=".45"/>
+        <circle cx="249" cy="170" r="5" fill="#F09A86" stroke="none" opacity=".45"/>
+      </g>
+    </g>
+
+    <!-- cat -->
+    <g>
+      <path class="tail" style="transform-origin:372px 326px" d="M372 326 C 400 324, 410 300, 398 286 C 392 280, 384 284, 388 292 C 394 302, 388 314, 370 316" fill="#F2C48F"/>
+      <path d="M332 336 C 324 312, 330 282, 352 278 C 374 276, 384 306, 378 336 Z" fill="#F2C48F"/>
+      <path d="M336 284 L 334 260 L 350 274 M 364 274 L 378 258 L 376 284" fill="#F2C48F"/>
+      <path d="M334 284 C 330 270, 352 262, 364 266 C 378 270, 382 284, 376 292 C 368 302, 340 302, 334 284 Z" fill="#F2C48F"/>
+      <path d="M346 284 q 3 -3 6 0 M 360 284 q 3 -3 6 0" stroke-width="2"/>
+      <path d="M354 290 l 2 2 l 2 -2" stroke-width="1.8"/>
+      <path d="M344 312 C 346 322, 346 330, 344 336 M 364 312 C 362 322, 362 330, 364 336" stroke-width="1.8" opacity=".5"/>
+    </g>
+
+    <!-- little floating leaves -->
+    <path class="float1" d="M120 120 C 128 108, 142 110, 140 120 C 134 130, 124 128, 120 120 Z" fill="#B7CFA6"/>
+    <path class="float2" d="M352 132 C 360 122, 374 126, 370 136 C 364 144, 354 142, 352 132 Z" fill="#F4B48E"/>
+    <circle class="float3" cx="330" cy="70" r="5" fill="#9BB5CC" stroke="none"/>
+    <circle class="float1" cx="110" cy="190" r="4" fill="#E9A47E" stroke="none"/>
+  </g>
+</svg>
