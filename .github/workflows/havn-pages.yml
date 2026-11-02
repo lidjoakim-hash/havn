@@ -1,0 +1,38 @@
+name: Havn job pages and health check
+
+on:
+  schedule:
+    - cron: "23 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: havn-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Build job pages
+        run: node generate.mjs
+      - name: Publish changes
+        run: |
+          git config user.name "havn-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A job jobs by sitemap.xml health.json
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Update job pages"
+            git push
+          fi
+      - name: Check NAV import is running
+        run: |
+          node -e "const h=require('./health.json'); console.log(h); if(!h.ok){console.error('NAV import looks stale or empty. Check Supabase > Edge Functions > nav-import > Logs.'); process.exit(1)}"
