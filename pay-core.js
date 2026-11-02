@@ -148,6 +148,7 @@ function estimateAny(j) {
   let [f, cur] = (j.workplace === "remote" && j.remoteFrom ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || (j.workplace === "remote" ? REMOTE_LEVEL.Europe : COUNTRY.Norway);
   if ((cur === "USD" && (j.country === "United States" || j.remoteFrom === "Worldwide")) && TECH.test(t)) f *= 1.35;
   if (/\b(staff|principal)\b/.test(t)) f *= 1.15;
+  if (j.source === "ats") f *= 1.25; // international companies hiring through their own boards usually pay above the local average
   const r = NOK_TO[cur] || NOK_TO.EUR, step = cur === "NOK" || cur === "SEK" || cur === "DKK" ? 10000 : 1000;
   return { min: Math.round(base.min * f * r / step) * step, max: Math.round(base.max * f * r / step) * step, period: "year", currency: cur };
 }
