@@ -166,7 +166,7 @@ const LANGS = [["Norwegian", /(norsk|norwegian|skandinavisk|scandinavian)/], ["E
 function adLanguage(text) {
   const c = { Norwegian: 0, English: 0, German: 0, Swedish: 0, Romanian: 0, Polish: 0 };
   for (const w of String(text || "").toLowerCase().split(/[^a-zæøåäöüßăâîșț]+/)) {
-    if (/^(og|du|vi|med|er|på|som|har|deg|ikke|eller|hos|skal)$/.test(w)) c.Norwegian++;
+    if (/^(og|du|vi|med|er|på|som|har|deg|ikke|ikkje|eller|hos|skal|eg|ein|eit|frå|vere|til|av|vår|våre)$/.test(w)) c.Norwegian++;
     else if (/^(the|and|you|we|with|our|will|your|are|this)$/.test(w)) c.English++;
     else if (/^(und|die|der|wir|sie|mit|für|das|ist|ihre|bei)$/.test(w)) c.German++;
     else if (/^(och|att|vi|med|är|för|som|på|inte)$/.test(w)) c.Swedish++;
@@ -174,7 +174,7 @@ function adLanguage(text) {
     else if (/^(i|w|z|na|do|jest|oraz|dla)$/.test(w)) c.Polish++;
   }
   const best = Object.entries(c).sort((a, b) => b[1] - a[1])[0];
-  return best[1] >= 3 ? best[0] : "";
+  return best[1] >= 2 ? best[0] : "";
 }
 function languagesOf(j, text) {
   const hay = `${j.title || ""} ${j.languages || ""} ${text || ""}`.toLowerCase();
@@ -183,6 +183,7 @@ function languagesOf(j, text) {
   if (ad === "Swedish" && j.country === "Norway") return need.length ? need : ["Norwegian"];
   if (!need.length && ad) need.push(ad);
   if (!need.length && ["jobicy", "ats"].includes(j.source)) need.push("English");
+  if (!need.length && j.source === "nav") need.push("Norwegian");
   if (ad && !need.includes(ad) && ad !== "Swedish") need.unshift(ad);
   return [...new Set(need)].slice(0, 4);
 }

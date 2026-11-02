@@ -646,7 +646,7 @@ nav.main a.cta{background:var(--accent);color:var(--accent-ink);box-shadow:0 4px
 </div>
 <div id="modalRoot"></div>
 
-<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=4"></script><script src="havn-backend.js?v=4"></script>
+<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=5"></script><script src="havn-backend.js?v=4"></script>
 <script>
 (function(){
 "use strict";
@@ -657,7 +657,7 @@ const COUNTRIES=["Norway","Romania","Sweden","Denmark","Germany","Netherlands","
 const CUR=["EUR","NOK","RON","USD","SEK","DKK","GBP"];
 const TYPES=["Full-time","Part-time","Contract","Freelance","Seasonal","Internship"];
 const LEVELS=["Entry","Mid","Senior","Lead"];
-const TO_EUR={EUR:1,NOK:0.085,RON:0.2,USD:0.92,SEK:0.087,DKK:0.134,GBP:1.17};
+const TO_EUR={EUR:1,NOK:0.085,RON:0.2,USD:0.92,SEK:0.087,DKK:0.134,GBP:1.17,CHF:1.05,PLN:0.23,CAD:0.67,AUD:0.6,INR:0.011,SGD:0.69};
 const PER_YEAR={year:1,month:12,hour:1650};
 const TIERS={
   standard:{name:"Standard",price:0,label:"Free at launch",rank:0},
@@ -1675,7 +1675,7 @@ document.addEventListener("change",e=>{
 });
 $("#searchForm").addEventListener("submit",e=>{e.preventDefault();S.limit=PAGE;if(location.hash&&location.hash!=="#jobs")location.hash="jobs";renderBoard();$("#jobList").scrollIntoView({behavior:"smooth",block:"start"})});
 let qTimer;$("#q").addEventListener("input",()=>{clearTimeout(qTimer);qTimer=setTimeout(()=>{S.limit=PAGE;renderBoard()},150)});
-["#fromWhere","#fWork","#fCat","#fType","#fLevel","#fMin","#fTz","#fSort","#fDirect","#fNoExp","#fVisa"].forEach(s=>$(s).addEventListener("change",()=>{S.limit=PAGE;renderBoard()}));
+["#fromWhere","#fWork","#fCat","#fType","#fLevel","#fLang","#fMin","#fTz","#fSort","#fDirect","#fNoExp","#fVisa"].forEach(s=>$(s).addEventListener("change",()=>{S.limit=PAGE;renderBoard()}));
 $("#cvText").addEventListener("change",()=>store("havn.cv",$("#cvText").value));
 $("#roiSalary").addEventListener("input",renderRoi);
 $("#lang").addEventListener("change",e=>{LANG=e.target.value;store("havn.lang",LANG);applyI18n();lastView=null;route();window.havn?.refresh?.()});
