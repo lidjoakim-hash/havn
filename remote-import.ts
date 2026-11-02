@@ -135,7 +135,7 @@ async function fromJobicy() {
 async function fromArbeitnow() {
   const out = new Map<string, Record<string, unknown>>();
   let minCreated = Infinity, ok = false;
-  for (let page = 1; page <= 3; page++) {
+  for (let page = 1; page <= 6; page++) {
     const res = await fetch(`https://www.arbeitnow.com/api/job-board-api?page=${page}`, { headers: { Accept: "application/json" } });
     if (!res.ok) break;
     const d = await res.json();

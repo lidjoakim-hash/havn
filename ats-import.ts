@@ -212,7 +212,26 @@ async function recruitee(c: Co) {
   }
   return out;
 }
-const READ = { gh: greenhouse, lv: lever, ab: ashby, sr: smartrecruiters, pe: personio, wk: workable, rc: recruitee } as const;
+async function teamtailor(c: Co) {
+  const r = await fetch(`https://${c.t}.teamtailor.com/jobs.rss`);
+  if (!r.ok) throw new Error(`teamtailor ${r.status}`);
+  const xml = await r.text();
+  const g = (s: string, n: string) => decode(((s.match(new RegExp(`<${n}>([\\s\\S]*?)</${n}>`)) || [])[1] || "").replace(/^<!\[CDATA\[|\]\]>$/g, "")).trim();
+  const out: [string, Record<string, unknown>][] = [];
+  for (const m of xml.match(/<item>[\s\S]*?<\/item>/g) || []) {
+    const title = g(m, "title"), link = g(m, "link"), remote = g(m, "remoteStatus");
+    const city = g(m, "tt:city"), country = g(m, "tt:country");
+    const loc = [city, country].filter(Boolean).join(", ");
+    const pl = place(`${loc} ${remote === "fully" ? "remote" : remote === "hybrid" ? "hybrid" : ""}`, remote === "fully"); if (!pl.keep) continue;
+    const { keep: _k, ...p } = pl;
+    const id = (link.match(/jobs\/(\d+)/) || [])[1] || g(m, "guid");
+    out.push([`ats-tt-${c.t}-${id}`, base({ title, company: c.name, category: category(title), jobType: jobType(title),
+      location: loc.slice(0, 80), ...p, description: htmlToText(g(m, "description")).slice(0, 4000),
+      applyUrl: link, sourceUrl: link, createdAt: Date.parse(g(m, "pubDate")) || Date.now(), expiresAt: Date.now() + 30 * DAY })]);
+  }
+  return out;
+}
+const READ = { gh: greenhouse, lv: lever, ab: ashby, sr: smartrecruiters, pe: personio, wk: workable, rc: recruitee, tt: teamtailor } as const;
 
 function hash(o: Record<string, unknown>) {
   const str = JSON.stringify([o.title, o.location, o.workplace, o.remoteFrom, o.salaryMin, o.salaryMax, o.applyUrl, String(o.description || "").length]);
