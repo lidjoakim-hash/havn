@@ -192,6 +192,7 @@ Deno.serve(async (req) => {
       }
       for (let i = 0; i < toFetch.length; i += 10) {
         const batch = toFetch.slice(i, i + 10);
+        const gone: string[] = [];
         const rows = (await Promise.all(batch.map(async (b) => {
           try {
             const r = await fetch(b.url.startsWith("http") ? b.url : BASE + b.url, { headers: headers() });
@@ -202,6 +203,9 @@ Deno.serve(async (req) => {
             let ad = parse(d.ad_content?.json) ?? parse(d.ad_content) ?? parse(d.json) ?? d;
             if (ad && typeof ad === "object" && !ad.title && ad.ad_content) ad = parse(ad.ad_content);
             const job = mapAd(ad || {}, b.entry);
+            // NAV sends withdrawn/expired ads with no text and no link: remove them instead of storing an empty shell
+            const st = String((ad && (ad.status ?? ad.adStatus)) || "").toUpperCase();
+            if (!ad || (st && st !== "ACTIVE") || (!job.description && !job.applyUrl && !job.sourceUrl)) { gone.push(b.id); return null; }
             // never store an ad without a way to apply: fall back to NAV's own public page
             const navUrl = "https://arbeidsplassen.nav.no/stillinger/stilling/" + b.id.slice(4);
             if (!job.sourceUrl) job.sourceUrl = navUrl;
@@ -214,6 +218,10 @@ Deno.serve(async (req) => {
         if (rows.length) {
           const { error } = await sb.from("docs").upsert(rows, { onConflict: "collection,id" });
           if (!error) imported += rows.length;
+        }
+        if (gone.length) {
+          const { count } = await sb.from("docs").delete({ count: "exact" }).eq("collection", "jobs").in("id", gone);
+          removed += count ?? 0;
         }
       }
       if (!feed.next_url) { note = "Reached the newest ads"; break; }
