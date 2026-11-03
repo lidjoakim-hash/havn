@@ -12,6 +12,7 @@ const DAY = 86400000;
 const ROWS_PER_FILE = 7000;
 const H = { apikey: KEY, Authorization: `Bearer ${KEY}` };
 
+const { havnModerate } = new Function(`${await readFile(new URL("./moderation.js", import.meta.url), "utf8")};return { havnModerate };`)();
 const { enrichPay } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay };`)();
 await mkdir(DIR, { recursive: true });
 
@@ -44,11 +45,21 @@ if (!full) {
   for (const d of del) raw.delete(d.id);
 }
 const changed = await getAll(`docs?collection=eq.jobs&select=id,data${full ? "" : `&updated_at=gt.${encodeURIComponent(since)}`}&order=id`);
+// full ad texts (split off into "jobtext" for most sources) so every ad can be checked for discriminatory wording
+const texts = new Map();
+for (const r of await getAll(`docs?collection=eq.jobtext&select=id,data${full ? "" : `&updated_at=gt.${encodeURIComponent(since)}`}&order=id`)) texts.set(r.id, r.data || {});
+// owner decisions from the admin panel: { allow: {id: true}, block: {id: true} }
+let mod = {};
+try { const m = await getAll(`docs?collection=eq.site&id=eq.moderation&select=data`); mod = (m[0] && m[0].data) || {}; } catch { /* none yet */ }
+const allow = mod.allow || {}, block = mod.block || {};
 for (const r of changed) {
   if (!r.data || !r.data.source) { raw.delete(r.id); continue; } // jobs posted on Havn itself come live from the database
   const j = { id: r.id, ...r.data };
   // NAV sends deactivated ads as empty shells (no text, no link): those are expired, never show them
   if (j.source === "nav" && !j.applyUrl && !j.sourceUrl && !j.hasText && !String(j.description || "").trim()) { raw.delete(r.id); continue; }
+  { const tx = texts.get(r.id) || {}; const hit = havnModerate([j.title, j.description, j.requirements, tx.description, tx.requirements].filter(Boolean).join(" \n "));
+    const hadText = texts.has(r.id) || !!j.description, old = prev.get(r.id);
+    if (hit && (hadText || hit.level === "hide")) j.mod = hit; else if (!hadText && old && old.mod) j.mod = old.mod; else if (hit) j.mod = hit; }
   delete j.description; delete j.requirements; delete j.benefits; delete j.h; delete j.keep; delete j._payDone;
   if (j.seniority === "") delete j.seniority;
   delete j.langs; delete j.payEst; delete j.paySrc;
@@ -66,6 +77,7 @@ const RANK = { ats: 1, nav: 2, jobtech: 3, remoteok: 4, jobicy: 5, arbeitnow: 6 
 const best = new Map(); let dupes = 0;
 for (const j of raw.values()) {
   if (j.status && j.status !== "active") continue;
+  if (block[j.id] || (j.mod && j.mod.level === "hide" && !allow[j.id])) continue; // discriminatory ad (see moderation.js)
   if ((j.expiresAt || 0) < now) continue;
   if (j.source === "remoteok" && now - (j.createdAt || 0) > 21 * DAY) continue; // older RemoteOK ads are usually filled
   const key = `${norm(j.company)}|${norm(j.title)}|${j.workplace === "remote" ? "remote:" + (j.remoteFrom || "") : norm(j.location || j.country)}`;
@@ -105,9 +117,14 @@ const rawFiles = []; const all = [...raw.values()];
 for (let i = 0; i < all.length; i += 10000) { const f = `raw-${rawFiles.length}.json`; await writeFile(`${DIR}/${f}`, JSON.stringify(all.slice(i, i + 10000))); rawFiles.push(f); }
 await rm(`${DIR}/raw.json`, { force: true });
 
+// list for the owner's admin panel: every open ad the check flagged, with the owner's decision
+const flagged = [...raw.values()].filter((j) => j.mod && (!j.status || j.status === "active") && (j.expiresAt || 0) >= now)
+  .map((j) => ({ id: j.id, title: j.title, company: j.company, source: j.source, url: j.sourceUrl || j.applyUrl || "", ...j.mod, decision: block[j.id] ? "hidden" : allow[j.id] ? "shown" : j.mod.level === "hide" ? "hidden" : "shown" }))
+  .sort((a, b) => (a.level === b.level ? 0 : a.level === "hide" ? -1 : 1));
+await writeFile(`${DIR}/flagged.json`, JSON.stringify(flagged));
 const bySource = {}; for (const j of shown) bySource[j.source] = (bySource[j.source] || 0) + 1;
 const newMeta = { lastSync: syncStart, fullAt: full ? syncStart : meta.fullAt, updated: new Date().toISOString(), count: shown.length, duplicatesRemoved: dupes,
   bySource, new24h: shown.filter((j) => now - (j.createdAt || 0) < DAY).length, remote: shown.filter((j) => j.workplace === "remote").length,
-  noExperience: noExp, noExperienceRemote: noExpRemote, companies: new Set(shown.map((j) => norm(j.company))).size, countries: new Set(shown.map((j) => j.country).filter(Boolean)).size, files, raw: rawFiles };
+  noExperience: noExp, noExperienceRemote: noExpRemote, companies: new Set(shown.map((j) => norm(j.company))).size, countries: new Set(shown.map((j) => j.country).filter(Boolean)).size, flagged: flagged.length, flaggedHidden: flagged.filter((f) => f.decision === "hidden").length, files, raw: rawFiles };
 await writeFile(`${DIR}/meta.json`, JSON.stringify(newMeta, null, 1));
 console.log(JSON.stringify({ ...newMeta, files: files.length, raw: rawFiles.length }));

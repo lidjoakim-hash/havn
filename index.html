@@ -653,6 +653,7 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
         <button role="tab" data-tab="requests">Post requests</button>
         <button role="tab" data-tab="apps">Applications</button>
         <button role="tab" data-tab="reports">Reports</button>
+        <button role="tab" data-tab="flagged">Flagged ads</button>
         <button role="tab" data-tab="digest">Digest list</button>
         <button role="tab" data-tab="growth">Growth playbook</button>
         <button role="tab" data-tab="settings">Settings</button>
@@ -673,7 +674,7 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
 </div>
 <div id="modalRoot"></div>
 
-<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=9"></script><script src="i18n-phrases.js?v=1"></script><script src="havn-backend.js?v=5"></script>
+<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=9"></script><script src="moderation.js?v=1"></script><script src="i18n-phrases.js?v=1"></script><script src="havn-backend.js?v=5"></script>
 <script>
 (function(){
 "use strict";
@@ -1276,7 +1277,7 @@ function quality(o){
 function wirePostForm(form,previewEl,qualityEl,noticeEl,mode){
   const sync=()=>{const o=formData(form);form.querySelectorAll("[data-remote]").forEach(x=>x.hidden=o.workplace!=="remote");
     previewEl.innerHTML=card(Object.assign({id:"preview",createdAt:now()},o),{preview:true})+`<p class="muted" style="font-size:13px;margin:8px 0 0">${TIERS[o.tier]?.price?`Total ${money(TIERS[o.tier].price,"EUR")} + VAT, invoiced after review.`:"Free during launch."}</p>`;
-    const q=quality(o);qualityEl.innerHTML=`<div class="panel quality"><div class="row" style="justify-content:space-between"><span class="flabel">LISTING STRENGTH</span><b class="mono">${q.score}/100</b></div><div class="qmeter"><i style="width:${q.score}%"></i></div>${q.tips.length?`<ul class="qtips">${q.tips.slice(0,3).map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`:`<span style="color:var(--good)">Strong listing. Candidates have everything they need.</span>`}</div>`};
+    const q=quality(o);const mh=window.havnModerate&&havnModerate([o.title,o.description,o.requirements,o.benefits].join(" \n "));qualityEl.innerHTML=(mh?`<div class="notice err" style="margin-bottom:10px">This wording may exclude applicants (${esc(mh.reason.toLowerCase())}): “${esc(mh.snippet.slice(0,120))}”. Ads like this are usually against equal-treatment law and may not be published.</div>`:"")+`<div class="panel quality"><div class="row" style="justify-content:space-between"><span class="flabel">LISTING STRENGTH</span><b class="mono">${q.score}/100</b></div><div class="qmeter"><i style="width:${q.score}%"></i></div>${q.tips.length?`<ul class="qtips">${q.tips.slice(0,3).map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`:`<span style="color:var(--good)">Strong listing. Candidates have everything they need.</span>`}</div>`};
   form.addEventListener("input",sync);form.addEventListener("change",sync);sync();
   form.addEventListener("submit",async e=>{
     e.preventDefault();const o=formData(form);const miss=validate(o);const n=noticeEl;
@@ -1515,13 +1516,21 @@ function renderAdmin(force){
   }
   if(t==="requests"){
     const items=[];S.requests.forEach(r=>Object.entries(r.items||{}).forEach(([k,v])=>items.push(Object.assign({_uid:r.id,_k:k},v))));items.sort((a,b)=>b.submittedAt-a.submittedAt);
-    body.innerHTML=items.length?`<div class="tablewrap"><table><thead><tr><th>Job</th><th>Pay</th><th>Plan</th><th>Contact</th><th>State</th><th></th></tr></thead><tbody>${items.map(i=>`<tr><td><b>${esc(i.title)}</b><div class="muted">${esc(i.company)} · ${esc(i.workplace)} · strength ${quality(i).score}/100</div><details><summary class="muted">Read listing</summary><div class="tpl">${esc(i.description)}</div></details></td><td class="mono">${esc(payText(i))}</td><td>${esc(TIERS[i.tier]?.name||"")}</td><td>${esc(i.contact)}</td><td><span class="status st-${i.state==="pending"?"pending":i.state==="approved"?"active":"closed"}">${esc(i.state)}</span></td><td style="white-space:nowrap">${i.state==="pending"?`<button class="btn btn-primary btn-sm" data-act="approve" data-id="${esc(i._uid)}|${esc(i._k)}">Approve</button> <button class="btn btn-ghost btn-sm" data-act="reject" data-id="${esc(i._uid)}|${esc(i._k)}">Reject</button>`:""}</td></tr>`).join("")}</tbody></table></div>`
+    body.innerHTML=items.length?`<div class="tablewrap"><table><thead><tr><th>Job</th><th>Pay</th><th>Plan</th><th>Contact</th><th>State</th><th></th></tr></thead><tbody>${items.map(i=>`<tr><td><b>${esc(i.title)}</b><div class="muted">${esc(i.company)} · ${esc(i.workplace)} · strength ${quality(i).score}/100</div>${(()=>{const h=window.havnModerate&&havnModerate([i.title,i.description,i.requirements,i.benefits].join(" \n "));return h?`<div class="notice err" style="margin-top:6px;font-size:13px">⚠ ${esc(h.reason)}: “${esc(h.snippet.slice(0,140))}”</div>`:""})()}<details><summary class="muted">Read listing</summary><div class="tpl">${esc(i.description)}</div></details></td><td class="mono">${esc(payText(i))}</td><td>${esc(TIERS[i.tier]?.name||"")}</td><td>${esc(i.contact)}</td><td><span class="status st-${i.state==="pending"?"pending":i.state==="approved"?"active":"closed"}">${esc(i.state)}</span></td><td style="white-space:nowrap">${i.state==="pending"?`<button class="btn btn-primary btn-sm" data-act="approve" data-id="${esc(i._uid)}|${esc(i._k)}">Approve</button> <button class="btn btn-ghost btn-sm" data-act="reject" data-id="${esc(i._uid)}|${esc(i._k)}">Reject</button>`:""}</td></tr>`).join("")}</tbody></table></div>`
       :`<div class="empty"><h3>No post requests</h3><p>When employers submit a job it waits here for your review.</p></div>`;return;
   }
   if(t==="apps"){
     const rows=[];S.apps.forEach(a=>Object.entries(a.apps||{}).forEach(([jid,v])=>rows.push(Object.assign({jid,p:a.profile||{}},v))));rows.sort((a,b)=>b.at-a.at);
     body.innerHTML=rows.length?`<div class="list-head"><b>${rows.length} applications</b><button class="btn btn-ghost btn-sm" data-act="export-apps">Export CSV</button></div><div class="tablewrap"><table><thead><tr><th>Candidate</th><th>Job</th><th>Note</th><th>Sent</th><th></th></tr></thead><tbody>${rows.map(r=>{const j=S.jobs.find(x=>x.id===r.jid);const fwd=`Hi! New applicant for ${r.jobTitle} via Havn:\n\nName: ${r.p.name}\nEmail: ${r.p.email}\nPhone: ${r.p.phone||"-"}\nCV/profile: ${r.p.link||"-"}\n\n${r.note}`;return `<tr><td><b>${esc(r.p.name)}</b><div>${esc(r.p.email)}</div><div class="muted">${esc(r.p.phone||"")}</div>${r.p.link?`<a href="${esc(safeUrl(r.p.link))}" target="_blank" rel="noopener">CV / profile</a>`:""}</td><td>${esc(r.jobTitle)}<div class="muted">${esc(r.company)}${j?.contact?" · "+esc(j.contact):""}</div></td><td style="max-width:360px;white-space:pre-wrap">${esc(r.note)}</td><td>${ago(r.at)}</td><td><button class="btn btn-ghost btn-sm" data-act="copy" data-text="${esc(fwd)}">Copy to forward</button></td></tr>`}).join("")}</tbody></table></div>`
       :`<div class="empty"><h3>No applications yet</h3><p>Quick applications from candidates appear here.</p></div>`;return;
+  }
+  if(t==="flagged"){
+    // ads the automatic check (moderation.js) flagged during the last index build; decisions are saved in site/moderation
+    if(!S.flagged){body.innerHTML=`<div class="empty"><h3>Loading…</h3></div>`;loadFlagged();return}
+    const dec=f=>{const m=S.modDoc||{};return (m.block||{})[f.id]?"hidden":(m.allow||{})[f.id]?"shown":f.level==="hide"?"hidden":"shown"};
+    const fl=S.flagged;const nh=fl.filter(f=>dec(f)==="hidden").length;
+    body.innerHTML=`<p class="muted" style="margin:18px 0 12px;max-width:70ch">Imported ads are checked for wording that excludes people by gender, age, origin, pregnancy or looks. <b>Clear cases are hidden</b> automatically; <b>unclear ones stay visible</b> until you decide. Changes apply at the next job-list update (within 30 minutes). ${fl.length} flagged · ${nh} hidden.</p>`+(fl.length?`<div class="tablewrap"><table><thead><tr><th>Ad</th><th>Why</th><th>Status</th><th></th></tr></thead><tbody>${fl.map(f=>{const d=dec(f);return `<tr><td><b>${esc(f.title)}</b><div class="muted">${esc(f.company)} · ${esc(EXT[f.source]||f.source)}${f.url?` · <a href="${esc(safeUrl(f.url))}" target="_blank" rel="noopener">original ad ↗</a>`:""}</div></td><td>${esc(f.reason)}<div class="muted" style="font-size:12px;max-width:46ch">“…${esc(f.snippet)}…”</div></td><td><span class="status st-${d==="hidden"?"closed":"pending"}">${d==="hidden"?"Hidden":f.level==="review"?"Visible · check":"Visible"}</span></td><td style="white-space:nowrap">${d==="hidden"?`<button class="btn btn-ghost btn-sm" data-act="mod-show" data-id="${esc(f.id)}">Show anyway</button>`:`<button class="btn btn-danger btn-sm" data-act="mod-hide" data-id="${esc(f.id)}">Hide</button>`}${f.level==="review"&&d==="shown"&&!((S.modDoc||{}).allow||{})[f.id]?` <button class="btn btn-ghost btn-sm" data-act="mod-show" data-id="${esc(f.id)}">It's fine</button>`:""}</td></tr>`}).join("")}</tbody></table></div>`
+      :`<div class="empty"><h3>Nothing flagged</h3><p>No open ad has discriminatory wording right now.</p></div>`);return;
   }
   if(t==="reports"){
     const rs=openReports();
@@ -1588,6 +1597,8 @@ Remote jobs across Europe + local jobs in Norway and Romania.
 Link in bio.</div>
 <button class="btn btn-ghost btn-sm" data-act="copyel" data-id="tpl2">Copy</button></div>
 </div>`;
+async function loadFlagged(){try{const sha=S.indexMeta&&S.indexMeta.sha;const [f,m]=await Promise.all([sha?fetch(`https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${sha}/flagged.json`).then(r=>r.ok?r.json():[]):Promise.resolve([]),S.db?S.db.doc("site/moderation").get().then(d=>d.exists?d.data():{}):Promise.resolve({})]);S.flagged=Array.isArray(f)?f:[];S.modDoc=m||{}}catch(e){S.flagged=[];S.modDoc={}}if(S.adminTab==="flagged")renderAdmin(true)}
+async function setModeration(id,show){const m=JSON.parse(JSON.stringify(S.modDoc||{}));m.allow=m.allow||{};m.block=m.block||{};if(show){m.allow[id]=true;delete m.block[id]}else{m.block[id]=true;delete m.allow[id]}await S.db.doc("site/moderation").set(m);S.modDoc=m;renderAdmin(true)}
 async function adminAction(fn,okMsg){try{await fn();toast(okMsg)}catch(e){toast("Couldn't save. Try again.")}}
 
 /* ================= employer ROI ================= */
@@ -1731,6 +1742,7 @@ document.addEventListener("click",async e=>{
     case "approve":case "reject":{const [uid,k]=id.split("|");const r=S.requests.find(x=>x.id===uid);if(!r)return;const items=JSON.parse(JSON.stringify(r.items||{}));const it=items[k];if(!it)return;
       if(a==="approve"){adminAction(async()=>{await publishJob(it);items[k].state="approved";await S.db.doc("requests/"+uid).set({items})},"Approved and published")}
       else{items[k].state="rejected";adminAction(()=>S.db.doc("requests/"+uid).set({items}),"Rejected")}return}
+    case "mod-show":case "mod-hide":adminAction(()=>setModeration(id,a==="mod-show"),a==="mod-show"?"Will show at the next update":"Will be hidden at the next update");return;
     case "report-close":case "report-dismiss":{const [uid,k]=id.split("|");const r=S.reports.find(x=>x.id===uid);if(!r)return;const items=JSON.parse(JSON.stringify(r.items||{}));const it=items[k];if(!it)return;items[k].state=a==="report-close"?"job closed":"dismissed";
       adminAction(async()=>{if(a==="report-close"&&S.jobs.some(j=>j.id===it.jobId))await J(it.jobId).update({status:"closed"});await S.db.doc("reports/"+uid).set({items})},a==="report-close"?"Job closed":"Report dismissed");return}
     case "export-apps":{const rows=[["Name","Email","Phone","CV link","Job","Company","Note","Sent"]];S.apps.forEach(x=>Object.values(x.apps||{}).forEach(v=>rows.push([x.profile?.name,x.profile?.email,x.profile?.phone,x.profile?.link,v.jobTitle,v.company,v.note,new Date(v.at).toISOString().slice(0,10)])));saveCsv("havn-applications.csv",rows);return}
