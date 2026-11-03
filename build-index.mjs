@@ -67,6 +67,7 @@ const best = new Map(); let dupes = 0;
 for (const j of raw.values()) {
   if (j.status && j.status !== "active") continue;
   if ((j.expiresAt || 0) < now) continue;
+  if (j.source === "remoteok" && now - (j.createdAt || 0) > 21 * DAY) continue; // older RemoteOK ads are usually filled
   const key = `${norm(j.company)}|${norm(j.title)}|${j.workplace === "remote" ? "remote:" + (j.remoteFrom || "") : norm(j.location || j.country)}`;
   const cur = best.get(key);
   if (!cur) { best.set(key, j); continue; }

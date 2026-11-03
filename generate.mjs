@@ -151,9 +151,18 @@ ${ben.length ? `<h2>Dette får du</h2><ul>${ben.map((r) => `<li>${esc(r)}</li>`)
 ${j.paySrc === "est" ? `<p class="meta">Lønnen er ikke oppgitt i annonsen. Estimatet viser vanlig lønn for lignende jobber i samme land eller region, og er ikke et tilbud fra arbeidsgiveren.</p>` : ""}
 ${j.workplace === "remote" ? `<p class="meta">Hvem kan søke: ${esc(WHO[j.remoteFrom] || j.remoteFrom || "se annonsen")}. Sjekk alltid annonsen, noen arbeidsgivere ansetter bare i bestemte land.</p>` : ""}
 ${j.source === "jobtech" && j.sourceUrl ? `<p class="meta">Annonsen kommer fra Arbetsförmedlingens åpne data (JobTech). <a href="${esc(j.sourceUrl)}" rel="nofollow noopener" target="_blank">Se original annonse</a></p>` : ""}${j.source === "ats" ? `<p class="meta">Jobben er hentet fra ${esc(j.company)} sin egen karriereside. Du søker direkte hos arbeidsgiveren.</p>` : ""}
-${isNav && j.sourceUrl ? `<p class="meta">Annonsen kommer fra NAVs offentlige stillingsdatabase. <a href="${esc(j.sourceUrl)}" rel="nofollow noopener" target="_blank">Se original annonse på arbeidsplassen.no</a></p>` : ""}`;
+${liveScript(j)}${isNav && j.sourceUrl ? `<p class="meta">Annonsen kommer fra NAVs offentlige stillingsdatabase. <a href="${esc(j.sourceUrl)}" rel="nofollow noopener" target="_blank">Se original annonse på arbeidsplassen.no</a></p>` : ""}`;
   const description = `${j.title} hos ${j.company}${where ? " i " + where : ""}. ${pay ? "Lønn: " + pay + ". " : ""}${descText.replace(/\s+/g, " ").slice(0, 120)}`;
   return page({ title: `${j.title} – ${j.company}${j.location ? " – " + j.location : ""} | Havn`, description, canonical, body, jsonld });
+}
+
+// Job pages are rebuilt hourly; this small check hides the apply button at once if the ad was closed since then.
+function liveScript(j) {
+  const id = JSON.stringify(String(j.id)).replace(/</g, "\\u003c");
+  return `<p class="meta" id="gone" hidden><strong>Denne stillingen er ikke lenger ute.</strong> Den kan være besatt eller utløpt. <a href="${SITE}/jobs/">Se ledige jobber</a></p>
+<script>(function(){var id=${id},K="${KEY}";function gone(){var g=document.getElementById("gone"),b=document.querySelector("a.btn[rel~=nofollow]");if(b){b.parentNode.parentNode.insertBefore(g,b.parentNode);b.remove()}g.hidden=false}
+fetch("${SUPABASE_URL}/rest/v1/docs?collection=eq.jobs&select=id&id=eq."+encodeURIComponent(id),{headers:{apikey:K,Authorization:"Bearer "+K}}).then(function(r){return r.ok?r.json():null}).then(function(a){if(a&&!a.length)gone()}).catch(function(){});
+if(id.indexOf("jobtech-")===0)fetch("https://jobsearch.api.jobtechdev.se/ad/"+id.slice(8)).then(function(r){return r.status===404?{removed:1}:r.ok?r.json():null}).then(function(a){if(a&&a.removed)gone()}).catch(function(){});})()</script>`;
 }
 
 function listPage(title, intro, path, jobs) {
