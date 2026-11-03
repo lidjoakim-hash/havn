@@ -2,7 +2,7 @@ name: Havn job pages and health check
 
 on:
   schedule:
-    - cron: "23 */3 * * *"
+    - cron: "23 * * * *"
   workflow_dispatch:
     inputs:
       full:
