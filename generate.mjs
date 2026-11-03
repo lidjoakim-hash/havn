@@ -44,7 +44,13 @@ async function fetchJobs() {
     const { cols, rows } = await (await fetch(base + f)).json();
     for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); }
   }
-  const own = await fetchCol("jobs", "&data->>source=is.null");
+  // jobs posted on Havn itself: ask for ids only first (fast), then their data by id; a full scan sorted by id timed out
+  const ownIds = (await sbGet(`docs?collection=eq.jobs&select=id&data->>source=is.null`)).map((r) => r.id);
+  const own = [];
+  for (let i = 0; i < ownIds.length; i += 80) {
+    const list = ownIds.slice(i, i + 80).map((x) => `"${x}"`).join(",");
+    for (const r of await sbGet(`docs?collection=eq.jobs&select=id,data&id=in.(${encodeURIComponent(list)})`)) own.push({ id: r.id, ...r.data });
+  }
   return out.concat(own);
 }
 async function fetchTexts(ids) {
@@ -55,6 +61,18 @@ async function fetchTexts(ids) {
     if (res.ok) for (const r of await res.json()) out.set(r.id, r.data);
   }
   return out;
+}
+// one request with retries (the database sometimes cancels slow statements)
+async function sbGet(path) {
+  let res, err = "";
+  for (let tries = 0; tries < 4; tries++) {
+    res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } });
+    if (res.ok) return res.json();
+    err = await res.text();
+    if (res.status < 500) break;
+    await new Promise((r) => setTimeout(r, 3000 * (tries + 1)));
+  }
+  throw new Error(`Supabase answered ${res.status}: ${err}`);
 }
 async function fetchCol(col, extra = "") {
   const out = [];
