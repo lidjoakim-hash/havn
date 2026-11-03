@@ -693,7 +693,7 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
 </div>
 <div id="modalRoot"></div>
 
-<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=9"></script><script src="moderation.js?v=1"></script><script src="i18n-phrases.js?v=2"></script><script src="havn-backend.js?v=6"></script>
+<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=9"></script><script src="moderation.js?v=1"></script><script src="i18n-phrases.js?v=3"></script><script src="havn-backend.js?v=7"></script>
 <script>
 (function(){
 "use strict";
@@ -1037,11 +1037,13 @@ function shareRow(j){
     <a href="#" data-act="share" data-id="${esc(j.id)}">${esc(t("d.link"))}</a></div></div>`;
 }
 function cleanText(v){if(typeof v!=="string"||!/[<&][a-z#\/]/i.test(v))return v;const dec=x=>x.replace(/&#(\d+);/g,(m,n)=>String.fromCharCode(+n)).replace(/&#x([0-9a-f]+);/gi,(m,n)=>String.fromCharCode(parseInt(n,16))).replace(/&nbsp;/g," ").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;|&apos;|&rsquo;|&lsquo;/g,"'").replace(/&ndash;|&mdash;/g,"–").replace(/&amp;/g,"&");const strip=x=>x.replace(/<\s*(br|\/p|\/div|\/li|\/h\d|\/ul|hr)\s*\/?>/gi,"\n").replace(/<\s*li[^>]*>/gi,"• ").replace(/<[^>]+>/g,"");return dec(strip(dec(strip(v)))).replace(/\u00a0/g," ").replace(/[ \t]+/g," ").replace(/ *\n */g,"\n").replace(/\n{3,}/g,"\n\n").replace(/\n\s*\n(?=• )/g,"\n").trim()}
+// anonymous counts (no cookies): one view per job per browser session, and apply clicks; see supabase/5-job-stats.sql
+function countOnce(key,j,k){try{const seen=JSON.parse(sessionStorage.getItem("havn.seen")||"{}");if(seen[key])return;seen[key]=1;sessionStorage.setItem("havn.seen",JSON.stringify(seen))}catch(e){}if(window.havn&&window.havn.track)window.havn.track(j,k)}
 function renderDetail(id){
   const box=$("#jobDetail");const j=S.jobs.find(x=>x.id===id);
   if(!j){box.innerHTML=S.jobsLoaded?`<div class="section"><a class="back" href="#jobs">${esc(t("d.back"))}</a><div class="empty" style="margin-top:20px"><h3>${esc(t("d.gone.h"))}</h3><p>${esc(t("d.gone.p"))}</p><a class="btn btn-primary" href="#jobs">${esc(t("d.see"))}</a></div></div>`:`<div class="section"><div class="empty"><h3>${esc(t("loading"))}</h3></div></div>`;return}
   if(j.hasText&&!j._textLoaded&&S.db){if(!j._textLoading){j._textLoading=true;S.db.doc("jobtext/"+id).get().then(d=>{const x=d.exists?d.data():{};j.description=cleanText(x.description||j.summary||"");j.requirements=cleanText(x.requirements)||j.requirements;j.benefits=cleanText(x.benefits)||j.benefits;j._textLoaded=true;if(location.hash==="#job-"+id)renderDetail(id)}).catch(()=>{j._textLoaded=true;j.description=j.summary||""})}if(!j.description)j.description=t("d.loadtext")}
-  fixLinks(j);liveCheck(j);S.recent=[id,...S.recent.filter(x=>x!==id)].slice(0,8);store("havn.recent",S.recent);
+  fixLinks(j);liveCheck(j);countOnce("v:"+id,id,"v");S.recent=[id,...S.recent.filter(x=>x!==id)].slice(0,8);store("havn.recent",S.recent);
   const st=jobStatus(j);const left=daysLeft(j);const applied=S.myApps[j.id]||S.track[j.id];
   const req=lines(j.requirements),ben=lines(j.benefits);const m=S.match[j.id];
   const similar=sortJobs(S.jobs.filter(x=>x.id!==j.id&&isLive(x)&&(x.category===j.category||x.company===j.company)),"new").slice(0,3);
@@ -1528,7 +1530,7 @@ function renderAdmin(force){
     const kp=`<div class="kpi"><b>${live.length}</b><span>Live jobs</span></div><div class="kpi"><b>${pendingCount()}</b><span>Waiting for review</span></div><div class="kpi"><b>${appsN}</b><span>Quick applications</span></div><div class="kpi"><b>${money(rev,"EUR")}</b><span>Paid posts, last 30 days</span></div>`;
     const soonHtml=soon.length?`<div class="panel" style="margin-top:14px"><div class="flabel">CLOSING IN 5 DAYS · ASK THE EMPLOYER IF THEY'RE STILL HIRING</div>${soon.map(j=>`<div class="row" style="justify-content:space-between;margin-top:8px"><span><a href="#job-${esc(j.id)}">${esc(j.title)}</a> · ${esc(j.company)} · <span class="mono">${daysLeft(j)}d</span></span><button class="btn btn-ghost btn-sm" data-act="extend" data-id="${esc(j.id)}">+30 days</button></div>`).join("")}</div>`:"";
     if(!force&&$("#adminForm")&&$("#adminKpis")){$("#adminKpis").innerHTML=kp;$("#adminSoon").innerHTML=soonHtml;return}
-    body.innerHTML=`<div class="kpis" id="adminKpis">${kp}</div><div id="adminSoon">${soonHtml}</div>${window.havn?`<div class="panel" style="margin-top:14px" id="navPanel"></div>`:""}
+    body.innerHTML=`<div class="kpis" id="adminKpis">${kp}</div><div id="adminSoon">${soonHtml}</div>${window.havn?`<div class="panel" style="margin-top:14px" id="statsPanel"><div class="flabel">LAST 7 DAYS</div><p class="muted" style="margin:6px 0 0">Loading…</p></div><div class="panel" style="margin-top:14px" id="navPanel"></div>`:""}
       <h3 style="margin:28px 0 6px;font-size:20px" id="adminFormTitle">Publish a job</h3><p class="muted" style="margin:0 0 14px">Jobs you publish here go live immediately. Use it for your own companies and for clients who sent you a listing.</p>
       <div class="post"><div style="display:flex;flex-direction:column;gap:14px;min-width:0">
         <div class="panel" data-aionly ${S.sample?"":"hidden"}><div class="flabel">PASTE A JOB AD → FILL THE FORM</div><div class="field" style="margin-top:8px"><label for="a_paste">Job ad text, an email from a client, or notes</label><textarea id="a_paste" style="min-height:80px"></textarea></div><div class="row" style="margin-top:8px"><button class="btn btn-ai btn-sm" type="button" data-act="ai-fill" data-form="adminForm">${SPARK}Fill the form with AI</button><span class="muted" data-aimsg="adminForm" style="font-size:13px"></span></div></div>
@@ -1537,7 +1539,7 @@ function renderAdmin(force){
         <div class="preview"><div class="flabel">LIVE PREVIEW</div><div id="adminPreview"></div><div id="adminQuality"></div><div id="adminNotice"></div></div></div>`;
     wirePostForm($("#adminForm"),$("#adminPreview"),$("#adminQuality"),$("#adminNotice"),"admin");
     if(S.sample)body.querySelectorAll("[data-aionly]").forEach(e=>e.hidden=false);
-    renderBulk();renderNavPanel();
+    renderBulk();renderNavPanel();renderStats();
     if(S.editing){const j=S.jobs.find(x=>x.id===S.editing);if(j){fillForm($("#adminForm"),j);$("#a_editBar").hidden=false;$("#adminForm button[type=submit]").textContent="Save changes";$("#adminFormTitle").textContent="Edit job";$("#adminFormTitle").scrollIntoView({block:"start"})}}
     return;
   }
@@ -1670,6 +1672,18 @@ async function bulkPublish(){
 
 /* ================= NAV status (public site) ================= */
 S.nav=null;
+// owner overview: views and apply clicks per day and the most viewed jobs (admins can read job_stats)
+async function renderStats(){const el=$("#statsPanel");if(!el||!window.havn||!window.havn.sb)return;
+  const from=new Date(now()-6*DAY).toISOString().slice(0,10);
+  const {data,error}=await window.havn.sb.from("job_stats").select("job_id,day,views,applies").gte("day",from).limit(20000);
+  if(error||!data){el.innerHTML=`<div class="flabel">LAST 7 DAYS</div><p class="muted" style="margin:6px 0 0">Stats not available (${esc(error&&error.message||"no data")}).</p>`;return}
+  const site=data.filter(r=>r.job_id==="_site"),jobs=data.filter(r=>r.job_id[0]!=="_");
+  const sum=(a,k)=>a.reduce((s,r)=>s+(r[k]||0),0);const byJob={};jobs.forEach(r=>{const o=byJob[r.job_id]=byJob[r.job_id]||{v:0,a:0};o.v+=r.views;o.a+=r.applies});
+  const top=Object.entries(byJob).sort((a,b)=>b[1].v-a[1].v).slice(0,10);
+  const days=[...Array(7)].map((_,i)=>new Date(now()-(6-i)*DAY).toISOString().slice(0,10));const perDay=days.map(d=>sum(jobs.filter(r=>r.day===d),"views"));const mx=Math.max(1,...perDay);
+  el.innerHTML=`<div class="flabel">LAST 7 DAYS</div><div class="kpis" style="margin-top:10px"><div class="kpi"><b>${sum(site,"views")}</b><span>visits</span></div><div class="kpi"><b>${sum(jobs,"views")}</b><span>job views</span></div><div class="kpi"><b>${sum(jobs,"applies")}</b><span>apply clicks</span></div><div class="kpi"><b>${Object.keys(byJob).length}</b><span>jobs viewed</span></div></div>
+  <div style="display:flex;gap:6px;align-items:flex-end;height:70px;margin:14px 0 4px">${perDay.map((v,i)=>`<div title="${days[i]}: ${v} views" style="flex:1;background:var(--primary);opacity:.8;border-radius:4px 4px 0 0;height:${Math.max(3,Math.round(v/mx*66))}px"></div>`).join("")}</div><div class="muted" style="font-size:12px;display:flex;justify-content:space-between"><span>${days[0]}</span><span>today</span></div>
+  ${top.length?`<div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Most viewed jobs</th><th>Views</th><th>Apply clicks</th></tr></thead><tbody>${top.map(([id,o])=>{const j=S.jobs.find(x=>x.id===id);return `<tr><td><a href="#job-${esc(id)}">${esc(j?j.title:id)}</a>${j?`<div class="muted">${esc(j.company)}</div>`:""}</td><td class="mono">${o.v}</td><td class="mono">${o.a}</td></tr>`}).join("")}</tbody></table></div>`:`<p class="muted" style="margin:10px 0 0">No job views counted yet. Counting started today.</p>`}`}
 async function loadNavState(){if(!S.db||!S.isOwner||!window.havn)return;try{const d=await S.db.doc("_sys/nav").get();S.nav=d.exists?d.data():{};renderNavPanel()}catch(e){}}
 function renderNavPanel(){const el=$("#navPanel");if(!el)return;const n=S.nav||{};
   el.innerHTML=`<div class="row" style="justify-content:space-between"><div><div class="flabel">NAV JOB FEED</div><div style="margin-top:6px;font-size:14px">${n.lastRun?`<b class="mono">${n.navJobs??0}</b> NAV jobs live · last run ${ago(n.lastRun).toLowerCase()} · +${n.lastImported??0} / −${n.lastRemoved??0}${n.lastNote?` · ${esc(n.lastNote)}`:""}`:"Not run yet. It runs every hour once the schedule is set up."}</div></div><button class="btn btn-ghost btn-sm" type="button" data-act="nav-run">Run import now</button></div>`}
@@ -1679,6 +1693,7 @@ function renderPrivacy(){const mail=S.settings.contactEmail||"the Havn team";$("
   <p>Havn stores only what you give us to use the site.</p>
   <h2>What we store</h2><ul>
   <li><b>Your email</b>, when you sign in, so we can sign you in and send what you ask for.</li>
+  <li><b>Anonymous counts</b>: how many times each job is opened and how often Apply is clicked, per day. No cookies, no IP address, nothing that can be tied to you.</li>
   <li><b>Applications</b> you send with Quick apply: your name, email, phone, CV link and note. Only you and Havn's administrator can see them. We forward them to the employer you applied to.</li>
   <li><b>Weekly digest</b>: your email and what you search for.</li>
   <li><b>Job posts and reports</b> you send.</li>
@@ -1738,7 +1753,7 @@ document.addEventListener("click",async e=>{
     case "copy":copy(el.dataset.text||"");return;
     case "copybrief":copy(window.__brief||"");return;
     case "copyel":copy(document.getElementById(id).textContent);return;
-    case "applysite":if(job){trackApplied(job);toast(t("toast.tracked"))}return;
+    case "applysite":if(job){countOnce("a:"+job.id,job.id,"a");trackApplied(job);toast(t("toast.tracked"))}return;
     case "mark-applied":if(job){trackApplied(job);toast(t("toast.tracked"));route()}return;
     case "stage":S.track[id].stage=el.dataset.stage;store("havn.track",S.track);renderMy();return;
     case "untrack":delete S.track[id];store("havn.track",S.track);renderMy();updateCounts();return;
@@ -1821,6 +1836,7 @@ route();
   $("#adminLink").hidden=!S.isOwner;
   if(!db){S.jobsLoaded=true;route();return}
   // Imported jobs come from the compact job index on a free CDN (fast, light); jobs posted on Havn come live from the database.
+  countOnce("site","_site","v");
   let IDX=null,OWN=[];const merge=()=>{S.jobs=(IDX||[]).concat(OWN);S.jobsLoaded=true;route()};
   IDX=await loadIndex(part=>{IDX=part;merge()}).catch(e=>{console.warn("Havn index unavailable, loading from database",e);return null});
   if(IDX)window.HAVN_OWN_ONLY=true;

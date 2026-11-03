@@ -136,7 +136,7 @@
       const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname+location.hash}});
       m.innerHTML=`<div class="notice ${error?"err":"ok"}">${esc(error?s.fail:s.sent)}</div>`});
   }
-  window.havn={sb,signIn,refresh:renderAuthButton,signOut:()=>sb.auth.signOut(),invoke:(name,body)=>sb.functions.invoke(name,{body:body||{}}),isSignedIn:()=>!!session,config:cfg};
+  window.havn={sb,track:(j,k)=>sb.rpc("track",{j:String(j).slice(0,120),k}).then(()=>{},()=>{}),totals:j=>sb.rpc("job_totals",{j}).then(r=>(r.data&&r.data[0])||{views:0,applies:0},()=>({views:0,applies:0})),signIn,refresh:renderAuthButton,signOut:()=>sb.auth.signOut(),invoke:(name,body)=>sb.functions.invoke(name,{body:body||{}}),isSignedIn:()=>!!session,config:cfg};
   document.addEventListener("DOMContentLoaded",()=>ready.then(renderAuthButton));
   window.addEventListener("storage",renderAuthButton);
 

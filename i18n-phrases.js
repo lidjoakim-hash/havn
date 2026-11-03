@@ -174,6 +174,8 @@ window.HAVN_PHRASES = {
   "Sweden": ["Sverige", "Suedia"], "Denmark": ["Danmark", "Danemarca"], "Germany": ["Tyskland", "Germania"], "Netherlands": ["Nederland", "Țările de Jos"],
   "Spain": ["Spania", "Spania"], "Poland": ["Polen", "Polonia"], "United Kingdom": ["Storbritannia", "Regatul Unit"], "Romania": ["Romania", "România"],
   "Internship": ["Praksisplass", "Stagiu"], "Lead": ["Leder", "Lider"],
+  "Anonymous counts": ["Anonyme tellinger", "Numărători anonime"],
+  ": how many times each job is opened and how often Apply is clicked, per day. No cookies, no IP address, nothing that can be tied to you.": [": hvor mange ganger hver jobb åpnes og hvor ofte «Søk» trykkes, per dag. Ingen informasjonskapsler, ingen IP-adresse, ingenting som kan knyttes til deg.", ": de câte ori este deschis fiecare job și cât de des se apasă Aplică, pe zi. Fără cookie-uri, fără adresă IP, nimic legat de tine."],
   "FOUNDING EMPLOYER OFFER": ["TILBUD TIL DE FØRSTE ARBEIDSGIVERNE", "OFERTĂ PENTRU PRIMII ANGAJATORI"],
   "Your first Featured post is free.": ["Din første Featured-annonse er gratis.", "Primul tău anunț Featured este gratuit."],
   "For the first 10 companies that post on Havn. Pinned at the top of the board for 30 days, first in the weekly digest and shared on Havn's social channels. No card needed.": ["For de 10 første bedriftene som legger ut på Havn. Festet øverst i 30 dager, først i det ukentlige nyhetsbrevet og delt i Havns sosiale kanaler. Ingen kort trengs.", "Pentru primele 10 companii care publică pe Havn. Fixat sus timp de 30 de zile, primul în newsletterul săptămânal și distribuit pe rețelele sociale Havn. Fără card."],
