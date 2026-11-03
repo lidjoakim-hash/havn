@@ -16,13 +16,21 @@ const { havnModerate } = new Function(`${await readFile(new URL("./moderation.js
 const { enrichPay } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay };`)();
 await mkdir(DIR, { recursive: true });
 
-async function getAll(path) {
+// pages of 500 with retries: the database cancels slow statements (timeout), so keep each request small
+async function getAll(path, size = 500) {
   const out = [];
-  for (let from = 0; ; from += 1000) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: { ...H, Range: `${from}-${from + 999}`, "Range-Unit": "items" } });
-    if (!res.ok) throw new Error(`Supabase ${res.status}: ${await res.text()}`);
+  for (let from = 0; ; from += size) {
+    let res, err = "";
+    for (let tries = 0; tries < 4; tries++) {
+      res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: { ...H, Range: `${from}-${from + size - 1}`, "Range-Unit": "items" } });
+      if (res.ok) break;
+      err = await res.text();
+      if (res.status < 500) break;
+      await new Promise((r) => setTimeout(r, 3000 * (tries + 1)));
+    }
+    if (!res.ok) throw new Error(`Supabase ${res.status}: ${err}`);
     const rows = await res.json(); out.push(...rows);
-    if (rows.length < 1000) break;
+    if (rows.length < size) break;
   }
   return out;
 }
@@ -44,7 +52,8 @@ if (!full) {
   const del = await getAll(`job_deletions?select=id&at=gt.${encodeURIComponent(since)}`);
   for (const d of del) raw.delete(d.id);
 }
-const changed = await getAll(`docs?collection=eq.jobs&select=id,data${full ? "" : `&updated_at=gt.${encodeURIComponent(since)}`}&order=id`);
+// incremental runs sort by updated_at so the database can use its updated_at index (sorting by id timed out)
+const changed = await getAll(`docs?collection=eq.jobs&select=id,data${full ? "&order=id" : `&updated_at=gt.${encodeURIComponent(since)}&order=updated_at.asc,id.asc`}`);
 // full ad texts (split off into "jobtext" for most sources) so every ad can be checked for discriminatory wording
 // (looked up by id: jobtext has no updated_at index, and a filtered scan times out on the database)
 const texts = new Map();
