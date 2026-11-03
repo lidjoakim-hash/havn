@@ -1,6 +1,6 @@
 // Havn service worker: makes the app installable and open instantly, and shows the last page when offline.
 // Job data always comes live from the server; only the app itself is cached.
-const VERSION = "havn-v12";
+const VERSION = "havn-v13";
 const SHELL = ["./", "./index.html", "./config.js?v=3", "./supabase-2.118.0.js", "./havn-backend.js?v=5", "./pay-core.js?v=9", "./i18n-phrases.js?v=1", "./manifest.webmanifest", "./icons/icon-192.png", "./offline.html"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== VERSION).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });

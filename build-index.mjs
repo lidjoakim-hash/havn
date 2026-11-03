@@ -47,6 +47,8 @@ const changed = await getAll(`docs?collection=eq.jobs&select=id,data${full ? "" 
 for (const r of changed) {
   if (!r.data || !r.data.source) { raw.delete(r.id); continue; } // jobs posted on Havn itself come live from the database
   const j = { id: r.id, ...r.data };
+  // NAV sends deactivated ads as empty shells (no text, no link): those are expired, never show them
+  if (j.source === "nav" && !j.applyUrl && !j.sourceUrl && !j.hasText && !String(j.description || "").trim()) { raw.delete(r.id); continue; }
   delete j.description; delete j.requirements; delete j.benefits; delete j.h; delete j.keep; delete j._payDone;
   if (j.seniority === "") delete j.seniority;
   delete j.langs; delete j.payEst; delete j.paySrc;

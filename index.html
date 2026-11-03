@@ -863,7 +863,7 @@ function isNew(j){return now()-(j.createdAt||0)<3*DAY}
 function jobStatus(j){if(j.status==="closed")return "closed";if((j.expiresAt||0)<=now())return "expired";return "active"}
 function lines(s){return Array.isArray(s)?s.map(String).filter(Boolean):String(s||"").split(/\n+/).map(x=>x.replace(/^[-•*]\s*/,"").trim()).filter(Boolean)}
 function median(a){if(!a.length)return 0;const s=a.slice().sort((x,y)=>x-y);const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2}
-function fixLinks(o){if(o&&o.source==="nav"&&/^nav-/.test(o.id||"")){const u="https://arbeidsplassen.nav.no/stillinger/stilling/"+o.id.slice(4);if(!o.sourceUrl)o.sourceUrl=u;if(!o.applyUrl)o.applyUrl=o.sourceUrl;o._navUrl=u}return o}
+function fixLinks(o){if(o&&o.source==="nav"&&/^nav-/.test(o.id||"")){if(!o.sourceUrl&&!o.applyUrl&&!o.hasText&&!String(o.description||"").trim()){o._dead=true;o.status="closed";return o}const u="https://arbeidsplassen.nav.no/stillinger/stilling/"+o.id.slice(4);if(!o.sourceUrl)o.sourceUrl=u;if(!o.applyUrl)o.applyUrl=o.sourceUrl}return o}
 function safeUrl(u){u=String(u||"").trim();if(!u)return "#";if(/^https?:\/\//i.test(u))return u;return "https://"+u.replace(/^\/+/,"")}
 async function copy(text){try{await navigator.clipboard.writeText(text);toast(t("toast.copied"))}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(t("toast.copied"))}catch(_){toast("Select the text and copy it")}ta.remove()}}
 function store(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
@@ -1634,7 +1634,7 @@ async function loadIndex(onFirst){
   const p=await fetch("data/pointer.json?t="+Math.floor(Date.now()/300000),{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("pointer "+r.status);return r.json()});
   const base=`https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
   const get=f=>fetch(base+f).then(r=>{if(!r.ok)throw new Error(f+" "+r.status);return r.json()});
-  const rowsOf=({cols,rows})=>rows.map(r=>{const o={_payDone:true};for(let i=0;i<cols.length;i++){const v=r[i];if(v!==null)o[cols[i]]=v}if(!o.seniority)o.seniority="Mid";if(!o.status)o.status="active";fixLinks(o);return o});
+  const rowsOf=({cols,rows})=>rows.map(r=>{const o={_payDone:true};for(let i=0;i<cols.length;i++){const v=r[i];if(v!==null)o[cols[i]]=v}if(!o.seniority)o.seniority="Mid";if(!o.status)o.status="active";fixLinks(o);return o}).filter(o=>!o._dead);
   // the first file holds the newest few hundred jobs, so the list can show before the rest arrives (slow phones)
   const rest=p.files.slice(1).map(get);const first=rowsOf(await get(p.files[0]));S.indexMeta=p;if(onFirst&&rest.length)onFirst(first);
   const out=first.concat(...(await Promise.all(rest)).map(rowsOf));
