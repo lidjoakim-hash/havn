@@ -860,6 +860,8 @@ function ago(ts){const d=Math.floor((now()-ts)/DAY);if(d<=0)return t("ago.today"
 function daysLeft(j){return Math.ceil(((j.expiresAt||0)-now())/DAY)}
 function isLive(j){return j.status==="active"&&(j.expiresAt||0)>now()}
 function isNew(j){return now()-(j.createdAt||0)<3*DAY}
+// Arbetsförmedlingen ads: ask JobTech live when a job is opened, so an ad removed in the last hour never shows as open
+function liveCheck(j){if(j.source!=="jobtech"||j._live)return;j._live=1;fetch("https://jobsearch.api.jobtechdev.se/ad/"+encodeURIComponent(j.id.replace(/^jobtech-/,""))).then(r=>r.status===404?{removed:true}:r.ok?r.json():null).then(a=>{if(!a)return;const dl=Date.parse(a.application_deadline||"");if(a.removed||(dl&&dl<now())){j.status="closed";if(location.hash==="#job-"+j.id)renderDetail(j.id)}}).catch(()=>{})}
 function jobStatus(j){if(j.status==="closed")return "closed";if((j.expiresAt||0)<=now())return "expired";return "active"}
 function lines(s){return Array.isArray(s)?s.map(String).filter(Boolean):String(s||"").split(/\n+/).map(x=>x.replace(/^[-•*]\s*/,"").trim()).filter(Boolean)}
 function median(a){if(!a.length)return 0;const s=a.slice().sort((x,y)=>x-y);const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2}
@@ -1001,7 +1003,7 @@ function renderDetail(id){
   const box=$("#jobDetail");const j=S.jobs.find(x=>x.id===id);
   if(!j){box.innerHTML=S.jobsLoaded?`<div class="section"><a class="back" href="#jobs">${esc(t("d.back"))}</a><div class="empty" style="margin-top:20px"><h3>${esc(t("d.gone.h"))}</h3><p>${esc(t("d.gone.p"))}</p><a class="btn btn-primary" href="#jobs">${esc(t("d.see"))}</a></div></div>`:`<div class="section"><div class="empty"><h3>${esc(t("loading"))}</h3></div></div>`;return}
   if(j.hasText&&!j._textLoaded&&S.db){if(!j._textLoading){j._textLoading=true;S.db.doc("jobtext/"+id).get().then(d=>{const x=d.exists?d.data():{};j.description=cleanText(x.description||j.summary||"");j.requirements=cleanText(x.requirements)||j.requirements;j.benefits=cleanText(x.benefits)||j.benefits;j._textLoaded=true;if(location.hash==="#job-"+id)renderDetail(id)}).catch(()=>{j._textLoaded=true;j.description=j.summary||""})}if(!j.description)j.description=t("d.loadtext")}
-  fixLinks(j);S.recent=[id,...S.recent.filter(x=>x!==id)].slice(0,8);store("havn.recent",S.recent);
+  fixLinks(j);liveCheck(j);S.recent=[id,...S.recent.filter(x=>x!==id)].slice(0,8);store("havn.recent",S.recent);
   const st=jobStatus(j);const left=daysLeft(j);const applied=S.myApps[j.id]||S.track[j.id];
   const req=lines(j.requirements),ben=lines(j.benefits);const m=S.match[j.id];
   const similar=sortJobs(S.jobs.filter(x=>x.id!==j.id&&isLive(x)&&(x.category===j.category||x.company===j.company)),"new").slice(0,3);
