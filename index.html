@@ -375,6 +375,17 @@ nav.main a.cta{background:var(--accent);color:var(--accent-ink);box-shadow:0 4px
 .empty .art{width:min(240px,70%);height:auto;display:block;margin:0 auto 10px}
 .emp-head{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;align-items:center}
 .emp-head .art{width:100%;height:auto}
+.emp-live{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.emp-live>div{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:12px 16px;min-width:130px;flex:1}
+.emp-live b{display:block;font-family:var(--f-display);font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.emp-live span{font-size:13px;color:var(--muted)}
+.founding{display:flex;gap:18px;align-items:center;justify-content:space-between;margin-top:16px;border:1.5px dashed color-mix(in srgb,var(--accent) 70%,transparent);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+.founding h3{margin:6px 0 4px;font-size:21px}.founding p{margin:0;color:var(--muted);max-width:62ch}
+@media (max-width:700px){.founding{flex-direction:column;align-items:flex-start}}
+.emp-sample{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:20px;align-items:center;margin:18px 0 22px}
+.emp-sample .job{pointer-events:none}
+@media (max-width:760px){.emp-sample{grid-template-columns:1fr}}
+
 @media (max-width:760px){.emp-head{grid-template-columns:1fr}.emp-head .art{max-width:260px;justify-self:center;order:-1}}
 .notice{border-radius:14px}
 .copybox{border-radius:12px}
@@ -583,6 +594,13 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
       <h2 style="margin-top:8px">Hire people who already know what you pay.</h2>
       <p class="sub">Candidates on Havn see the salary, the location rules and the hiring steps before they apply. That means fewer mismatched applications and faster hires.</p>
       </div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 240" class="art" role="img" aria-label="A friendly employer waving next to a small dog"> <g fill="none" stroke="#2E2B27" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"> <circle cx="150" cy="118" r="98" fill="#F2D9CC" stroke="none"/> <ellipse cx="150" cy="226" rx="120" ry="9" fill="#E6DCC9" stroke="none"/> <!-- desk --> <path d="M60 170 L 240 170 L 240 182 L 60 182 Z" fill="#E7C9A9"/> <path d="M74 182 L 74 224 M 226 182 L 226 224" stroke-width="3"/> <!-- person behind desk --> <path d="M120 120 C 126 106, 172 104, 180 120 C 186 136, 186 156, 184 170 L 116 170 C 114 154, 114 136, 120 120 Z" fill="#9BB5CC"/> <path d="M150 116 L 150 170" stroke-width="1.8" opacity=".45"/> <!-- waving arm --> <g class="wave" style="transform-origin:178px 124px"> <path d="M176 122 C 196 116, 206 100, 208 82 C 210 76, 220 76, 220 84 C 218 104, 206 124, 182 136" fill="#9BB5CC"/> <ellipse cx="214" cy="74" rx="8" ry="9" fill="#E2B08C"/> <path d="M208 68 l -3 -6 M 214 66 l 0 -7 M 220 68 l 3 -6" stroke-width="1.8"/> </g> <!-- other arm on desk --> <path d="M124 122 C 110 136, 108 156, 116 166 C 122 170, 136 170, 140 164 C 136 156, 128 156, 124 154" fill="#9BB5CC"/> <ellipse cx="142" cy="164" rx="7" ry="5" fill="#E8B48F"/> <!-- mug on desk --> <path d="M90 150 L 108 150 L 106 170 L 92 170 Z" fill="#A9C49B"/> <path class="steam" d="M96 144 c -3 -6 3 -8 0 -14 M 102 144 c -3 -6 3 -8 0 -14" stroke-width="1.6" opacity=".5"/> <!-- head --> <path d="M143 106 L 143 98 L 157 98 L 157 106" fill="#D9A07A"/> <g class="nod" style="transform-origin:150px 98px"> <circle cx="150" cy="74" r="26" fill="#E8B48F"/> <path d="M124 72 C 120 50, 138 40, 154 44 C 170 46, 178 60, 176 74 C 172 66, 168 62, 162 60 C 150 60, 136 64, 124 72 Z" fill="#B5643D"/> <path d="M178 70 C 186 82, 184 96, 176 102" fill="#B5643D"/> <circle class="blink" cx="142" cy="78" r="2.4" fill="#2E2B27" stroke="none"/> <circle class="blink" cx="160" cy="78" r="2.4" fill="#2E2B27" stroke="none"/> <path d="M144 88 q 6 6 12 0" stroke-width="2"/> <circle cx="136" cy="86" r="4" fill="#F09A86" stroke="none" opacity=".5"/> <circle cx="166" cy="86" r="4" fill="#F09A86" stroke="none" opacity=".5"/> </g> <!-- dog --> <g> <path class="tail" style="transform-origin:270px 206px" d="M270 206 C 282 200, 288 190, 286 182" stroke-width="3"/> <path d="M236 222 C 232 204, 240 192, 256 192 C 272 192, 278 206, 274 222 Z" fill="#F7F1E6"/> <path d="M226 190 C 222 176, 234 166, 246 168 C 258 170, 262 182, 256 192 C 250 200, 232 200, 226 190 Z" fill="#F7F1E6"/> <path d="M230 172 C 222 172, 218 184, 222 192 C 228 192, 232 182, 232 176" fill="#C98F65"/> <path d="M250 170 C 258 168, 264 178, 260 186 C 254 186, 250 178, 250 172" fill="#C98F65"/> <circle cx="236" cy="182" r="2" fill="#2E2B27" stroke="none"/> <circle cx="248" cy="182" r="2" fill="#2E2B27" stroke="none"/> <path d="M240 188 q 2 2 4 0" stroke-width="1.8"/> <circle cx="242" cy="186" r="2.4" fill="#2E2B27" stroke="none"/> </g> <path class="float1" d="M60 70 C 68 58, 82 62, 78 72 C 72 80, 62 78, 60 70 Z" fill="#B7CFA6"/> <circle class="float3" cx="250" cy="52" r="5" fill="#F5C96B" stroke="none"/> </g> </svg></div>
+      <div class="emp-live" id="empLive" aria-live="polite"></div>
+      <div class="panel founding">
+        <div><div class="flabel">FOUNDING EMPLOYER OFFER</div>
+        <h3>Your first Featured post is free.</h3>
+        <p>For the first 10 companies that post on Havn. Pinned at the top of the board for 30 days, first in the weekly digest and shared on Havn's social channels. No card needed.</p></div>
+        <a class="btn btn-primary" href="#post" data-act="pick" data-id="featured" data-founding="1">Claim the free Featured post</a>
+      </div>
       <div class="why">
         <div class="panel"><h3>Applicants who fit</h3><p>Salary and "remote from" rules are required fields, so people who can't take the job filter themselves out.</p></div>
         <div class="panel"><h3>Seen where it matters</h3><p>Featured jobs go into the weekly digest and are posted on Havn's social channels in Norway and Romania.</p></div>
@@ -594,6 +612,7 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
       <h2>Simple pricing</h2>
       <p class="sub">Job seekers never pay. Employers pay only for reach. Prices exclude VAT.</p>
       <div class="billing" role="group" aria-label="Billing period"><button type="button" data-bill="month" aria-pressed="true">Monthly</button><button type="button" data-bill="year" aria-pressed="false">Yearly · save 29%</button></div>
+      <div class="emp-sample"><div><div class="flabel">WHAT A FEATURED POST LOOKS LIKE</div><p class="muted" style="font-size:14px;margin:6px 0 0">Pinned above every other job, with your pay range and company name up front.</p></div><div id="empSample"></div></div>
       <div class="plans" id="plans"></div>
       <div class="panel roi" style="margin-top:22px">
         <div class="flabel">WHAT A HIRE COSTS YOU</div>
@@ -636,7 +655,7 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
         <details><summary>Is it free for job seekers?</summary><p>Yes, always. Havn earns from employers who want more reach, never from the people looking for work.</p></details>
         <details><summary>Can I post in Norwegian or Romanian?</summary><p>Yes. Write the listing in the language you work in. Candidates can filter by the country they live in.</p></details>
         <details><summary>Can recruitment agencies post?</summary><p>Yes, but agency jobs are labelled, and candidates can choose to see direct employers only.</p></details>
-        <details><summary>How do I pay?</summary><p>After review we send an invoice for paid plans. Standard posts are free during the launch period.</p></details>
+        <details><summary>How do I pay?</summary><p>By card right after you submit (secure Stripe checkout), or by invoice if you prefer. Standard posts are free during the launch period, and founding employers get their first Featured post free.</p></details>
         <details><summary>What is the reply promise?</summary><p>You choose how many days you need to answer every applicant. It's shown on the listing. Employers who keep it rank higher.</p></details>
       </div>
     </div>
@@ -674,7 +693,7 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
 </div>
 <div id="modalRoot"></div>
 
-<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=9"></script><script src="moderation.js?v=1"></script><script src="i18n-phrases.js?v=1"></script><script src="havn-backend.js?v=5"></script>
+<script src="config.js?v=3"></script><script src="supabase-2.118.0.js"></script><script src="pay-core.js?v=9"></script><script src="moderation.js?v=1"></script><script src="i18n-phrases.js?v=2"></script><script src="havn-backend.js?v=5"></script>
 <script>
 (function(){
 "use strict";
@@ -1204,6 +1223,10 @@ OPEN JOBS (${live.length}):\n${JSON.stringify(live)}`;
 
 
 /* ================= employers ================= */
+// employer page: live numbers from the job index (real counts, refreshed every 30 min) and a sample Featured card
+function renderEmp(){const m=S.indexMeta;const el=$("#empLive");if(el&&m&&m.count){const f=n=>new Intl.NumberFormat(S.lang==="en"?"en-GB":S.lang==="ro"?"ro-RO":"nb-NO").format(n);
+    el.innerHTML=[[m.count,"open jobs on Havn"],[m.companies,"companies hiring"],[m.countries,"countries"],[m.new24h,"new jobs in 24 hours"]].map(([n,l])=>`<div><b>${f(n||0)}</b><span>${esc(l)}</span></div>`).join("")}
+  const sm=$("#empSample");if(sm&&!sm.dataset.done){sm.dataset.done=1;sm.innerHTML=card({id:"sample",title:"Warehouse Team Lead",company:"Your Company AS",category:"Logistics & warehouse",jobType:"Full-time",workplace:"onsite",country:"Norway",location:"Stavanger",salaryMin:520000,salaryMax:600000,currency:"NOK",salaryPeriod:"year",languages:"English",tier:"featured",createdAt:now(),seniority:"Mid"},{preview:true})}}
 function renderPlans(){
   document.querySelectorAll("[data-bill]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.bill===S.bill));
   $("#plans").innerHTML=PLANS.map(p=>`<div class="plan${p.hot?" hot":""}">
@@ -1290,9 +1313,10 @@ function wirePostForm(form,previewEl,qualityEl,noticeEl,mode){
         sync();
       }else{
         if(window.havn&&!S.uid){store("havn.postDraft",o);n.innerHTML=`<div class="notice">Sign in to submit. Your listing is saved in this browser.</div>`;window.havn.signIn("post");btn.disabled=false;return}
+        if(S.founding&&o.tier==="featured")o.founding=true;
         const ok=await submitRequest(o);
         if(ok){const pay=(S.settings.payLinks||{})[o.tier];try{localStorage.removeItem("havn.postDraft")}catch(e){}
-          n.innerHTML=`<div class="notice ok">Thanks. Your job is in the review queue and usually goes live within one working day. We'll email ${esc(o.contact)} if anything needs changing.${pay&&TIERS[o.tier]?.price?`<div class="row" style="margin-top:10px"><a class="btn btn-accent btn-sm" href="${esc(safeUrl(pay))}" target="_blank" rel="noopener">Pay ${money(TIERS[o.tier].price,"EUR")} now</a><span class="muted" style="font-size:13px">Paying now gets your post live faster. Write your company name in the payment.</span></div>`:""}</div>`;form.reset();sync()}
+          n.innerHTML=`<div class="notice ok">Thanks. Your job is in the review queue and usually goes live within one working day. We'll email ${esc(o.contact)} if anything needs changing.${o.founding?`<div style="margin-top:8px"><b>Founding offer:</b> this Featured post is free. Nothing to pay.</div>`:""}${pay&&TIERS[o.tier]?.price&&!o.founding?`<div class="row" style="margin-top:10px"><a class="btn btn-accent btn-sm" href="${esc(safeUrl(pay))}" target="_blank" rel="noopener">Pay ${money(TIERS[o.tier].price,"EUR")} now</a><span class="muted" style="font-size:13px">Paying now gets your post live faster. Write your company name in the payment.</span></div>`:""}</div>`;form.reset();sync()}
         else{n.innerHTML=offlineSubmit(o)}}
     }catch(err){n.innerHTML=mode==="admin"?`<div class="notice err">Couldn't save (${esc(err&&err.code||"error")}). Check your connection and try again.</div>`:offlineSubmit(o)}
     btn.disabled=false;
@@ -1516,7 +1540,7 @@ function renderAdmin(force){
   }
   if(t==="requests"){
     const items=[];S.requests.forEach(r=>Object.entries(r.items||{}).forEach(([k,v])=>items.push(Object.assign({_uid:r.id,_k:k},v))));items.sort((a,b)=>b.submittedAt-a.submittedAt);
-    body.innerHTML=items.length?`<div class="tablewrap"><table><thead><tr><th>Job</th><th>Pay</th><th>Plan</th><th>Contact</th><th>State</th><th></th></tr></thead><tbody>${items.map(i=>`<tr><td><b>${esc(i.title)}</b><div class="muted">${esc(i.company)} · ${esc(i.workplace)} · strength ${quality(i).score}/100</div>${(()=>{const h=window.havnModerate&&havnModerate([i.title,i.description,i.requirements,i.benefits].join(" \n "));return h?`<div class="notice err" style="margin-top:6px;font-size:13px">⚠ ${esc(h.reason)}: “${esc(h.snippet.slice(0,140))}”</div>`:""})()}<details><summary class="muted">Read listing</summary><div class="tpl">${esc(i.description)}</div></details></td><td class="mono">${esc(payText(i))}</td><td>${esc(TIERS[i.tier]?.name||"")}</td><td>${esc(i.contact)}</td><td><span class="status st-${i.state==="pending"?"pending":i.state==="approved"?"active":"closed"}">${esc(i.state)}</span></td><td style="white-space:nowrap">${i.state==="pending"?`<button class="btn btn-primary btn-sm" data-act="approve" data-id="${esc(i._uid)}|${esc(i._k)}">Approve</button> <button class="btn btn-ghost btn-sm" data-act="reject" data-id="${esc(i._uid)}|${esc(i._k)}">Reject</button>`:""}</td></tr>`).join("")}</tbody></table></div>`
+    body.innerHTML=items.length?`<div class="tablewrap"><table><thead><tr><th>Job</th><th>Pay</th><th>Plan</th><th>Contact</th><th>State</th><th></th></tr></thead><tbody>${items.map(i=>`<tr><td><b>${esc(i.title)}</b><div class="muted">${esc(i.company)} · ${esc(i.workplace)} · strength ${quality(i).score}/100</div>${i.founding?`<span class="status st-pending" style="margin-top:4px;display:inline-block">Founding offer · free Featured</span>`:""}${(()=>{const h=window.havnModerate&&havnModerate([i.title,i.description,i.requirements,i.benefits].join(" \n "));return h?`<div class="notice err" style="margin-top:6px;font-size:13px">⚠ ${esc(h.reason)}: “${esc(h.snippet.slice(0,140))}”</div>`:""})()}<details><summary class="muted">Read listing</summary><div class="tpl">${esc(i.description)}</div></details></td><td class="mono">${esc(payText(i))}</td><td>${esc(TIERS[i.tier]?.name||"")}</td><td>${esc(i.contact)}</td><td><span class="status st-${i.state==="pending"?"pending":i.state==="approved"?"active":"closed"}">${esc(i.state)}</span></td><td style="white-space:nowrap">${i.state==="pending"?`<button class="btn btn-primary btn-sm" data-act="approve" data-id="${esc(i._uid)}|${esc(i._k)}">Approve</button> <button class="btn btn-ghost btn-sm" data-act="reject" data-id="${esc(i._uid)}|${esc(i._k)}">Reject</button>`:""}</td></tr>`).join("")}</tbody></table></div>`
       :`<div class="empty"><h3>No post requests</h3><p>When employers submit a job it waits here for your review.</p></div>`;return;
   }
   if(t==="apps"){
@@ -1661,7 +1685,7 @@ async function loadIndex(onFirst){
   // the first file holds the newest few hundred jobs, so the list can show before the rest arrives (slow phones)
   const rest=p.files.slice(1).map(get);const first=rowsOf(await get(p.files[0]));S.indexMeta=p;if(onFirst&&rest.length)onFirst(first);
   const out=first.concat(...(await Promise.all(rest)).map(rowsOf));
-  S.indexMeta=p;return out}
+  S.indexMeta=p;try{renderEmp()}catch(e){}return out}
 /* ================= routing ================= */
 function setView(v){document.querySelectorAll("[data-view]").forEach(s=>s.hidden=s.id!=="v-"+v);document.querySelectorAll("[data-nav]").forEach(a=>a.removeAttribute("aria-current"));const n=document.querySelector(`[data-nav="${v}"]`);if(n)n.setAttribute("aria-current","page")}
 let lastView=null;
@@ -1669,7 +1693,7 @@ function route(){
   const h=(location.hash||"").slice(1);const changed=lastView!==h;
   if(h.startsWith("job-")){setView("job");renderDetail(h.slice(4));if(changed)window.scrollTo(0,0)}
   else if(h.startsWith("co-")){setView("co");renderCompany(h.slice(3));if(changed)window.scrollTo(0,0)}
-  else if(h==="employers"||h==="post"||h==="pricing"){setView("employers");document.querySelector('[data-nav="employers"]').setAttribute("aria-current","page");if(changed){if(h==="post")$("#postSection").scrollIntoView();else if(h==="pricing")$("#pricing").scrollIntoView();else window.scrollTo(0,0)}}
+  else if(h==="employers"||h==="post"||h==="pricing"){setView("employers");renderEmp();document.querySelector('[data-nav="employers"]').setAttribute("aria-current","page");if(changed){if(h==="post")$("#postSection").scrollIntoView();else if(h==="pricing")$("#pricing").scrollIntoView();else window.scrollTo(0,0)}}
   else if(h==="my"||h==="saved"){setView("my");renderMy();if(changed)window.scrollTo(0,0)}
   else if(h==="salaries"){setView("salaries");renderSalaries();if(changed)window.scrollTo(0,0)}
   else if(h==="compare"){setView("compare");renderCompare();if(changed)window.scrollTo(0,0)}
@@ -1719,7 +1743,7 @@ document.addEventListener("click",async e=>{
     case "signin":closeModal();window.havn?.signIn(id);return;
     case "nav-run":{el.disabled=true;el.textContent="Running…";const r=await window.havn.invoke("nav-import");toast(r.error?"Import failed: "+(r.error.message||r.error):`Imported ${r.data?.imported??0}, removed ${r.data?.removed??0}`);loadNavState();return}
     case "ask-close":askClose();return;
-    case "pick":{const r=document.querySelector(`#postForm input[name=tier][value="${id==="pro"?"featured":id}"]`);if(r){r.checked=true;$("#postForm").dispatchEvent(new Event("input"))}return}
+    case "pick":{S.founding=!!el.dataset.founding;if(S.founding)toast("Founding offer added. Your first Featured post is free.");const r=document.querySelector(`#postForm input[name=tier][value="${id==="pro"?"featured":id}"]`);if(r){r.checked=true;$("#postForm").dispatchEvent(new Event("input"))}return}
     case "chip":{const c=CHIPS.find(x=>x.id===id);const on=el.getAttribute("aria-pressed")!=="true";c.set(on);S.limit=PAGE;if(location.hash&&location.hash!=="#jobs")location.hash="jobs";renderBoard();return}
     case "clear":writeFilters({});renderBoard();return;
     case "digest":digestModal();return;

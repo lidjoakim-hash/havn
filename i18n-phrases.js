@@ -174,6 +174,17 @@ window.HAVN_PHRASES = {
   "Sweden": ["Sverige", "Suedia"], "Denmark": ["Danmark", "Danemarca"], "Germany": ["Tyskland", "Germania"], "Netherlands": ["Nederland", "Țările de Jos"],
   "Spain": ["Spania", "Spania"], "Poland": ["Polen", "Polonia"], "United Kingdom": ["Storbritannia", "Regatul Unit"], "Romania": ["Romania", "România"],
   "Internship": ["Praksisplass", "Stagiu"], "Lead": ["Leder", "Lider"],
+  "FOUNDING EMPLOYER OFFER": ["TILBUD TIL DE FØRSTE ARBEIDSGIVERNE", "OFERTĂ PENTRU PRIMII ANGAJATORI"],
+  "Your first Featured post is free.": ["Din første Featured-annonse er gratis.", "Primul tău anunț Featured este gratuit."],
+  "For the first 10 companies that post on Havn. Pinned at the top of the board for 30 days, first in the weekly digest and shared on Havn's social channels. No card needed.": ["For de 10 første bedriftene som legger ut på Havn. Festet øverst i 30 dager, først i det ukentlige nyhetsbrevet og delt i Havns sosiale kanaler. Ingen kort trengs.", "Pentru primele 10 companii care publică pe Havn. Fixat sus timp de 30 de zile, primul în newsletterul săptămânal și distribuit pe rețelele sociale Havn. Fără card."],
+  "Claim the free Featured post": ["Få den gratis Featured-annonsen", "Ia anunțul Featured gratuit"],
+  "open jobs on Havn": ["ledige jobber på Havn", "joburi deschise pe Havn"],
+  "companies hiring": ["bedrifter som ansetter", "companii care angajează"],
+  "countries": ["land", "țări"],
+  "new jobs in 24 hours": ["nye jobber siste døgn", "joburi noi în 24 de ore"],
+  "WHAT A FEATURED POST LOOKS LIKE": ["SLIK SER EN FEATURED-ANNONSE UT", "CUM ARATĂ UN ANUNȚ FEATURED"],
+  "Pinned above every other job, with your pay range and company name up front.": ["Festet over alle andre jobber, med lønnsspenn og firmanavn helt fremme.", "Fixat deasupra tuturor joburilor, cu salariul și numele companiei la vedere."],
+  "By card right after you submit (secure Stripe checkout), or by invoice if you prefer. Standard posts are free during the launch period, and founding employers get their first Featured post free.": ["Med kort rett etter at du sender inn (sikker betaling via Stripe), eller med faktura om du vil. Standardannonser er gratis i lanseringsperioden, og de første arbeidsgiverne får sin første Featured-annonse gratis.", "Cu cardul imediat după trimitere (plată securizată Stripe) sau prin factură. Anunțurile Standard sunt gratuite în perioada de lansare, iar primii angajatori primesc primul anunț Featured gratuit."],
 };
 // Swap English text in the page for the chosen language. Remembers the English so switching back works.
 (function () {
