@@ -46,8 +46,18 @@ if (!full) {
 }
 const changed = await getAll(`docs?collection=eq.jobs&select=id,data${full ? "" : `&updated_at=gt.${encodeURIComponent(since)}`}&order=id`);
 // full ad texts (split off into "jobtext" for most sources) so every ad can be checked for discriminatory wording
+// (looked up by id: jobtext has no updated_at index, and a filtered scan times out on the database)
 const texts = new Map();
-for (const r of await getAll(`docs?collection=eq.jobtext&select=id,data${full ? "" : `&updated_at=gt.${encodeURIComponent(since)}`}&order=id`)) texts.set(r.id, r.data || {});
+try {
+  if (full) { for (const r of await getAll(`docs?collection=eq.jobtext&select=id,data&order=id`)) texts.set(r.id, r.data || {}); }
+  else {
+    const ids = changed.filter((r) => r.data && r.data.hasText).map((r) => r.id);
+    for (let i = 0; i < ids.length; i += 60) {
+      const list = ids.slice(i, i + 60).map((x) => `"${String(x).replace(/"/g, "")}"`).join(",");
+      for (const r of await getAll(`docs?collection=eq.jobtext&select=id,data&id=in.(${encodeURIComponent(list)})`)) texts.set(r.id, r.data || {});
+    }
+  }
+} catch (e) { console.log("Ad texts unavailable this run, keeping earlier checks:", String(e).slice(0, 200)); }
 // owner decisions from the admin panel: { allow: {id: true}, block: {id: true} }
 let mod = {};
 try { const m = await getAll(`docs?collection=eq.site&id=eq.moderation&select=data`); mod = (m[0] && m[0].data) || {}; } catch { /* none yet */ }
