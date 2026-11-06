@@ -135,7 +135,7 @@ async function loadMkt(){if(mktDone)return;mktDone=true;const f=await getFeed();
  $("#mkt").innerHTML=d?d.items.map(it=>itemHtml(f.cdn,d,it)).join(""):'<div class="card">No drafts yet – they appear every morning.</div>'}
 getFeed().then(f=>{const d=f.days&&f.days[0];if(!d){$("#todayNote").textContent="No drafts yet. The first ones appear tomorrow morning.";return}
  const isToday=d.date===new Date().toISOString().slice(0,10);$("#todayNote").textContent=`${d.items.length} drafts ${isToday?"ready for today":"from "+d.date} · theme: ${d.theme}.`;
- const p=d.items.find(i=>i.type==="post");if(p)$("#todayThumb").innerHTML=`<img src="${f.cdn}/${d.date}/${p.file}" alt="" style="width:100%;border-radius:14px;box-shadow:var(--shadow)">`});
+ const p=d.items.find(i=>i.type==="post");if(p)$("#todayThumb").innerHTML=`<img loading="lazy" src="${f.cdn}/${d.date}/${p.file}" alt="" style="width:100%;border-radius:14px;box-shadow:var(--shadow)">`});
 
 /* launch steps */
 const STEPS=[
