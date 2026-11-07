@@ -1,0 +1,35 @@
+{
+ "lastSync": 1794055953776,
+ "fullAt": 1793670842361,
+ "updated": "2026-11-07T12:53:03.240Z",
+ "count": 27354,
+ "duplicatesRemoved": 988,
+ "bySource": {
+  "jobtech": 10708,
+  "ats": 11526,
+  "arbeitnow": 1435,
+  "jobicy": 278,
+  "nav": 3381,
+  "remoteok": 26
+ },
+ "new24h": 2437,
+ "remote": 3066,
+ "noExperience": 2040,
+ "noExperienceRemote": 143,
+ "companies": 6082,
+ "countries": 31,
+ "flagged": 58,
+ "flaggedHidden": 3,
+ "files": [
+  "jobs-0.json",
+  "jobs-1.json",
+  "jobs-2.json",
+  "jobs-3.json",
+  "jobs-4.json"
+ ],
+ "raw": [
+  "raw-0.json",
+  "raw-1.json",
+  "raw-2.json"
+ ]
+}
