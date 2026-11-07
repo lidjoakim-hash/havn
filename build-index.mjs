@@ -96,7 +96,8 @@ const RANK = { ats: 1, nav: 2, jobtech: 3, remoteok: 4, jobicy: 5, arbeitnow: 6 
 const best = new Map(); let dupes = 0;
 for (const j of raw.values()) {
   if (j.status && j.status !== "active") continue;
-  if (block[j.id] || (j.mod && j.mod.level === "hide" && !allow[j.id])) continue; // discriminatory ad (see moderation.js)
+  if (block[j.id] || (j.mod && j.mod.level === "hide" && !allow[j.id])) continue;
+  if (/^tj[äa]na\b|\bren provisjon\b|\bprovisionsbaserad\b|\bprovisjonsbasert\b/i.test(j.title || "")) continue; // commission-only sales spam // discriminatory ad (see moderation.js)
   if ((j.expiresAt || 0) < now) continue;
   if (j.source === "remoteok" && now - (j.createdAt || 0) > 21 * DAY) continue; // older RemoteOK ads are usually filled
   const key = `${norm(j.company)}|${norm(j.title)}|${j.workplace === "remote" ? "remote:" + (j.remoteFrom || "") : norm(j.location || j.country)}`;
