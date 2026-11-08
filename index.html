@@ -764,7 +764,7 @@ const TZS=["CET ±2h","UK hours","US hours","Flexible"];
 
 const S={intl:/[?&#]intl\b/.test(location.search+location.hash),db:null,user:null,sample:null,downloads:null,uid:null,isOwner:false,canWrite:null,
   jobs:[],jobsLoaded:false,settings:{},apps:[],requests:[],alerts:[],reports:[],
-  myApps:{},myRequests:{},myReports:{},saved:new Set(),track:{},recent:[],match:{},
+  myApps:load("havn.myApps",{}),myRequests:{},myReports:{},saved:new Set(),track:{},recent:[],match:{},
   adminTab:"overview",myTab:"saved",editing:null,newOnly:false,bill:"month",compare:[],limit:30,lastVisit:0};
 
 /* ================= i18n ================= */
@@ -1083,8 +1083,7 @@ function renderDetail(id){
       <p class="muted" style="font-size:13px;margin:0">${esc(j.source==="nav"?t("d.navnote"):(j.source==="ats"?t("d.atsnote",{co:j.company}):t("d.extnote",{src:EXT[j.source]})))}${j.source==="jobicy"?" "+esc(t("d.jobicynote")):""}</p>${j.source&&S.indexMeta&&S.indexMeta.updated?`<p class="muted" style="font-size:12px;margin:4px 0 0">✓ ${esc(t("d.checked",{when:String(ago(Date.parse(S.indexMeta.updated))).toLowerCase()}))}</p>`:""}
       ${!applied?`<button class="btn btn-ghost btn-sm" type="button" data-act="mark-applied" data-id="${esc(j.id)}">${esc(t("d.mark"))}</button>`:""}`
     :`${j.applyUrl?`<a class="btn btn-primary" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl))}" target="_blank" rel="noopener">${esc(t("d.applysite",{co:j.company}))}</a>`:""}
-      ${!S.uid&&window.havn?`<button class="btn ${j.applyUrl?"btn-ghost":"btn-primary"}" type="button" data-act="signin" data-id="apply">${esc(t("d.signapply"))}</button>`:""}
-      ${canSave()?`<button class="btn ${j.applyUrl?"btn-ghost":"btn-primary"}" type="button" data-act="quick" data-id="${esc(j.id)}">${esc(S.myApps[j.id]?t("d.update"):t("d.quick"))}</button>`:""}
+      ${window.havn?`<button class="btn ${j.applyUrl?"btn-ghost":"btn-primary"}" type="button" data-act="quick" data-id="${esc(j.id)}">${esc(S.myApps[j.id]?t("d.update"):t("d.quick"))}</button>`:""}
       ${j.applyEmail?`<div><div class="flabel" style="margin:6px 0 4px">${esc(t("d.email"))}</div><div class="copybox"><span style="flex:1">${esc(j.applyEmail)}</span><button class="btn btn-ghost btn-sm" type="button" data-act="copy" data-text="${esc(j.applyEmail)}">${esc(t("copy"))}</button></div></div>`:""}
       ${!applied?`<button class="btn btn-ghost btn-sm" type="button" data-act="mark-applied" data-id="${esc(j.id)}">${esc(t("d.mark"))}</button>`:""}`;
   const stageName=t("st."+(S.track[j.id]?.stage||"applied"));
@@ -1128,7 +1127,7 @@ function renderDetail(id){
       </div>
       <p class="muted" style="font-size:13px;margin:0">${esc(t("d.never"))} <button type="button" class="btn btn-ghost btn-sm" data-act="report" data-id="${esc(j.id)}" style="margin-top:6px">${esc(t("d.report"))}</button></p>
     </aside>
-    ${st==="active"&&(j.applyUrl||j.sourceUrl)?`<div class="mbar"><span class="t">${esc(j.company)}</span><a class="btn btn-primary btn-sm" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl||j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.applyshort"))} ↗</a></div>`:""}
+    ${st==="active"&&(j.applyUrl||j.sourceUrl)?`<div class="mbar"><span class="t">${esc(j.company)}</span><a class="btn btn-primary btn-sm" data-act="applysite" data-id="${esc(j.id)}" href="${esc(safeUrl(j.applyUrl||j.sourceUrl))}" target="_blank" rel="noopener">${esc(t("d.applyshort"))} ↗</a></div>`:st==="active"&&!isExt(j)&&window.havn?`<div class="mbar"><span class="t">${esc(j.company)}</span><button class="btn btn-primary btn-sm" type="button" data-act="quick" data-id="${esc(j.id)}">${esc(t("d.applyshort"))}</button></div>`:""}
   </div>
     ${similar.length?`<section class="similar"><h2 style="font-size:20px;margin:8px 0 12px">${esc(t("d.similar"))}</h2><div class="list">${similar.map(x=>card(x)).join("")}</div></section>`:""}`;
 }
@@ -1484,8 +1483,12 @@ CANDIDATE NOTES: ${draft||"(none)"}`,{signal:ctl.signal,cache:false,onText:({tex
         if(!fd.name||!fd.email||!fd.note){m.querySelector("#qaMsg").innerHTML=`<div class="notice err">Add your name, email and a short note.</div>`;return}
         store("havn.profile",{name:fd.name,email:fd.email,phone:fd.phone,link:fd.link});
         const apps=Object.assign({},S.myApps);apps[id]={note:fd.note,at:now(),jobTitle:j.title,company:j.company};
-        try{await S.db.doc("applications/"+S.uid).set({profile:{name:fd.name,email:fd.email,phone:fd.phone||"",link:fd.link||""},apps});S.myApps=apps;trackApplied(j);closeModal();toast("Application sent");route()}
-        catch(err){S.canWrite=false;m.querySelector("#qaMsg").innerHTML=`<div class="notice err">Quick apply isn't available for your account. ${j.applyUrl?"Use the employer's apply link instead.":j.applyEmail?"Email your CV to "+esc(j.applyEmail)+" instead.":""}</div>`}
+        const btn=e.target.querySelector("button[type=submit]");btn.disabled=true;
+        try{
+          if(canSave()){await S.db.doc("applications/"+S.uid).set({profile:{name:fd.name,email:fd.email,phone:fd.phone||"",link:fd.link||""},apps})}
+          else{const {data,error}=await window.havn.sb.rpc("apply_job",{j:id,title:j.title||"",co:j.company||"",n:fd.name,e:fd.email,ph:fd.phone||"",l:fd.link||"",msg:fd.note});if(error||!data||!data.ok)throw error||data}
+          S.myApps=apps;store("havn.myApps",apps);countOnce("a:"+id,id,"a");trackApplied(j);closeModal();toast("Application sent");route()}
+        catch(err){btn.disabled=false;if(err&&err.error==="invalid"){m.querySelector("#qaMsg").innerHTML=`<div class="notice err">Check your name, email and note.</div>`;return}m.querySelector("#qaMsg").innerHTML=`<div class="notice err">Quick apply isn't available for your account. ${j.applyUrl?"Use the employer's apply link instead.":j.applyEmail?"Email your CV to "+esc(j.applyEmail)+" instead.":""}</div>`}
       });
     });
 }
@@ -1583,7 +1586,9 @@ function renderAdmin(force){
       :`<div class="empty"><h3>No post requests</h3><p>When employers submit a job it waits here for your review.</p></div>`;return;
   }
   if(t==="apps"){
-    const rows=[];S.apps.forEach(a=>Object.entries(a.apps||{}).forEach(([jid,v])=>rows.push(Object.assign({jid,p:a.profile||{}},v))));rows.sort((a,b)=>b.at-a.at);
+    if(!S.anonApps&&window.havn&&window.havn.sb){S.anonApps=[];window.havn.sb.from("job_applications").select("*").order("created_at",{ascending:false}).limit(1000).then(({data})=>{S.anonApps=data||[];if(S.adminTab==="apps")renderAdmin(true)})}
+    const rows=[];S.apps.forEach(a=>Object.entries(a.apps||{}).forEach(([jid,v])=>rows.push(Object.assign({jid,p:a.profile||{}},v))));
+    (S.anonApps||[]).forEach(r=>rows.push({jid:r.job_id,p:{name:r.name,email:r.email,phone:r.phone,link:r.link},note:r.note,at:Date.parse(r.updated_at||r.created_at),jobTitle:r.job_title,company:r.company}));rows.sort((a,b)=>b.at-a.at);
     body.innerHTML=rows.length?`<div class="list-head"><b>${rows.length} applications</b><button class="btn btn-ghost btn-sm" data-act="export-apps">Export CSV</button></div><div class="tablewrap"><table><thead><tr><th>Candidate</th><th>Job</th><th>Note</th><th>Sent</th><th></th></tr></thead><tbody>${rows.map(r=>{const j=S.jobs.find(x=>x.id===r.jid);const fwd=`Hi! New applicant for ${r.jobTitle} via Havn:\n\nName: ${r.p.name}\nEmail: ${r.p.email}\nPhone: ${r.p.phone||"-"}\nCV/profile: ${r.p.link||"-"}\n\n${r.note}`;return `<tr><td><b>${esc(r.p.name)}</b><div>${esc(r.p.email)}</div><div class="muted">${esc(r.p.phone||"")}</div>${r.p.link?`<a href="${esc(safeUrl(r.p.link))}" target="_blank" rel="noopener">CV / profile</a>`:""}</td><td>${esc(r.jobTitle)}<div class="muted">${esc(r.company)}${j?.contact?" · "+esc(j.contact):""}</div></td><td style="max-width:360px;white-space:pre-wrap">${esc(r.note)}</td><td>${ago(r.at)}</td><td><button class="btn btn-ghost btn-sm" data-act="copy" data-text="${esc(fwd)}">Copy to forward</button></td></tr>`}).join("")}</tbody></table></div>`
       :`<div class="empty"><h3>No applications yet</h3><p>Quick applications from candidates appear here.</p></div>`;return;
   }
