@@ -13,7 +13,7 @@ const ROWS_PER_FILE = 7000;
 const H = { apikey: KEY, Authorization: `Bearer ${KEY}` };
 
 const { havnModerate } = new Function(`${await readFile(new URL("./moderation.js", import.meta.url), "utf8")};return { havnModerate };`)();
-const { enrichPay } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay };`)();
+const { enrichPay, estimateAny } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay, estimateAny };`)();
 await mkdir(DIR, { recursive: true });
 
 // pages of 500 with retries: the database cancels slow statements (timeout), so keep each request small
@@ -88,6 +88,8 @@ for (const r of changed) {
   delete j.hints;
   raw.set(j.id, j);
 }
+// pay estimates depend only on title and place, so refresh them for every stored job (picks up estimate fixes without a full sync)
+for (const j of raw.values()) if (j.paySrc === "est" && !(+j.salaryMin || +j.salaryMax)) { try { j.payEst = estimateAny(j); } catch { /* keep old */ } }
 console.log(`${full ? "Full" : "Incremental"} sync: ${changed.length} changed, ${raw.size} imported jobs in store`);
 
 // ---------- clean up + remove duplicates ----------

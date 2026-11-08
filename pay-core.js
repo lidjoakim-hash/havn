@@ -41,49 +41,51 @@ function payFromText(text) {
 const PAY_EST = [
   [/(lærling|apprentice|sommerjobb|sommervikar|summer job|ekstrahjelp|student|praksisplass|trainee|frivillig|volunteer)/, null],
   [/(overlege|psykologspesialist|spesialist i allmennmedisin)/, 1000000, 1300000],
-  [/(lege i spesialisering|\blis\d?\b|turnuslege|fastlege|legevikar|kommunelege|\blege\b|physician|doctor)/, 750000, 1000000],
-  [/(tannlege|dentist)/, 750000, 1000000],
+  [/(lege i spesialisering|\blis\d?\b|turnuslege|fastlege|legevikar|kommunelege|\blege\b|physician|doctor|läkare|specialistläkare|\blæge\b)/, 750000, 1000000],
+  [/(tannlege|dentist|tandläkare|tandlæge)/, 750000, 1000000],
   [/(psykolog)/, 750000, 950000],
-  [/(pedagogisk leder|pedagogisk leiar|barnehagelærer|barnehagelærar|preschool teacher)/, 560000, 640000],
+  [/(pedagogisk leder|pedagogisk leiar|barnehagelærer|barnehagelærar|preschool teacher|förskollärare|pædagog(?!medhjælper))/, 560000, 640000],
   [/(daglig leder|daglig leiar|direktør|director|regionsjef|konsernsjef|kommunalsjef)/, 850000, 1200000],
-  [/(butikksjef|butikkleder|restaurantsjef|kjøkkensjef|assisterende|nestleder|skiftleder|formann|arbeidsleder|store manager)/, 550000, 700000],
-  [/(rektor|avdelingsleder|avdelingsleiar|enhetsleder|einingsleiar|seksjonsleder|seksjonsleiar|virksomhetsleder|driftsleder|teamleder)/, 650000, 900000],
-  [/((?<!vei|prosjekt)leder\b|(?<!rett|prosjekt)leiar\b|manager|sjef)/, 580000, 800000],
-  [/(jordmor|helsesykepleier|helsesjukepleiar|spesialsykepleier|intensivsykepleier|anestesisykepleier|operasjonssykepleier|fagutviklingssykepleier)/, 680000, 780000],
-  [/(sykepleier|sjukepleiar|sykepleiar|nurse)/, 620000, 710000],
-  [/(vernepleier|vernepleiar|miljøterapeut|barnevernspedagog|barnevernskonsulent|sosionom|social worker)/, 590000, 670000],
-  [/(bioingeniør|ergoterapeut|fysioterapeut|radiograf|ernæringsfysiolog|farmasøyt|audiograf|ortopediingeniør)/, 600000, 690000],
-  [/(helsefagarbeider|helsefagarbeidar|omsorgsarbeider|hjelpepleier|apotektekniker)/, 520000, 590000],
-  [/(helsesekretær|tannhelsesekretær|legesekretær)/, 450000, 520000],
-  [/(stipendiat|phd|ph\.d|doktorgrad)/, 530000, 590000],
+  [/(butikksjef|butikkleder|restaurantsjef|kjøkkensjef|assisterende|nestleder|skiftleder|formann|arbeidsleder|arbetsledare|store manager|butikschef|platschef|klubbchef|klubbsjef|senterleder)/, 550000, 700000],
+  [/(rektor|enhetschef|avdelningschef|verksamhetschef|avdelingsleder|avdelingsleiar|enhetsleder|einingsleiar|seksjonsleder|seksjonsleiar|virksomhetsleder|driftsleder|teamleder)/, 650000, 900000],
+  [/((?<!vei|prosjekt)leder\b|(?<!rett|prosjekt)leiar\b|manager|sjef|\bchef\b)/, 580000, 800000],
+  [/(jordmor|barnmorska|distriktssköterska|specialistsjuksköterska|helsesykepleier|helsesjukepleiar|spesialsykepleier|intensivsykepleier|anestesisykepleier|operasjonssykepleier|fagutviklingssykepleier)/, 680000, 780000],
+  [/(sykepleier|sjukepleiar|sykepleiar|nurse|sjuksköterska|sjuksköterskor|sygeplejerske)/, 620000, 710000],
+  [/(vernepleier|vernepleiar|miljøterapeut|barnevernspedagog|barnevernskonsulent|sosionom|social worker|socialsekreterare|socionom|socialrådgiver|behandlingsassistent)/, 590000, 670000],
+  [/(bioingeniør|ergoterapeut|arbetsterapeut|fysioterapeut|sjukgymnast|farmaceut|radiograf|ernæringsfysiolog|farmasøyt|audiograf|ortopediingeniør)/, 600000, 690000],
+  [/(helsefagarbeider|helsefagarbeidar|omsorgsarbeider|hjelpepleier|apotektekniker|undersköterska|undersköterskor|social- og sundhedsassistent|social- og sundhedshjælper|sosu)/, 520000, 590000],
+  [/(helsesekretær|tannhelsesekretær|legesekretær|tandsköterska|medicinsk sekreterare|tandklinikassistent)/, 450000, 520000],
+  [/(stipendiat|phd|ph\.d|doktorgrad|doktorand)/, 530000, 590000],
   [/(postdoktor|postdoc|forsker|researcher|førsteamanuensis|professor|universitetslektor)/, 640000, 820000],
-  [/(lektor|lærer|lærar|adjunkt|teacher|spesialpedagog|instruktør)/, 600000, 720000],
-  [/(barnehageassistent|barne- og ungdomsarbeider|barnehagemedarbeider|fagarbeider i barnehage|assistent i barnehage|skoleassistent|assistent skole)/, 430000, 520000],
+  [/(personlig trener|personlig tränare|personal trainer|gruppetimeinstruktør|instruktør|instruktör|tränare|trener\b|\btrainer\b|fitness)/, 400000, 480000],
+  [/(lektor|lærer|lærar|lärare|speciallärare|adjunkt|teacher|spesialpedagog)/, 600000, 720000],
+  [/(barnehageassistent|barne- og ungdomsarbeider|barnehagemedarbeider|fagarbeider i barnehage|assistent i barnehage|skoleassistent|assistent skole|barnskötare|elevassistent|fritidshem|fritidspedagog|pædagogmedhjælper)/, 430000, 520000],
   [/(salgsrådgiver|kunderådgiver|salgs- og kunderådgiver|salgs- og kunderådgjevar|bilselger|kundeveileder)/, 430000, 530000],
   [/(seniorrådgiver|seniorrådgjevar|senior adviser|senior advisor)/, 780000, 920000],
   [/(jurist|advokat|lawyer|legal counsel)/, 680000, 900000],
-  [/(utvikler|developer|programmerer|devops|software|data scientist|dataingeniør|it-arkitekt|platform engineer|systemutvikler|cyber|sikkerhetsrådgiver|it-konsulent|ikt-konsulent)/, 700000, 950000],
-  [/(rådgiver|rådgjevar|adviser|advisor|controller|økonom|analytiker|analyst|revisor)/, 620000, 760000],
-  [/(ingeniør|ingeniør|engineer|prosjektleder|prosjektleiar|project manager|byggeleder|anleggsleder|takstingeniør|takstmann|planlegger)/, 680000, 880000],
+  [/(utvikler|utvecklare|udvikler|developer|programmerer|devops|software|data scientist|dataingeniør|it-arkitekt|platform engineer|systemutvikler|cyber|sikkerhetsrådgiver|it-konsulent|ikt-konsulent)/, 700000, 950000],
+  [/(hr-ansvarlig|hr-rådgiver|hr-rådgjevar|hr manager|hr-sjef|hr-leder|personalsjef|hr business partner|rådgiver|rådgjevar|adviser|advisor|controller|økonom|analytiker|analyst|revisor)/, 620000, 760000],
+  [/(ingeniør|ingenjör|engineer|prosjektleder|prosjektleiar|projektledare|projektleder|project manager|byggeleder|anleggsleder|takstingeniør|takstmann|planlegger)/, 680000, 880000],
   [/(markedsfør|marketing|kommunikasjon|communication|designer|grafisk|\bux\b)/, 560000, 720000],
-  [/(saksbehandler|sakshandsamar|konsulent|consultant|veileder|rettleiar|koordinator|coordinator|forvalter|arkivar|informasjonsforvalter)/, 560000, 660000],
+  [/(saksbehandler|sakshandsamar|handläggare|sagsbehandler|konsulent|consultant|veileder|rettleiar|koordinator|coordinator|samordnare|inköpare|innkjøper|forvalter|arkivar|informasjonsforvalter)/, 560000, 660000],
   [/(elektriker|automatiker|elektromontør|telekommunikasjonsmontør|heismontør|electrician)/, 560000, 660000],
   [/(rørlegger|plumber|ventilasjonsmontør|blikkenslager)/, 560000, 650000],
-  [/(sveiser|welder|platearbeider|industrimekaniker|mekaniker|mechanic|maskinist|cnc|servicetekniker|tekniker|technician|montør|fitter)/, 540000, 640000],
-  [/(tømrer|snekker|carpenter|murer|bricklayer|flislegger|tiler|maler|painter|betong|concrete|forskaling|jernbinder|rebar|stillas|scaffold|anleggsarbeider|anleggsgartner|håndverker|bas\b)/, 500000, 610000],
+  [/(sveiser|svetsare|svejser|welder|platearbeider|industrimekaniker|mekaniker|mechanic|maskinist|cnc|servicetekniker|tekniker|technician|montør|montör|fitter)/, 540000, 640000],
+  [/(tømrer|snekker|snickare|carpenter|murer|bricklayer|flislegger|tiler|maler|painter|betong|concrete|forskaling|jernbinder|rebar|stillas|scaffold|anleggsarbeider|anleggsgartner|håndverker|bas\b)/, 500000, 610000],
   [/(matros|dekksmann|deckhand|fisker|fisherman|styrmann|overstyrmann|skipper|kaptein|maskinsjef)/, 520000, 720000],
   [/(lastebilsjåfør|sjåfør kl\.? ?c|yrkessjåfør|bussjåfør|brøytebil|truck driver|maskinfører)/, 500000, 580000],
   [/(vaktmester|driftstekniker|driftsoperatør|caretaker)/, 500000, 580000],
-  [/(hjelpearbeider|produksjonsarbeider|produksjonsmedarbeider|operatør|operator|production worker|fiskeindustri|fish industry|fiskeforedling|slakteri)/, 450000, 540000],
-  [/(lagermedarbeider|lager|truckfører|logistikk|warehouse|terminalarbeider|plukker)/, 450000, 530000],
-  [/(sjåfør|driver|bud\b|budbil|taxi)/, 430000, 520000],
-  [/(kokk|\bchef\b|\bcook\b)/, 460000, 540000],
+  [/(hjelpearbeider|produksjonsarbeider|produksjonsmedarbeider|operatør|operatör|maskinoperatör|operator|production worker|fiskeindustri|fish industry|fiskeforedling|slakteri)/, 450000, 540000],
+  [/(lagermedarbeider|lagermedarbejder|lagerarbetare|lager|truckfører|truckförare|logistikk|warehouse|terminalarbeider|plukker)/, 450000, 530000],
+  [/(sjåfør|chaufför|chauffør|förare|driver|courier|kurir|bud\b|budbil|taxi)/, 430000, 520000],
+  [/(kokk|\bkock\b|\bkok\b|\bcook\b)/, 460000, 540000],
   [/(servitør|waiter|bartender|barista|kjøkken|oppvask|runner|kitchen|kantine|restaurantmedarbeider)/, 400000, 470000],
-  [/(renhold|cleaner|cleaning|vaskehjelp|reinhald|vaskeri)/, 420000, 470000],
-  [/(kontor|sekretær|administrativ|resepsjonist|merkantil|regnskapsmedarbeider|lønnsmedarbeider|office)/, 480000, 560000],
-  [/(salgskonsulent|selger|sales|key account|account manager|møtebooker|telefonsalg)/, 450000, 600000],
+  [/(renhold|cleaner|cleaning|vaskehjelp|reinhald|vaskeri|lokalvårdare|städare|hemstädare|städ|rengøring|hemfrid)/, 420000, 470000],
+  [/(kontor|sekretær|administrativ|administratör|ekonomiassistent|resepsjonist|merkantil|regnskapsmedarbeider|lønnsmedarbeider|office)/, 480000, 560000],
+  [/(account executive|key account|account manager|business developer|business development manager|forretningsutvikler)/, 600000, 780000],
+  [/(salgskonsulent|selger|säljare|sælger|sales|key account|account manager|møtebooker|telefonsalg)/, 450000, 600000],
   [/(kundeservice|customer service|customer support|kundesenter|kundebehandler)/, 420000, 500000],
-  [/(butikk|butikkmedarbeider|salgsmedarbeider|kassamedarbeider|ferskvare|retail|shop assistant|\bstore\b)/, 410000, 480000],
+  [/(medlemsvert|medlemsvärd|member host|butikk|butikkmedarbeider|butiksmedarbetare|butiksmedarbejder|butikssäljare|salgsmedarbeider|kassamedarbeider|kassør|ferskvare|retail|shop assistant|\bstore\b)/, 410000, 480000],
   [/(resepsjon|hotell|hotel|housekeeping)/, 410000, 480000],
   [/(frisør|hairdresser|negledesigner|vippetekniker|hudpleier|spaterapeut|spa therapist|massør)/, 380000, 460000],
   [/(personlig assistent|bpa|brukerstyrt|assistent|assistant|pleiemedarbeider|nattevakt|miljøarbeider|støttekontakt|avlaster)/, 430000, 520000],
@@ -140,7 +142,11 @@ const CAT_EST = { Engineering: [700000, 900000], Design: [560000, 720000], Produ
 const TECH = /(engineer|developer|software|data|machine learning|devops|security|product manager|designer|ux|ingeniør|utvikler)/i;
 function estimateAny(j) {
   const t = `${j.title || ""}`.toLowerCase();
-  if (/(sommerjobb|summer job|ekstrahjelp|extra help|student|tilkalling|ringevikar|deltid|part[- ]time|werkstudent|helgejobb)/.test(t) && (!j.country || j.country === "Norway")) return { min: 180, max: 230, period: "hour", currency: "NOK" };
+  const HOURLY = /(sommerjobb|summer job|ekstrahjelp|extra help|extrajobb|student|tilkalling|ringevikar|timvikarie|deltid|part[- ]time|werkstudent|helgejobb|helgestilling|helgevakt|julehjelp|sesonghjelp|barnepasser|barnevakt|barnvakt|barnpassning|nanny|childminder|babysit|läxhjälp|leksehjelp|privatlärare)/;
+  if (HOURLY.test(t) && (!j.country || COUNTRY[j.country])) {
+    const [f, c] = COUNTRY[j.country || "Norway"]; const r = NOK_TO[c] || NOK_TO.EUR, step = r > 0.5 ? 5 : 1;
+    return { min: Math.round(180 * f * r / step) * step, max: Math.round(220 * f * r / step) * step, period: "hour", currency: c };
+  }
   if (/(lærling|apprentice|ausbildung)/.test(t)) { const [f, c] = COUNTRY[j.country] || [1, "NOK"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(260000 * f * r / 1000) * 1000, max: Math.round(380000 * f * r / 1000) * 1000, period: "year", currency: c }; }
   if (/(\bintern\b|\binternship|praktikant|trainee)/.test(t)) { const [f, c] = (j.workplace === "remote" ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || [0.8, "EUR"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(300000 * f * r / 1000) * 1000, max: Math.round(420000 * f * r / 1000) * 1000, period: "year", currency: c }; }
   let base = payEstimate(j);
@@ -148,9 +154,12 @@ function estimateAny(j) {
   let [f, cur] = (j.workplace === "remote" && j.remoteFrom ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || (j.workplace === "remote" ? REMOTE_LEVEL.Europe : COUNTRY.Norway);
   if ((cur === "USD" && (j.country === "United States" || j.remoteFrom === "Worldwide")) && TECH.test(t)) f *= 1.35;
   if (/\b(staff|principal)\b/.test(t)) f *= 1.15;
-  if (j.source === "ats") f *= 1.25; // international companies hiring through their own boards usually pay above the local average
+  if (j.source === "ats" && TECH.test(t) && !["NOK", "SEK", "DKK"].includes(cur)) f *= 1.15; // international tech companies hiring through their own boards often pay a bit above the local average
   const r = NOK_TO[cur] || NOK_TO.EUR, step = cur === "NOK" || cur === "SEK" || cur === "DKK" ? 10000 : 1000;
-  return { min: Math.round(base.min * f * r / step) * step, max: Math.round(base.max * f * r / step) * step, period: "year", currency: cur };
+  // keep the range tight: at most about ±10% around the middle, so an estimate reads as one level of pay, not a guess
+  let lo = base.min, hi = base.max; const mid = Math.sqrt(lo * hi);
+  if (hi / lo > 1.22) { lo = mid / 1.1; hi = mid * 1.1; }
+  return { min: Math.round(lo * f * r / step) * step, max: Math.round(hi * f * r / step) * step, period: "year", currency: cur };
 }
 // ---------- seniority and languages ----------
 function seniorityOf(j, text) {
