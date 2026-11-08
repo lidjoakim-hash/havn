@@ -465,6 +465,15 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
 #alertPanel{margin-top:22px}
 .job .tags .tag:nth-child(n+4){display:none}
 .job .pay .amt.est+.conv{display:none}
+/* phones: jobs visible on the first screen */
+@media (max-width:640px){
+  .hero{padding-block:18px 0}.hero .eyebrow{display:none}.hero h1{font-size:28px}
+  .ai-row .muted{display:none}.ai-row{margin-top:8px}
+  #chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding:0 16px 4px;-webkit-overflow-scrolling:touch}
+  #chips::-webkit-scrollbar{display:none}#chips .chip{flex:none}
+  .ask-fab{padding:12px;width:48px;height:48px;justify-content:center;border-radius:50%}
+  .ask-fab>span{display:none}
+}
 @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}.hero h1 em{animation:none;background-size:100% 100%}.detail .panel,.detail .prose,.big-pay,.mbar{animation:none!important}}
 </style>
 </head><body>
@@ -704,7 +713,7 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
 <footer><div class="wrap"><span>© Havn Jobs · <span data-i18n="foot.free">Free for job seekers, always.</span></span><span><a href="#salaries" data-i18n="nav.salaries">Salaries</a> · <a href="#employers" data-i18n="nav.employers">For employers</a> · <a href="#my" data-i18n="nav.my">My jobs</a> · <a href="privacy.html" data-i18n="priv">Privacy</a> · <a href="jobs/">All jobs</a> · <a href="en/work-in-norway/">Work in Norway</a> · <a href="ro/lucru-in-norvegia/">Lucru în Norvegia</a> · <span class="kbd">/</span> <span data-i18n="foot.search">to search</span></span></div></footer>
 
 <a href="#compare" class="cmp-tray" id="cmpTray" hidden></a>
-<button type="button" class="ask-fab" id="askFab" data-act="ask-open" hidden><svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg><span data-i18n="ask.btn">Ask Havn</span></button>
+<button type="button" class="ask-fab" id="askFab" data-act="ask-open" aria-label="Ask Havn" hidden><svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4z"/></svg><span data-i18n="ask.btn">Ask Havn</span></button>
 <div class="ask" id="askPanel" role="dialog" aria-label="Ask Havn" hidden>
   <div class="ask-head"><div><b data-i18n="ask.title">Ask Havn</b><div class="muted" style="font-size:12px" data-i18n="ask.sub"></div></div><button type="button" class="btn btn-ghost btn-sm" data-act="ask-close" aria-label="Close">✕</button></div>
   <div class="ask-log" id="askLog" aria-live="polite"></div>
