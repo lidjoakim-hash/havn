@@ -22,3 +22,8 @@ node scripts/validate-seo.mjs <same dir>     # JobPosting rules for every live j
 
 IndexNow
 `6b0be9cbc25443691fcf996f19a49122.txt` is the IndexNow key file; `indexnow.mjs` runs after each publish (Bing, Yandex etc.). Google ignores IndexNow and reads the sitemap.
+
+Pay reading
+`pay-core.js` reads pay out of ad text. Numbers that are supplements, course money, guarantees, averages or earnings claims are skipped, and a text-derived Norwegian pay far from typical pay for the job (0.45x to 2.5x) falls back to the marked estimate. Tests with real ad sentences: `node pay-core.test.mjs` (runs in both workflows before building). Changing `PAY_VERSION` makes `build-index.mjs` re-read every job once. `generate.mjs` applies the same plausibility check, so a stale index can never put an implausible number on a job page.
+
+Checks: `node scripts/validate-seo.mjs <index dir>` also verifies sitemap.xml, its children and robots.txt.

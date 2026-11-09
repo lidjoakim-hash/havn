@@ -80,6 +80,32 @@ if (process.argv[1].endsWith("validate-seo.mjs")) {
   for (const f of files) checkPage(f, "page");
   const jobs = readdirSync(root + "job"); let jp = 0;
   for (const id of jobs) { const f = `${root}job/${id}/index.html`; const h = readFileSync(f, "utf8"); if (!h.includes('name="havn-tpl" content="4"')) continue; jp++; checkPage(f, "job"); }
+  // sitemaps + robots: well-formed, https on the right host, no duplicates, every URL has a file (or is the home page), size limits, robots points at the index
+  const read = (f) => readFileSync(root + f, "utf8"), locs = (x) => [...x.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const idxXml = read("sitemap.xml"), subs = locs(idxXml).map((u) => u.replace("https://havncareerhub.com/", ""));
+  if (!/^<\?xml/.test(idxXml) || !idxXml.includes("<sitemapindex")) bad("sitemap.xml", "not a sitemap index");
+  if (!subs.length) bad("sitemap.xml", "no child sitemaps");
+  const seen = new Set(); let urlsTotal = 0;
+  for (const f of subs) {
+    if (!existsSync(root + f)) { bad(f, "listed in sitemap.xml but missing"); continue; }
+    const x = read(f), us = locs(x); urlsTotal += us.length;
+    if (us.length > 50000 || Buffer.byteLength(x) > 50 * 1024 * 1024) bad(f, "over sitemap limits");
+    if (!x.includes("<urlset")) bad(f, "not a urlset");
+    for (const u of us) {
+      if (!u.startsWith("https://havncareerhub.com/")) bad(f, `bad host ${u}`);
+      if (seen.has(u)) bad(f, `duplicate ${u}`); seen.add(u);
+      const rel = u.replace("https://havncareerhub.com/", "");
+      const file = rel === "" ? "index.html" : rel.endsWith("/") ? rel + "index.html" : rel;
+      if (!existsSync(root + file)) bad(f, `no file for ${u}`);
+    }
+    for (const m of x.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)) if (!/^\d{4}-\d{2}-\d{2}/.test(m[1])) bad(f, `bad lastmod ${m[1]}`);
+  }
+  const robots = read("robots.txt");
+  if (!/^Sitemap: https:\/\/havncareerhub\.com\/sitemap\.xml$/m.test(robots)) bad("robots.txt", "Sitemap line missing");
+  for (const ua of ["Googlebot", "Bingbot", "GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended"]) if (!new RegExp(`User-agent: ${ua}\\nAllow: /`).test(robots)) bad("robots.txt", `${ua} not allowed`);
+  if (/^Disallow:\s*\/\s*$/m.test(robots)) bad("robots.txt", "blocks the whole site");
+  if (!existsSync(root + "llms.txt") || !existsSync(root + "llms-full.txt")) bad("llms", "missing");
+  console.log(`Sitemaps: ${subs.length} files, ${urlsTotal} URLs, all point at existing pages; robots.txt ok`);
   console.log(`Pages checked: ${files.length} landing/list pages, ${jp} job pages on current template`);
   if (warns.length) console.log(`Notes:\n  ${warns.slice(0, 20).join("\n  ")}`);
   if (errors.length) { console.log(`ERRORS (${errors.length}):\n  ${errors.slice(0, 60).join("\n  ")}`); process.exit(1); }

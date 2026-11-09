@@ -2,13 +2,13 @@
 
 > Havn Career Hub (havncareerhub.com) is a job board for Norway, Romania and remote work across Europe. Every job shows pay: either stated by the employer, or a clearly marked estimate. It is always free for job seekers. The site is Norwegian first, with English and Romanian pages for people moving to Norway.
 
-Updated: 2026-11-09. Open jobs listed right now: 28 264 (4 590 in Norway, 186 in Romania, 2 760 remote). Pay stated by the employer on 862 jobs; the rest show a labelled estimate ("ca." and "estimat"). Estimates are typical pay for similar jobs (from Statistics Norway earnings data and public pay scales), never an offer.
+Updated: 2026-11-09. Open jobs listed right now: 28 264 (4 590 in Norway, 186 in Romania, 2 760 remote). Pay stated by the employer on 833 jobs; the rest show a labelled estimate ("ca." and "estimat"). Estimates are typical pay for similar jobs (from Statistics Norway earnings data and public pay scales), never an offer.
 
 ## Main pages
 - [Remote jobb](https://havncareerhub.com/remote-jobb/): 2 758 remote jobber du kan søke på fra Norge. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. Oppdateres flere ganger om dagen.
 - [Jobb med hjemmekontor](https://havncareerhub.com/hjemmekontor-jobb/): 180 jobber i Norge med hybrid eller hjemmekontor, med lønn vist på hver jobb. Slik avtaler du hjemmekontor og hva arbeidsgiveren må sørge for.
 - [Jobb på engelsk](https://havncareerhub.com/jobb-pa-engelsk/): 227 jobber i Norge der annonsen er på engelsk eller norsk ikke er påkrevd. Lønn vises på hver jobb. Oppdateres flere ganger om dagen.
-- [Jobb med lønn oppgitt](https://havncareerhub.com/jobb-med-lonn-oppgitt/): 492 jobber i Norge, Romania og remote i Europa der arbeidsgiveren har oppgitt lønn. På Havn viser alle jobber lønn, og estimater er alltid merket.
+- [Jobb med lønn oppgitt](https://havncareerhub.com/jobb-med-lonn-oppgitt/): 480 jobber i Norge, Romania og remote i Europa der arbeidsgiveren har oppgitt lønn. På Havn viser alle jobber lønn, og estimater er alltid merket.
 - [Jobb i Romania](https://havncareerhub.com/jobb-i-romania/): 186 ledige jobber i Romania, blant annet i Bucuresti, Cluj-Napoca og Timișoara. Lønn vises på hver jobb, enten oppgitt eller som merket estimat.
 - [Remote jobb i Europa](https://havncareerhub.com/remote-jobb-europa/): 2 760 remote jobber hos arbeidsgivere i Europa, gruppert på land: United Kingdom, Germany, France og flere. Lønn vises på hver jobb.
 

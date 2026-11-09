@@ -12,7 +12,7 @@ import { GUIDE, guidePage } from "./seo/guides.mjs";
 import { injectHome } from "./seo/home.mjs";
 import { chunk, sitemapIndex, urlset, llmsTxt, llmsFull, INDEXNOW_KEY } from "./seo/feeds.mjs";
 
-const { enrichPay, payEstimate } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay, payEstimate };`)();
+const { enrichPay, payEstimate, estimateAny, payPlausible } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay, payEstimate, estimateAny, payPlausible };`)();
 
 const SUPABASE_URL = "https://cybrexiizqgbbtnddzjn.supabase.co";
 const KEY = "sb_publishable_i0s_T4iaXgZLrvf_x_hX5g_fLkxvZGF";
@@ -96,6 +96,14 @@ async function oldDescription(id) { try { const h = await readFile(`job/${id}/in
 
 const all = (await fetchJobs()).map((j) => (j._payDone ? j : enrichPay(j)));
 for (const j of all) if (j._intl === undefined) j._intl = intlJob(j);
+// Safety net for pay read out of ad text: if a value in the index is far from typical pay for that job (an older index may still hold one), show the marked estimate instead.
+let payFixed = 0;
+for (const j of all) {
+  if (j.paySrc !== "ad" || !(+j.salaryMin || +j.salaryMax)) continue;
+  const est = estimateAny(j);
+  if (!payPlausible({ min: +j.salaryMin, max: +j.salaryMax, period: j.salaryPeriod, currency: j.currency || "NOK" }, est)) { delete j.salaryMin; delete j.salaryMax; delete j.salaryPeriod; j.payEst = est; j.paySrc = "est"; payFixed++; }
+}
+if (payFixed) console.log(`Pay: ${payFixed} implausible text-derived values replaced by the marked estimate`);
 // Jobs from partner feeds (Jobicy, Arbeitnow, Remote OK) stay in the app only and link back to the original ad; no copies for search engines.
 // NAV, Arbetsförmedlingen (CC0) and companies' own career pages get their own pages.
 const live = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && isPublic(j));
@@ -116,10 +124,11 @@ registry.articles = [["/artikler/", "Alle artikler"], ...ARTICLES.map((a) => [`/
 for (const c of CITIES) if (!nicheSet.has(`/ledige-stillinger-${c.slug}/`)) await rm(`ledige-stillinger-${c.slug}`, { recursive: true, force: true });
 for (const p of Object.keys(NICHE_LABEL)) if (!nicheSet.has(p)) await rm(`.${p}`, { recursive: true, force: true });
 
-const byCityLive = {};
-for (const j of live) if (j.location) (byCityLive[j.location] ||= []).push(j);
+// grouped by URL slug: "Remote, UK" and "Remote - UK" are the same page (two raw spellings used to overwrite each other and appear twice in the sitemap)
+const byCityLive = {}, cityName = {};
+for (const j of live) if (j.location) { const k = slug(j.location); (byCityLive[k] ||= []).push(j); cityName[k] ||= j.location; }
 const cityNiche = (j) => { const c = cityOf(j); return c && nicheSet.has(`/ledige-stillinger-${c.slug}/`) ? c : null; };
-const byPages = new Set(Object.entries(byCityLive).filter(([, js]) => js.length >= 3).map(([c]) => slug(c)));
+const byPages = new Set(Object.entries(byCityLive).filter(([, js]) => js.length >= 3).map(([k]) => k));
 const jobCtx = {
   payEstimate,
   exists: (p) => nicheSet.has(p),
@@ -173,7 +182,7 @@ for (const [cat, js] of Object.entries(byCat)) {
   await put(`/jobs/${slug(cat)}/`, listPage(`${name} – ledige jobber`, `Ledige stillinger innen ${name.toLowerCase()} i Norge, Romania og fjernarbeid.`, `/jobs/${slug(cat)}/`, js, name));
   addPage(`/jobs/${slug(cat)}/`);
 }
-const cities = Object.entries(byCityLive).filter(([, js]) => js.length >= 3).sort((a, b) => b[1].length - a[1].length);
+const cities = Object.entries(byCityLive).filter(([, js]) => js.length >= 3).map(([k, js]) => [cityName[k], js]).sort((a, b) => b[1].length - a[1].length);
 // a city that has its own landing page: the old /by/ URL becomes a stub pointing to it
 const landingOf = (js) => { const c = cityNiche(js[0]); return c ? `/ledige-stillinger-${c.slug}/` : null; };
 const moreCities = [];
