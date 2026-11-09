@@ -31,6 +31,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Pay reading tests
+        run: node pay-core.test.mjs
       - name: Build index
         env:
           FULL: ${{ github.event.inputs.full || '0' }}

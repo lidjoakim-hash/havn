@@ -1,18 +1,21 @@
 // Havn pay helper: finds the pay written in an ad's text, or makes a careful estimate from typical Norwegian pay for that kind of job.
 // Shared by the app (index.html) and the page generator (generate.mjs). Amounts are NOK.
-const PAY_BAD_CTX = /(bonus|omsetning|budsjett|kapital|invest|studielån|sletting|depositum|husleie|leie|stipend(?!iat)|tilskudd|millioner|mill\.|signering|reise|diett|kilometer|km|forsikring|aksje|pensjon|verdi|pris|koster|betal|gebyr|kontingent)/;
+// numbers that are part of the pay but not the pay: supplements, courses, "over guaranteed pay", averages, what top sellers may earn
+const PAY_BAD_BEFORE = /(tillegg|over\s+(minste\s+|tariff|garanti)?\s*$|tjene|\btjen\b|gjennomsnitt|\bsnitt\b|beste\s+selgere|\blykkes\b|\binntil\b|\bopptil\b|garantilønn|garantert|\bkurs\b|kurs\/|kongress|fordjuping|fordypning|permisjon|provisjon|bonus|overtid|ulempe|godtgjørelse|refusjon|stønad|rekrutteringstilskudd)/;
+const PAY_BAD_AFTER = /^[\d ]*(?:,-|kr\.?|kroner|nok|brutto|pr\.?\s*(?:år|mnd|måned|time)|per\s+(?:år|måned|time))?\s*(?:over\b|ekstra|høyere|mer enn|lokalt|lokal\b|tillegg|utover|til\s+(?:kurs|fordjuping|fordypning|utdanning|reise))/;
+const PAY_BAD_CTX = /(bonus|omsetning|budsjett|kapital|invest|studielån|sletting|depositum|husleie|\bleie|stipend(?!iat)|tilskudd|millioner|mill\.|signering|reise|diett|kilometer|\bkm\b|forsikring|aksje|pensjon|verdi|\bpris|koster|betal|gebyr|kontingent)/;
 function payNum(s) {
   s = String(s).trim().replace(/,-$/, "");
   if (/^\d{1,3}([ .  ,']\d{3})+$/.test(s)) return +s.replace(/[^\d]/g, "");
   return +s.replace(",", ".").replace(/[^\d.]/g, "") || 0;
 }
 const PAY_NUM = String.raw`(\d{1,3}(?:[ .  ,']\d{3})+|\d{2,7})(?:[.,]\d{1,2})?`;
-const PAY_RANGE = String.raw`${PAY_NUM}(?:\s*(?:,-|kr\.?|nok|kroner)?\s*(?:[-–—]\s*(?:til|to)?|til|to|og|and)\s*(?:kr\.?\s*|nok\s*)?${PAY_NUM})?`;
+const PAY_RANGE = String.raw`${PAY_NUM}(?:\s*(?:,-|kr\.?|nok|kroner)?\s*(?:[-–—]\s*(?:til|to)?|til|to|og|and)\s*(?:kr\.?\s*|kroner\s*|nok\s*)?${PAY_NUM})?`;
 const PAY_PER = String.raw`\s*(?:kr\.?|nok|kroner|,-)?\s*(?:\/|per|pr\.?|i|a|an)\s*(timen|time|t|hour|h|måneden|måned|mnd|month|md|året|år|year|annum)\b`;
 const PAY_RE = [
   new RegExp(String.raw`(?:kr\.?\s*|nok\s*)?${PAY_RANGE}${PAY_PER}`, "gi"),
-  new RegExp(String.raw`(?:årslønn|lønn|salary|lønnsspenn|lønnsramme|lønnsnivå|timelønn|hourly rate|grunnlønn|fastlønn)[^.\n]{0,40}?(?:kr\.?|nok)\s*${PAY_RANGE}`, "gi"),
-  new RegExp(String.raw`(?:årslønn|lønn|salary|lønnsspenn|lønnsramme|grunnlønn|fastlønn)[^.\n\d]{0,25}${PAY_RANGE}\s*(?:kr|nok|kroner|,-)`, "gi"),
+  new RegExp(String.raw`(?:årslønn|lønn|salary|lønnsspenn|lønnsramme|lønnsnivå|timelønn|hourly rate|grunnlønn|fastlønn)[^.\n]{0,40}?(?:kr\.?|kroner|nok)\s*${PAY_RANGE}`, "gi"),
+  new RegExp(String.raw`(?:årslønn|lønn|salary|lønnsspenn|lønnsramme|grunnlønn|fastlønn)[^.\n\d]{0,25}${PAY_RANGE}\s*(?:kroner|kr|nok|,-)`, "gi"),
 ];
 function payPeriodOf(unit, v) {
   if (unit) { unit = unit.toLowerCase(); if (/^(t|h|time|timen|hour)$/.test(unit)) return "hour"; if (/^(mnd|md|måned|måneden|month)$/.test(unit)) return "month"; return "year"; }
@@ -26,10 +29,13 @@ function payFromText(text) {
     while ((m = re.exec(tx))) {
       const before = tx.slice(Math.max(0, m.index - 45), m.index).toLowerCase();
       if (PAY_BAD_CTX.test(before) || PAY_BAD_CTX.test(m[0].toLowerCase())) continue;
+      { // what sits directly before the amount (inside the match too) and right after it decides whether it is the pay itself
+        const d = m[0].search(/\d/), lead = (before.slice(-20) + m[0].slice(0, d < 0 ? 0 : d)).toLowerCase();
+        if (PAY_BAD_BEFORE.test(lead) || PAY_BAD_AFTER.test(tx.slice(m.index + m[0].length, m.index + m[0].length + 40).toLowerCase()) || /^[^.\n]{0,30}\bover\s+(minste\s+)?(garanti|tariff)/.test(tx.slice(m.index + m[0].length, m.index + m[0].length + 60).toLowerCase())) continue; }
       let a = payNum(m[1]), b = m[2] ? payNum(m[2]) : 0;
       if (b && a < 1000 && b >= 100000) a *= 1000; // "550 - 650 000"
       const unit = k === 0 ? m[3] : "";
-      const per = payPeriodOf(unit, Math.max(a, b));
+      const per = !unit && /(timelønn|hourly rate)/i.test(m[0]) ? "hour" : payPeriodOf(unit, Math.max(a, b));
       const ok = PAY_OK[per]; if (!ok) continue;
       if (a < ok[0] || a > ok[1] || (b && (b < a || b > ok[1] || b > a * 2.5))) continue;
       return { min: a, max: b || 0, period: per };
@@ -229,6 +235,16 @@ function categoryOf(text) { const t = String(text || "").toLowerCase(); for (con
 const EXP_YES = /(junior|entry[- ]level|\bgraduate\b|trainee|\bintern\b|internship|no experience|no prior experience|ingen erfaring|uten erfaring|lærling|nyutdannet|0\s*[-–]\s*1 years?)/i;
 const EXP_NO = /(\b([2-9]|[1-9]\d)\s*\+\s*(years?|yrs|år)|\b([2-9]|[1-9]\d)\s*(\+|[-–]\s*\d+)?\s*(years?|yrs|år)\s+(of\s+)?(relevant\s+|professional\s+|work\s+|hands-on\s+)?(experience|erfaring|erfarenhet))/i;
 function noExperienceOf(title, text) { const x = `${title || ""}\n${text || ""}`; return EXP_YES.test(x) && !EXP_NO.test(x); }
+// Bump when the pay reading rules change: build-index.mjs then re-reads every job once instead of only the changed ones.
+const PAY_VERSION = 2;
+const PAY_PER_YEAR = { year: 1, month: 12, hour: 1650 };
+// Safety net: a pay read out of ad text is only used if it is in the same ballpark as typical pay for that job (0.45x to 2.5x). Otherwise the job shows the marked estimate.
+function payPlausible(stated, est) {
+  if (!est || !stated || stated.currency !== est.currency) return true;
+  const yr = (stated.min || stated.max) * (PAY_PER_YEAR[stated.period] || 1);
+  const k = PAY_PER_YEAR[est.period] || 1; // the estimate can be hourly or monthly too
+  return yr >= est.min * k * 0.45 && yr <= est.max * k * 2.5;
+}
 function enrichPay(j) {
   if (j._payDone) return j; j._payDone = true;
   const text = j.description || `${j.summary || ""} | ${j.hints || ""}`;
@@ -241,10 +257,12 @@ function enrichPay(j) {
   if (j.source || !j.noExperience) j.noExperience = noExperienceOf(j.title, text);
   if (+j.salaryMin || +j.salaryMax) { j.paySrc = j.paySrc || "listed"; return j; }
   const src = `${j.title || ""}\n${text}\n${j.benefits || ""}`;
-  const found = (!j.country || j.country === "Norway") && j.workplace !== "remote" ? payFromText(src) : null;
-  const fx = found ? null : payFromTextFx(src);
+  let found = (!j.country || j.country === "Norway") && j.workplace !== "remote" ? payFromText(src) : null;
+  let fx = found ? null : payFromTextFx(src);
+  const est = estimateAny(j); // what the pay would be if no pay was written in the ad
+  if (found && !payPlausible({ ...found, currency: "NOK" }, est)) found = null;
   if (found) { j.salaryMin = found.min; j.salaryMax = found.max; j.salaryPeriod = found.period; j.currency = "NOK"; j.paySrc = "ad"; return j; }
   if (fx) { j.salaryMin = fx.min; j.salaryMax = fx.max; j.salaryPeriod = fx.period; j.currency = fx.currency; j.paySrc = "ad"; return j; }
-  j.payEst = estimateAny(j); j.paySrc = "est";
+  j.payEst = est; j.paySrc = "est";
   return j;
 }

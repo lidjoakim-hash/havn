@@ -1,0 +1,42 @@
+# Havn Career Hub
+
+> Havn Career Hub (havncareerhub.com) is a job board for Norway, Romania and remote work across Europe. Every job shows pay: either stated by the employer, or a clearly marked estimate. It is always free for job seekers. The site is Norwegian first, with English and Romanian pages for people moving to Norway.
+
+Updated: 2026-11-09. Open jobs listed right now: 28 264 (4 590 in Norway, 186 in Romania, 2 760 remote). Pay stated by the employer on 833 jobs; the rest show a labelled estimate ("ca." and "estimat"). Estimates are typical pay for similar jobs (from Statistics Norway earnings data and public pay scales), never an offer.
+
+## Main pages
+- [Remote jobb](https://havncareerhub.com/remote-jobb/): 2 758 remote jobber du kan søke på fra Norge. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. Oppdateres flere ganger om dagen.
+- [Jobb med hjemmekontor](https://havncareerhub.com/hjemmekontor-jobb/): 180 jobber i Norge med hybrid eller hjemmekontor, med lønn vist på hver jobb. Slik avtaler du hjemmekontor og hva arbeidsgiveren må sørge for.
+- [Jobb på engelsk](https://havncareerhub.com/jobb-pa-engelsk/): 227 jobber i Norge der annonsen er på engelsk eller norsk ikke er påkrevd. Lønn vises på hver jobb. Oppdateres flere ganger om dagen.
+- [Jobb med lønn oppgitt](https://havncareerhub.com/jobb-med-lonn-oppgitt/): 480 jobber i Norge, Romania og remote i Europa der arbeidsgiveren har oppgitt lønn. På Havn viser alle jobber lønn, og estimater er alltid merket.
+- [Jobb i Romania](https://havncareerhub.com/jobb-i-romania/): 186 ledige jobber i Romania, blant annet i Bucuresti, Cluj-Napoca og Timișoara. Lønn vises på hver jobb, enten oppgitt eller som merket estimat.
+- [Remote jobb i Europa](https://havncareerhub.com/remote-jobb-europa/): 2 760 remote jobber hos arbeidsgivere i Europa, gruppert på land: United Kingdom, Germany, France og flere. Lønn vises på hver jobb.
+
+## City pages (ledige stillinger)
+- [Ledige stillinger i Oslo](https://havncareerhub.com/ledige-stillinger-oslo/): 826 ledige stillinger i Oslo. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 85 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Bærum](https://havncareerhub.com/ledige-stillinger-baerum/): 61 ledige stillinger i Bærum. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 1 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Lillestrøm](https://havncareerhub.com/ledige-stillinger-lillestrom/): 61 ledige stillinger i Lillestrøm. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 3 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Asker](https://havncareerhub.com/ledige-stillinger-asker/): 29 ledige stillinger i Asker. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Lørenskog](https://havncareerhub.com/ledige-stillinger-lorenskog/): 45 ledige stillinger i Lørenskog. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Drammen](https://havncareerhub.com/ledige-stillinger-drammen/): 81 ledige stillinger i Drammen. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 2 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Ski](https://havncareerhub.com/ledige-stillinger-ski/): 24 ledige stillinger i Ski. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 2 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Stavanger](https://havncareerhub.com/ledige-stillinger-stavanger/): 129 ledige stillinger i Stavanger. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 5 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Bergen](https://havncareerhub.com/ledige-stillinger-bergen/): 157 ledige stillinger i Bergen. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 10 på engelsk. Oppdatert flere ganger om dagen.
+
+## Guides and articles (Norwegian)
+- [Remote jobb i Norge – slik finner du det](https://havncareerhub.com/artikler/remote-jobb-i-norge/): Slik finner du en remote jobb fra Norge: hva som skiller remote fra hjemmekontor, hvor du leter, hva du må sjekke om skatt og kontrakt, og hvordan du unngår svindel.
+- [Jobb på engelsk i Oslo](https://havncareerhub.com/artikler/jobb-pa-engelsk-i-oslo/): Slik finner du jobb på engelsk i Oslo uten å snakke norsk: hvilke bransjer som ansetter, hva du må ordne som utlending, og hvordan du skriver CV og søknad.
+- [Hva tjener man? Lønn i vanlige jobber](https://havncareerhub.com/artikler/hva-tjener-man-lonn-i-vanlige-jobber/): Typisk årslønn i Norge for vanlige jobber, fra sykepleier til tømrer og utvikler. Tallene er Havns estimater basert på SSB-statistikk og offentlige lønnsregulativ.
+- [Slik skriver du en god søknad](https://havncareerhub.com/artikler/slik-skriver-du-en-god-sokad/): Slik skriver du en god jobbsøknad: oppbygging, hva du skal skrive i første avsnitt, hvordan du viser resultater, og de vanligste feilene. Med sjekkliste og eksempel.
+
+## English and Romanian
+- [Jobs in Norway for foreigners](https://havncareerhub.com/en/work-in-norway/): English-language jobs in Norway and a short guide to moving there
+- [Locuri de muncă în Norvegia](https://havncareerhub.com/ro/lucru-in-norvegia/): ghid pentru români
+
+## Browse everything
+- [All jobs](https://havncareerhub.com/jobs/): categories and cities
+- [Sitemap index](https://havncareerhub.com/sitemap.xml)
+- [Full description for AI assistants](https://havncareerhub.com/llms-full.txt)
+
+## Optional
+- [Privacy](https://havncareerhub.com/privacy.html)

@@ -13,7 +13,7 @@ const ROWS_PER_FILE = 7000;
 const H = { apikey: KEY, Authorization: `Bearer ${KEY}` };
 
 const { havnModerate } = new Function(`${await readFile(new URL("./moderation.js", import.meta.url), "utf8")};return { havnModerate };`)();
-const { enrichPay, estimateAny } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay, estimateAny };`)();
+const { enrichPay, estimateAny, PAY_VERSION } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay, estimateAny, PAY_VERSION };`)();
 await mkdir(DIR, { recursive: true });
 
 // pages of 500 with retries: the database cancels slow statements (timeout), so keep each request small
@@ -42,7 +42,8 @@ try {
   for (const f of meta.raw || []) for (const o of JSON.parse(await readFile(`${DIR}/${f}`, "utf8"))) prev.set(o.id, o);
 } catch { /* first run */ }
 
-const full = !meta.lastSync || !meta.fullAt || now - meta.fullAt > 7 * DAY || process.env.FULL === "1";
+// a new pay-reading version (PAY_VERSION in pay-core.js) forces one full re-read so old wrong pay values are replaced
+const full = !meta.lastSync || !meta.fullAt || now - meta.fullAt > 7 * DAY || process.env.FULL === "1" || meta.payVersion !== PAY_VERSION;
 const since = new Date((meta.lastSync || 0) - 5 * 60000).toISOString(); // small overlap
 const syncStart = Date.now();
 
@@ -145,7 +146,7 @@ const flagged = [...raw.values()].filter((j) => j.mod && (!j.status || j.status 
   .sort((a, b) => (a.level === b.level ? 0 : a.level === "hide" ? -1 : 1));
 await writeFile(`${DIR}/flagged.json`, JSON.stringify(flagged));
 const bySource = {}; for (const j of shown) bySource[j.source] = (bySource[j.source] || 0) + 1;
-const newMeta = { lastSync: syncStart, fullAt: full ? syncStart : meta.fullAt, updated: new Date().toISOString(), count: shown.length, duplicatesRemoved: dupes,
+const newMeta = { payVersion: PAY_VERSION, lastSync: syncStart, fullAt: full ? syncStart : meta.fullAt, updated: new Date().toISOString(), count: shown.length, duplicatesRemoved: dupes,
   bySource, new24h: shown.filter((j) => now - (j.createdAt || 0) < DAY).length, remote: shown.filter((j) => j.workplace === "remote").length,
   noExperience: noExp, noExperienceRemote: noExpRemote, companies: new Set(shown.map((j) => norm(j.company))).size, countries: new Set(shown.map((j) => j.country).filter(Boolean)).size, flagged: flagged.length, flaggedHidden: flagged.filter((f) => f.decision === "hidden").length, files, raw: rawFiles };
 await writeFile(`${DIR}/meta.json`, JSON.stringify(newMeta, null, 1));
