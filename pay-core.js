@@ -145,7 +145,9 @@ function estimateAny(j) {
   const HOURLY = /(sommerjobb|summer job|ekstrahjelp|extra help|extrajobb|student|tilkalling|ringevikar|timvikarie|deltid|part[- ]time|werkstudent|helgejobb|helgestilling|helgevakt|julehjelp|sesonghjelp|barnepasser|barnevakt|barnvakt|barnpassning|nanny|childminder|babysit|läxhjälp|leksehjelp|privatlärare)/;
   if (HOURLY.test(t) && (!j.country || COUNTRY[j.country])) {
     const [f, c] = COUNTRY[j.country || "Norway"]; const r = NOK_TO[c] || NOK_TO.EUR, step = r > 0.5 ? 5 : 1;
-    return { min: Math.round(180 * f * r / step) * step, max: Math.round(220 * f * r / step) * step, period: "hour", currency: c };
+    let lo = 180, hi = 220; const base = payEstimate(j); // a known profession keeps its own level, as an hourly rate (full-time hours: 1,850 a year)
+    if (base) { lo = Math.max(180, base.min / 1850); hi = Math.max(lo * 1.1, base.max / 1850); const mid = Math.sqrt(lo * hi); if (hi / lo > 1.22) { lo = mid / 1.1; hi = mid * 1.1; } }
+    return { min: Math.round(lo * f * r / step) * step, max: Math.round(hi * f * r / step) * step, period: "hour", currency: c };
   }
   if (/(lærling|apprentice|ausbildung)/.test(t)) { const [f, c] = COUNTRY[j.country] || [1, "NOK"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(260000 * f * r / 1000) * 1000, max: Math.round(380000 * f * r / 1000) * 1000, period: "year", currency: c }; }
   if (/(\bintern\b|\binternship|praktikant|trainee)/.test(t)) { const [f, c] = (j.workplace === "remote" ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || [0.8, "EUR"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(300000 * f * r / 1000) * 1000, max: Math.round(420000 * f * r / 1000) * 1000, period: "year", currency: c }; }

@@ -11,6 +11,7 @@ const SITE = "https://havncareerhub.com";
 const now = Date.now();
 const DAY = 86400000;
 
+const normCity = (j) => { const l = String(j.location || "").replace(/,\s*(norway|norge)$/i, "").replace(/^(norway|norge),\s*/i, "").replace(/^(?:norway|norge)\s*\((.+)\)$/i, "$1").trim(); return j.country === "Norway" ? l.replace(/\s+S$/, "") : l; };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const slug = (s) => String(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/æ/g, "ae").replace(/ø/g, "o").replace(/å/g, "a").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "x";
 const lines = (s) => String(s || "").split(/\n+/).map((x) => x.replace(/^[-•*]\s*/, "").trim()).filter(Boolean);
@@ -21,22 +22,28 @@ const TYPE_SCHEMA = { "Full-time": "FULL_TIME", "Part-time": "PART_TIME", "Contr
 const TYPE_NO = { "Full-time": "Heltid", "Part-time": "Deltid", "Contract": "Kontrakt", "Freelance": "Frilans", "Seasonal": "Sesong", "Internship": "Praksis" };
 const COUNTRY_CODE = { Norway: "NO", Romania: "RO", Sweden: "SE", Denmark: "DK", Germany: "DE", Netherlands: "NL", Spain: "ES", Poland: "PL", "United Kingdom": "GB" };
 
-function payText(j) {
+function payText(j, lang = "nb") {
+  const en = lang === "en";
   const a = +j.salaryMin || 0, b = +j.salaryMax || 0;
+  const f = (n) => new Intl.NumberFormat(en ? "en-GB" : "nb-NO").format(n);
   if (!a && !b) {
     if (!j.payEst) return "";
-    const f = (n) => new Intl.NumberFormat("nb-NO").format(n);
-    const e = j.payEst, c = e.currency || "NOK";
-    if (e.period === "hour") return `ca. ${e.min}–${e.max} ${c === "NOK" ? "kr" : c}/time (estimat · vanlig lønn, ikke bekreftet)`;
-    return `ca. ${f(e.min)}–${f(e.max)} ${c === "NOK" ? "kr" : c}/år (estimat · vanlig lønn, ikke bekreftet)`;
+    const e = j.payEst, c = e.currency || "NOK", cu = c === "NOK" && !en ? "kr" : c;
+    if (e.period === "hour") return en ? `approx. ${e.min}–${e.max} ${c}/hour (estimate · typical pay, not confirmed)` : `ca. ${e.min}–${e.max} ${cu}/time (estimat · vanlig lønn, ikke bekreftet)`;
+    return en ? `approx. ${f(e.min)}–${f(e.max)} ${c}/year (estimate · typical pay, not confirmed)` : `ca. ${f(e.min)}–${f(e.max)} ${cu}/år (estimat · vanlig lønn, ikke bekreftet)`;
   }
-  const per = { year: "/år", month: "/mnd", hour: "/time" }[j.salaryPeriod] || "";
-  const f = (n) => new Intl.NumberFormat("nb-NO").format(n);
-  return `${a && b && a !== b ? f(a) + "–" + f(b) : f(a || b)} ${j.currency || ""}${per}${j.paySrc === "ad" ? " (fra annonsen)" : ""}`;
+  const per = (en ? { year: "/year", month: "/month", hour: "/hour" } : { year: "/år", month: "/mnd", hour: "/time" })[j.salaryPeriod] || "";
+  return `${a && b && a !== b ? f(a) + "–" + f(b) : f(a || b)} ${j.currency || ""}${per}${j.paySrc === "ad" ? (en ? " (from the ad)" : " (fra annonsen)") : ""}`;
 }
 
 // The job list comes from the compact job index (built every 30 min, served by jsDelivr); jobs posted on Havn itself come from the database.
 async function fetchJobs() {
+  if (process.env.HAVN_LOCAL_DATA) { // test mode: read the compact index from a local folder, skip the database
+    const dir = process.env.HAVN_LOCAL_DATA, out = [];
+    const p = JSON.parse(await readFile(`${dir}/pointer.json`, "utf8"));
+    for (const f of p.files) { const { cols, rows } = JSON.parse(await readFile(`${dir}/${f}`, "utf8")); for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); } }
+    return out;
+  }
   const p = await (await fetch(`https://raw.githubusercontent.com/lidjoakim-hash/havn/main/data/pointer.json?x=${now}`)).json();
   const base = `https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
   const out = [];
@@ -55,6 +62,7 @@ async function fetchJobs() {
 }
 async function fetchTexts(ids) {
   const out = new Map();
+  if (process.env.HAVN_LOCAL_DATA) return out;
   for (let i = 0; i < ids.length; i += 80) {
     const list = ids.slice(i, i + 80).map((x) => `"${x}"`).join(",");
     const res = await fetch(`${SUPABASE_URL}/rest/v1/docs?collection=eq.jobtext&id=in.(${encodeURIComponent(list)})&select=id,data`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } });
@@ -90,7 +98,7 @@ async function fetchCol(col, extra = "") {
 
 const CSS = `:root{--bg:#F6F1E7;--fg:#2E2B27;--muted:#6E675D;--line:#E6DDCC;--card:#FFFDF8;--primary:#4F7A5A;--accent:#EFA77E;--shadow:0 1px 2px rgba(46,43,39,.04),0 8px 24px rgba(46,43,39,.06);color-scheme:light}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 "DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
-a{color:#4A7355}.wrap{max-width:860px;margin:0 auto;padding:24px 16px 64px}
+a{color:var(--primary)}.wrap{max-width:860px;margin:0 auto;padding:24px 16px 64px}
 header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
 h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em}
 .logo{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:24px;text-decoration:none;color:var(--fg)}h1{font-size:clamp(28px,5vw,42px);line-height:1.15;margin:8px 0}
@@ -123,9 +131,9 @@ ${body}
 
 function isPublic(j) { return !j.source || ["nav", "jobtech", "ats"].includes(j.source); }
 const WHO = { Worldwide: "fra hele verden", Europe: "bor du i Europa", Nordics: "bor du i Norden", Norway: "bor du i Norge", Romania: "bor du i Romania", "EU": "bor du i EU" };
-function jobRow(j) {
-  const where = [j.location, j.country].filter(Boolean).join(", ");
-  const pay = payText(j);
+function jobRow(j, lang = "nb") {
+  const where = [normCity(j), j.country].filter(Boolean).join(", ");
+  const pay = payText(j, lang);
   const href = isPublic(j) ? `${SITE}/job/${esc(j.id)}/` : `${SITE}/#job-${esc(j.id)}`;
   return `<li><a href="${href}">${esc(j.title)}</a><span>${esc(j.company)}${where ? " · " + esc(where) : ""}${pay ? " · " + esc(pay) : ""}</span></li>`;
 }
@@ -159,7 +167,7 @@ function jobPage(j) {
     jsonld.baseSalary = { "@type": "MonetaryAmount", currency: j.currency || "EUR", value: { "@type": "QuantitativeValue", minValue: +j.salaryMin, ...(+j.salaryMax ? { maxValue: +j.salaryMax } : {}), unitText: { year: "YEAR", month: "MONTH", hour: "HOUR" }[j.salaryPeriod] || "YEAR" } };
   }
   const cat = CAT_NO[j.category] || j.category || "";
-  const body = `<p class="meta"><a href="${SITE}/jobs/">Alle jobber</a>${j.category ? ` › <a href="${SITE}/jobs/${slug(j.category)}/">${esc(cat)}</a>` : ""}${j.location ? ` › <a href="${SITE}/by/${slug(j.location)}/">${esc(j.location)}</a>` : ""}</p>
+  const body = `<p class="meta"><a href="${SITE}/jobs/">Alle jobber</a>${j.category ? ` › <a href="${SITE}/jobs/${slug(j.category)}/">${esc(cat)}</a>` : ""}${normCity(j) ? ` › <a href="${SITE}/by/${slug(normCity(j))}/">${esc(normCity(j))}</a>` : ""}</p>
 <h1>${esc(j.title)}</h1><p class="meta"><strong>${esc(j.company)}</strong>${where ? " · " + esc(where) : ""}</p>
 <div class="tags">${pay ? `<span class="tag">💰 ${esc(pay)}</span>` : `<span class="tag">Lønn ikke oppgitt</span>`}${j.jobType ? `<span class="tag">${esc(TYPE_NO[j.jobType] || j.jobType)}</span>` : ""}${j.workplace === "remote" ? `<span class="tag">Fjernarbeid${j.remoteFrom ? " · " + esc(j.remoteFrom) : ""}</span>` : ""}${{ nav: `<span class="tag">via NAV</span>`, jobtech: `<span class="tag">via Arbetsförmedlingen</span>`, ats: `<span class="tag">Direkte fra arbeidsgiver</span>` }[j.source] || ""}<span class="tag">Frist ${esc(new Date(j.expiresAt || now).toLocaleDateString("nb-NO"))}</span></div>
 <p><a class="btn" href="${esc(applyUrl)}" rel="nofollow noopener" target="_blank">Søk på stillingen</a><a class="btn ghost" href="${SITE}/#job-${esc(j.id)}">Åpne i Havn (lagre, sammenlign, KI-hjelp)</a></p>
@@ -183,11 +191,43 @@ fetch("${SUPABASE_URL}/rest/v1/docs?collection=eq.jobs&select=id&id=eq."+encodeU
 if(id.indexOf("jobtech-")===0)fetch("https://jobsearch.api.jobtechdev.se/ad/"+id.slice(8)).then(function(r){return r.status===404?{removed:1}:r.ok?r.json():null}).then(function(a){if(a&&a.removed)gone()}).catch(function(){});})()</script>`;
 }
 
-function listPage(title, intro, path, jobs) {
-  const sorted = jobs.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-  const body = `<h1>${esc(title)}</h1><p class="meta">${esc(intro)} ${sorted.length} ledige stillinger.</p><ul class="jobs">${sorted.map(jobRow).join("")}</ul>`;
-  return page({ title: `${title} | Havn`, description: `${intro} ${sorted.length} ledige stillinger på Havn.`, canonical: `${SITE}${path}`, body });
+// ---------- landing pages: cities, categories, topics (part-time, no experience, seasonal, remote), and English city pages ----------
+const LIST_MAX = 60; // keep each page small; the rest is one click away in the app
+const nfmt = (n) => new Intl.NumberFormat("nb-NO").format(n);
+const pad = (n) => Math.round(n / 10000) * 10000;
+// full-time-equivalent yearly NOK pay of a job (stated or estimated), or null
+function yearlyNok(j) {
+  const a = +j.salaryMin || 0, b = +j.salaryMax || 0; let lo = a || b, hi = b || a, per = j.salaryPeriod, cur = j.currency;
+  if (!lo && j.payEst) { lo = j.payEst.min; hi = j.payEst.max; per = j.payEst.period; cur = j.payEst.currency || "NOK"; }
+  if (!lo || cur !== "NOK") return null;
+  const mid = (lo + hi) / 2, yr = per === "hour" ? mid * 1850 : per === "month" ? mid * 12 : mid;
+  return yr >= 250000 && yr <= 2500000 ? yr : null;
 }
+function payLine(jobs, lang) {
+  const v = jobs.map(yearlyNok).filter(Boolean).sort((x, y) => x - y);
+  if (v.length < 8) return "";
+  const lo = pad(v[Math.floor(v.length * 0.25)]), hi = pad(v[Math.floor(v.length * 0.75)]);
+  return lang === "en" ? `Typical full-time pay in these ads: about ${nfmt(lo)}–${nfmt(hi)} NOK a year (stated pay and clearly marked estimates, ${v.length} ads).` : `Typisk heltidslønn i disse annonsene: ca. ${nfmt(lo)}–${nfmt(hi)} kr i året (oppgitt lønn og tydelig merkede estimater, ${v.length} annonser).`;
+}
+function topCats(jobs, n = 3) {
+  const c = {}; for (const j of jobs) if (j.category && j.category !== "Other") c[j.category] = (c[j.category] || 0) + 1;
+  return Object.entries(c).sort((a, b) => b[1] - a[1]).slice(0, n);
+}
+// one landing page: heading, short intro, optional link sections, then the newest jobs
+function landing({ title, h1, intro, path, jobs, desc, lang = "nb", crumbs = [], sections = "", alternates = null }) {
+  const sorted = jobs.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  const shown = sorted.slice(0, LIST_MAX);
+  const en = lang === "en";
+  const more = sorted.length > shown.length ? `<p><a class="btn" href="${SITE}/">${en ? `See all ${sorted.length} jobs in Havn` : `Se alle ${sorted.length} jobber i Havn`}</a></p>` : "";
+  const crumbHtml = crumbs.length ? `<p class="meta">${crumbs.map(([n, h]) => `<a href="${SITE}${h}">${esc(n)}</a>`).join(" › ")}</p>` : "";
+  const body = `${crumbHtml}<h1>${esc(h1)}</h1><p class="meta">${esc(intro)}</p>${sections}<h2>${en ? "Newest jobs" : "Nyeste jobber"} (${sorted.length})</h2><ul class="jobs">${shown.map((j) => jobRow(j, lang)).join("")}</ul>${more}`;
+  const jsonld = [
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [[en ? "Home" : "Hjem", "/"], ...crumbs, [h1, path]].map(([n, h], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${SITE}${h}` })) },
+    { "@context": "https://schema.org", "@type": "ItemList", numberOfItems: sorted.length, itemListElement: shown.slice(0, 25).map((j, i) => ({ "@type": "ListItem", position: i + 1, url: isPublic(j) ? `${SITE}/job/${j.id}/` : `${SITE}/#job-${j.id}` })) },
+  ];
+  return page({ title: `${title} | Havn`, description: desc, canonical: `${SITE}${path}`, body, jsonld, lang, alternates });
+}
+const linkList = (items) => `<div class="links">${items.map(([name, href, n]) => `<div><a href="${SITE}${href}">${esc(name)}</a>${n != null ? ` (${n})` : ""}</div>`).join("")}</div>`;
 
 // Jobs that suit people from abroad: English-language ads, or ads that say Norwegian isn't required. Same rules as the app.
 function intlJob(j) {
@@ -242,14 +282,14 @@ const GUIDE = {
   },
 };
 
-function guidePage(g, jobs, otherPath) {
+function guidePage(g, jobs, otherPath, extra = "") {
   const sorted = jobs.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   const canonical = `${SITE}${g.path}`;
   const body = `<p class="meta"><a href="${SITE}${otherPath}">${g.other}</a></p>
 ${ART_SEARCH}<h1>${esc(g.h1)}</h1><p class="meta">${esc(g.intro(sorted.length))}</p>
 <p><a class="btn" href="${SITE}/?intl=1">${esc(g.cta)}</a></p>
 <h2>${esc(g.guideH)}</h2>${g.faq.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("")}
-<h2>${esc(g.jobsH)} (${sorted.length})</h2><ul class="jobs">${sorted.map(jobRow).join("")}</ul>`;
+${extra}<h2>${esc(g.jobsH)} (${sorted.length})</h2><ul class="jobs">${sorted.slice(0, 150).map((j) => jobRow(j, g.lang)).join("")}</ul>`;
   const jsonld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: g.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) };
   const alternates = { en: `${SITE}${GUIDE.en.path}`, ro: `${SITE}${GUIDE.ro.path}` };
   return page({ title: `${g.title} | Havn`, description: g.desc(sorted.length), canonical, body, jsonld, lang: g.lang, alternates });
@@ -286,27 +326,73 @@ console.log(`Job pages: ${need.length} written, ${existing.size} existed`);
 const byCat = {}, byCity = {};
 for (const j of live) {
   if (j.category) (byCat[j.category] ||= []).push(j);
-  if (j.location) (byCity[j.location] ||= []).push(j);
+  const c = normCity(j); if (c) (byCity[c] ||= []).push(j);
 }
+const nameOfCat = (c) => CAT_NO[c] || c;
+const TOPICS = [
+  { key: "deltid", name: "Deltidsjobber", h1: "Deltidsjobber i Norge", test: (j) => j.country === "Norway" && j.jobType === "Part-time", intro: "Deltidsstillinger i Norge fra NAV og arbeidsgivere, for deg som vil jobbe ved siden av studier, familie eller en annen jobb.", city: (c) => `Deltidsjobber i ${c}` },
+  { key: "sesongjobb", name: "Sesongjobber og ekstrahjelp", h1: "Sesongjobber og ekstrahjelp i Norge", test: (j) => j.country === "Norway" && (j.jobType === "Seasonal" || /(sesong|julehjelp|sommerjobb|ekstrahjelp)/i.test(j.title || "")), intro: "Sesongjobber, sommerjobber, julehjelp og ekstrahjelp i Norge.", city: (c) => `Sesongjobber og ekstrahjelp i ${c}` },
+  { key: "uten-erfaring", name: "Jobber uten krav til erfaring", h1: "Jobber uten krav til erfaring i Norge", test: (j) => j.country === "Norway" && j.noExperience, intro: "Stillinger i Norge der du kan begynne uten tidligere erfaring: opplæring gis, eller annonsen ber om nyutdannede og nybegynnere.", city: (c) => `Jobber uten erfaring i ${c}` },
+  { key: "fjernarbeid", name: "Fjernjobber og hjemmekontor", h1: "Fjernjobber og hjemmekontor", test: (j) => j.workplace === "remote", intro: "Jobber du kan gjøre helt eller delvis på avstand, fra Norge, Norden og resten av Europa.", city: null },
+];
+const catPages = [], cityPages = [];
+const popular = []; // links for the all-jobs page
 for (const [cat, js] of Object.entries(byCat)) {
-  const name = CAT_NO[cat] || cat;
-  await put(`/jobs/${slug(cat)}/`, listPage(`${name} – ledige jobber`, `Ledige stillinger innen ${name.toLowerCase()} i Norge, Romania og fjernarbeid.`, `/jobs/${slug(cat)}/`, js));
+  await put(`/jobs/${slug(cat)}/`, landing({ title: `${nameOfCat(cat)} – ledige jobber`, h1: `${nameOfCat(cat)} – ledige jobber`, desc: `${js.length} ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge, Romania og fjernarbeid. Lønn vises på hver jobb.`, intro: `Ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge, Romania og fjernarbeid. ${payLine(js, "nb")}`.trim(), path: `/jobs/${slug(cat)}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]] }));
   urls.push(`${SITE}/jobs/${slug(cat)}/`);
 }
-const cities = Object.entries(byCity).filter(([, js]) => js.length >= 3).sort((a, b) => b[1].length - a[1].length);
+for (const t of TOPICS) {
+  const js = live.filter(t.test);
+  if (js.length < 5) continue;
+  const cityLinks = [];
+  const byC = {}; for (const j of js) { const c = normCity(j); if (c) (byC[c] ||= []).push(j); }
+  if (t.city) for (const [c, cj] of Object.entries(byC).sort((a, b) => b[1].length - a[1].length)) if (cj.length >= 5) {
+    await put(`/by/${slug(c)}/${t.key}/`, landing({ title: t.city(c), h1: t.city(c), desc: `${cj.length} ${t.name.toLowerCase()} i ${c} på Havn. Lønn vises på hver jobb.`, intro: `${t.name} i ${c}. ${payLine(cj, "nb")}`.trim(), path: `/by/${slug(c)}/${t.key}/`, jobs: cj, crumbs: [["Alle jobber", "/jobs/"], [`Jobber i ${c}`, `/by/${slug(c)}/`]] }));
+    urls.push(`${SITE}/by/${slug(c)}/${t.key}/`); cityLinks.push([c, `/by/${slug(c)}/${t.key}/`, cj.length]);
+  }
+  const sec = cityLinks.length ? `<h2>Etter by</h2>${linkList(cityLinks.slice(0, 40))}` : "";
+  await put(`/jobs/${t.key}/`, landing({ title: t.h1, h1: t.h1, desc: `${js.length} ${t.name.toLowerCase()} på Havn. Lønn vises på hver jobb: oppgitt av arbeidsgiver eller et tydelig merket estimat.`, intro: `${t.intro} ${payLine(js, "nb")}`.trim(), path: `/jobs/${t.key}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]], sections: sec }));
+  urls.push(`${SITE}/jobs/${t.key}/`); popular.push([t.name, `/jobs/${t.key}/`, js.length]);
+}
+// Norwegian cities from 3 jobs; other countries only for clean city names with 10+ jobs (location strings from some feeds are messy)
+const cities = Object.entries(byCity).filter(([c, js]) => (js.filter((j) => j.country === "Norway").length >= js.length / 2 && js.length >= 3) || (js.length >= 10 && !/[,/(]|\d|anywhere|remote|office|worldwide|europe/i.test(c))).sort((a, b) => b[1].length - a[1].length);
 for (const [city, js] of cities) {
-  await put(`/by/${slug(city)}/`, listPage(`Ledige jobber i ${city}`, `Alle ledige stillinger i ${city}.`, `/by/${slug(city)}/`, js));
+  const cats = Object.entries(byCat).map(([c]) => [c, js.filter((j) => j.category === c)]).filter(([, cj]) => cj.length >= 8).sort((a, b) => b[1].length - a[1].length);
+  for (const [cat, cj] of cats) {
+    await put(`/by/${slug(city)}/${slug(cat)}/`, landing({ title: `${nameOfCat(cat)} – ledige jobber i ${city}`, h1: `${nameOfCat(cat)} i ${city}`, desc: `${cj.length} ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i ${city}. Lønn vises på hver jobb.`, intro: `Ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i ${city}. ${payLine(cj, "nb")}`.trim(), path: `/by/${slug(city)}/${slug(cat)}/`, jobs: cj, crumbs: [["Alle jobber", "/jobs/"], [`Jobber i ${city}`, `/by/${slug(city)}/`]] }));
+    urls.push(`${SITE}/by/${slug(city)}/${slug(cat)}/`);
+  }
+  const intlN = js.filter((j) => intlJob(j)).length;
+  const top = topCats(js).map(([c, n]) => `${nameOfCat(c).toLowerCase()} (${n})`).join(", ");
+  const intro = `${js.length} ledige jobber i ${city} akkurat nå, fra NAV og arbeidsgivere, oppdatert flere ganger om dagen.${top ? ` Flest innen ${top}.` : ""} ${payLine(js, "nb")}${intlN >= 3 ? ` ${intlN} av jobbene passer for deg som ikke snakker norsk.` : ""} Alle jobber på Havn viser lønn: oppgitt av arbeidsgiver, eller et tydelig merket estimat.`.replace(/\s+/g, " ").trim();
+  const topicLinks = TOPICS.filter((t) => t.city).map((t) => [t, js.filter(t.test)]).filter(([, tj]) => tj.length >= 5).map(([t, tj]) => [t.city(city), `/by/${slug(city)}/${t.key}/`, tj.length]);
+  const sec = `${cats.length ? `<h2>Etter fagfelt i ${esc(city)}</h2>${linkList(cats.map(([c, cj]) => [`${nameOfCat(c)} i ${city}`, `/by/${slug(city)}/${slug(c)}/`, cj.length]))}` : ""}${topicLinks.length ? `<h2>Andre søk i ${esc(city)}</h2>${linkList(topicLinks)}` : ""}<h2>Andre byer</h2>${linkList(cities.filter(([c, cj]) => c !== city && cj.filter((j) => j.country === "Norway").length >= cj.length / 2).slice(0, 14).map(([c, cj]) => [`Jobber i ${c}`, `/by/${slug(c)}/`, cj.length]))}`;
+  await put(`/by/${slug(city)}/`, landing({ title: `Ledige jobber i ${city} (${js.length}) – lønn vist`, h1: `Ledige jobber i ${city}`, desc: `${js.length} ledige jobber i ${city}. Lønn vises på hver jobb. Oppdatert flere ganger om dagen. Gratis for jobbsøkere.`, intro, path: `/by/${slug(city)}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]], sections: sec }));
   urls.push(`${SITE}/by/${slug(city)}/`);
 }
 
 const indexBody = `<h1>Alle ledige jobber på Havn</h1><p class="meta">${live.length} ledige stillinger. Oppdateres flere ganger om dagen.</p>
 <h2>Etter kategori</h2><div class="links">${Object.keys(byCat).sort().map((c) => `<div><a href="${SITE}/jobs/${slug(c)}/">${esc(CAT_NO[c] || c)}</a> (${byCat[c].length})</div>`).join("")}</div>
+<h2>Populære søk</h2>${linkList(popular)}
 <h2>Etter by</h2><div class="links">${cities.map(([c, js]) => `<div><a href="${SITE}/by/${slug(c)}/">${esc(c)}</a> (${js.length})</div>`).join("")}</div>
-<h2>Nyeste jobber</h2><ul class="jobs">${live.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).map(jobRow).join("")}</ul>`;
+<h2>Nyeste jobber</h2><ul class="jobs">${live.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 100).map((j) => jobRow(j)).join("")}</ul>`;
 await put(`/jobs/`, page({ title: "Alle ledige jobber | Havn", description: `${live.length} ledige stillinger i Norge, Romania og fjernarbeid i Europa. Gratis for jobbsøkere.`, canonical: `${SITE}/jobs/`, body: indexBody }));
 
 const intl = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && j.country === "Norway" && intlJob(j)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 400);
-await put(GUIDE.en.path, guidePage(GUIDE.en, intl, GUIDE.ro.path));
+// English city pages: jobs in each city that suit people from abroad
+const intlAll = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && j.country === "Norway" && intlJob(j));
+const intlByCity = {}; for (const j of intlAll) { const c = normCity(j); if (c) (intlByCity[c] ||= []).push(j); }
+const intlCities = Object.entries(intlByCity).filter(([, js]) => js.length >= 6).sort((a, b) => b[1].length - a[1].length);
+for (const [city, js] of intlCities) {
+  const top = topCats(js).map(([c, n]) => `${c.toLowerCase()} (${n})`).join(", ");
+  const intro = `${js.length} open jobs in ${city}, Norway, that suit people from abroad: the ad is in English, or Norwegian isn't required.${top ? ` Most are in ${top}.` : ""} ${payLine(js, "en")} Every job on Havn shows the pay: stated by the employer, or a clearly marked estimate. Apply directly with the employer.`.replace(/\s+/g, " ").trim();
+  const sec = `<p><a class="btn" href="${SITE}/?intl=1">Search and filter these jobs in Havn</a></p><h2>Other cities</h2>${linkList(intlCities.filter(([c]) => c !== city).slice(0, 12).map(([c, cj]) => [`Jobs in ${c}`, `/en/jobs-in/${slug(c)}/`, cj.length]))}<p class="meta"><a href="${SITE}${GUIDE.en.path}">Moving to Norway for work: the short guide</a></p>`;
+  await put(`/en/jobs-in/${slug(city)}/`, landing({ title: `Jobs in ${city} for foreigners – no Norwegian needed`, h1: `Jobs in ${city} for foreigners`, desc: `${js.length} jobs in ${city}, Norway, open to international applicants: English-language ads and jobs where Norwegian isn't required. Pay shown on every job.`, intro, path: `/en/jobs-in/${slug(city)}/`, jobs: js, lang: "en", crumbs: [["Work in Norway", GUIDE.en.path]], sections: sec }));
+  urls.push(`${SITE}/en/jobs-in/${slug(city)}/`);
+}
+console.log(`English city pages: ${intlCities.length}`);
+const guideCities = intlCities.length ? `<h2>Jobs by city</h2>${linkList(intlCities.slice(0, 24).map(([c, cj]) => [`Jobs in ${c}`, `/en/jobs-in/${slug(c)}/`, cj.length]))}` : "";
+await put(GUIDE.en.path, guidePage(GUIDE.en, intl, GUIDE.ro.path, guideCities));
 await put(GUIDE.ro.path, guidePage(GUIDE.ro, intl, GUIDE.en.path));
 urls.push(`${SITE}${GUIDE.en.path}`, `${SITE}${GUIDE.ro.path}`);
 console.log(`International jobs: ${intl.length}`);
