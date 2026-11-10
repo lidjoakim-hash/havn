@@ -13,7 +13,7 @@ const SITE = process.env.HAVN_SITE || "https://havncareerhub.com";
 const OUT = process.env.OUT_DIR || "drafts";
 const now = Date.now();
 const DAY = 86400000;
-const today = new Date(now + 3600000).toISOString().slice(0, 10); // Norway morning
+const today = process.env.DAY_LABEL || new Date(now + 3600000).toISOString().slice(0, 10); // Norway morning
 const weekday = new Date(now + 3600000).getUTCDay(); // 0 Sunday
 
 const { enrichPay } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay };`)();
@@ -29,8 +29,14 @@ async function fetchJobs() {
   const p = await (await fetch(`https://raw.githubusercontent.com/lidjoakim-hash/havn/main/data/pointer.json?x=${now}`)).json();
   const base = `https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
   const out = [];
+  const get = async (f) => { // jsDelivr sometimes refuses this large repository, so read from GitHub first
+    for (const u of [`https://raw.githubusercontent.com/lidjoakim-hash/havn/${p.sha}/${f}`, base + f]) {
+      for (let tries = 0; tries < 2; tries++) { try { const r = await fetch(u); if (r.ok) return await r.json(); } catch { /* try next */ } await new Promise((x) => setTimeout(x, 1500)); }
+    }
+    throw new Error(`Could not load ${f}`);
+  };
   for (const f of p.files) {
-    const { cols, rows } = await (await fetch(base + f)).json();
+    const { cols, rows } = await get(f);
     for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); }
   }
   return out.concat(await fetchCol("jobs", "&data->>source=is.null"));
@@ -97,11 +103,16 @@ const THEMES = [
   { key: "oslo", lang: "no", art: "hero", filter: inCity("oslo"), h: { no: "Nye jobber i Oslo", en: "New jobs in Oslo", ro: "Joburi noi în Oslo" }, tags: "#oslo #jobbioslo #ledigstilling #jobb #havn" },
   { key: "noexp", lang: "no", art: "wave", filter: (j) => /(ekstrahjelp|deltid|butikk|servitør|lager|renhold|assistent|tilkalling|student)/i.test(j.title || ""), h: { no: "Jobber du kan søke uten mye erfaring", en: "Jobs for getting started", ro: "Joburi pentru început" }, tags: "#deltidsjobb #studentjobb #ledigstilling #jobb #havn" },
 ];
-let theme = THEMES[weekday];
-let jobs = pick(pool.filter(theme.filter));
-if (jobs.length < 3) { jobs = pick(live.filter(theme.filter)); }
+let theme = THEMES[process.env.THEME !== undefined ? +process.env.THEME : weekday];
+const USED_FILE = process.env.USED_FILE;
+const used = new Set(USED_FILE ? JSON.parse(await readFile(USED_FILE, "utf8").catch(() => "[]")) : []);
+const key = (j) => j.id || `${j.title}|${j.company}`, coKey = (j) => "co:" + (j.company || "").toLowerCase();
+const notUsed = (j) => !used.has(key(j)) && !used.has(coKey(j));
+let jobs = pick(pool.filter((j) => theme.filter(j) && notUsed(j)));
+if (jobs.length < 3) { jobs = pick(live.filter((j) => theme.filter(j) && notUsed(j))); }
 if (jobs.length < 3) { theme = THEMES[1]; jobs = pick(live.filter(theme.filter)); }
 const count = live.filter(theme.filter).length;
+if (USED_FILE) { jobs.slice(0, 4).forEach((j) => { used.add(key(j)); used.add(coKey(j)); }); await writeFile(USED_FILE, JSON.stringify([...used])); }
 
 // ---------- captions ----------
 const CTA = { no: "Se alle og søk direkte hos arbeidsgiveren – lenke i bio.", en: "See them all and apply directly with the employer – link in bio.", ro: "Vezi toate joburile și aplică direct la angajator – link în bio." };

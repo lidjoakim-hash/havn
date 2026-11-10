@@ -47,8 +47,15 @@ async function fetchJobs() {
   const p = await (await fetch(`https://raw.githubusercontent.com/lidjoakim-hash/havn/main/data/pointer.json?x=${now}`)).json();
   const base = `https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
   const out = [];
+  // jsDelivr refuses very large repositories at times ("Package size exceeded"), so read straight from GitHub first and use jsDelivr as the backup
+  const get = async (f) => {
+    for (const u of [`https://raw.githubusercontent.com/lidjoakim-hash/havn/${p.sha}/${f}`, base + f]) {
+      for (let tries = 0; tries < 2; tries++) { try { const r = await fetch(u); if (r.ok) return await r.json(); } catch { /* try next */ } await new Promise((x) => setTimeout(x, 1500)); }
+    }
+    throw new Error(`Could not load ${f}`);
+  };
   for (const f of p.files) {
-    const { cols, rows } = await (await fetch(base + f)).json();
+    const { cols, rows } = await get(f);
     for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); }
   }
   // jobs posted on Havn itself: ask for ids only first (fast), then their data by id; a full scan sorted by id timed out

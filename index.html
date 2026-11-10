@@ -1738,7 +1738,7 @@ function renderPrivacy(){const mail=S.settings.contactEmail||"the Havn team";$("
 async function loadIndex(onFirst){
   const p=await fetch("data/pointer.json?t="+Math.floor(Date.now()/300000),{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error("pointer "+r.status);return r.json()});
   const base=`https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
-  const get=f=>fetch(base+f).then(r=>{if(!r.ok)throw new Error(f+" "+r.status);return r.json()});
+  const get=f=>fetch(base+f).then(r=>{if(!r.ok)throw new Error(f+" "+r.status);return r.json()}).catch(()=>fetch(`https://raw.githubusercontent.com/lidjoakim-hash/havn/${p.sha}/${f}`).then(r=>{if(!r.ok)throw new Error(f+" "+r.status);return r.json()}));
   const rowsOf=({cols,rows})=>rows.map(r=>{const o={_payDone:true};for(let i=0;i<cols.length;i++){const v=r[i];if(v!==null)o[cols[i]]=v}if(!o.seniority)o.seniority="Mid";if(!o.status)o.status="active";fixLinks(o);return o}).filter(o=>!o._dead);
   // the first file holds the newest few hundred jobs, so the list can show before the rest arrives (slow phones)
   const rest=p.files.slice(1).map(get);const first=rowsOf(await get(p.files[0]));S.indexMeta=p;if(onFirst&&rest.length)onFirst(first);
