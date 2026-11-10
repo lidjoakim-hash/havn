@@ -10,6 +10,7 @@ const KEY = "sb_publishable_i0s_T4iaXgZLrvf_x_hX5g_fLkxvZGF";
 const SITE = "https://havncareerhub.com";
 const now = Date.now();
 const DAY = 86400000;
+let ownLookupFailed = false;
 
 const normCity = (j) => { const l = String(j.location || "").replace(/,\s*(norway|norge)$/i, "").replace(/^(norway|norge),\s*/i, "").replace(/^(?:norway|norge)\s*\((.+)\)$/i, "$1").trim(); return j.country === "Norway" ? l.replace(/\s+S$/, "") : l; };
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -59,7 +60,10 @@ async function fetchJobs() {
     for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); }
   }
   // jobs posted on Havn itself: ask for ids only first (fast), then their data by id; a full scan sorted by id timed out
-  const ownIds = (await sbGet(`docs?collection=eq.jobs&select=id&data->>source=is.null`)).map((r) => r.id);
+  // (filtering on data->>source scans the whole table and times out, so own jobs are found by what their id does NOT start with)
+  let ownIds = [];
+  try { ownIds = (await sbGet(`docs?collection=eq.jobs&select=id&limit=2000&id=not.like.nav-*&id=not.like.jobtech-*&id=not.like.ats-*&id=not.like.remoteok-*&id=not.like.jobicy-*&id=not.like.arbeitnow-*`)).map((r) => r.id); }
+  catch (e) { ownLookupFailed = true; console.log("Could not list jobs posted on Havn this run; keeping their pages:", String(e).slice(0, 160)); }
   const own = [];
   for (let i = 0; i < ownIds.length; i += 80) {
     const list = ownIds.slice(i, i + 80).map((x) => `"${x}"`).join(",");
@@ -322,7 +326,7 @@ const { readdir } = await import("node:fs/promises");
 await mkdir("job", { recursive: true });
 const existing = new Set(await readdir("job").catch(() => []));
 const liveIds = new Set(live.map((j) => j.id));
-for (const d of existing) if (!liveIds.has(d)) await rm(`job/${d}`, { recursive: true, force: true });
+for (const d of existing) if (!liveIds.has(d) && !(ownLookupFailed && !/^(nav|jobtech|ats|remoteok|jobicy|arbeitnow)-/.test(d))) await rm(`job/${d}`, { recursive: true, force: true });
 const rebuild = process.env.FULL === "1"; // only on request, to keep the repository small
 const need = live.filter((j) => rebuild || !existing.has(j.id));
 const texts = await fetchTexts(need.filter((j) => j.hasText).map((j) => j.id));

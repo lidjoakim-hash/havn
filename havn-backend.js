@@ -24,7 +24,7 @@
     const out=[];const size=1000;
     // Havn's own jobs: ids first (fast), then their data by id; filtering the full jobs table with data can time out
     if(col==="jobs"&&window.HAVN_OWN_ONLY){
-      const {data:ids,error:e1}=await sb.from(T).select("id").eq("collection","jobs").is("data->>source",null).limit(2000);if(e1)throw err(e1);
+      const {data:ids,error:e1}=await sb.from(T).select("id").eq("collection","jobs").not("id","like","nav-%").not("id","like","jobtech-%").not("id","like","ats-%").not("id","like","remoteok-%").not("id","like","jobicy-%").not("id","like","arbeitnow-%").limit(2000);if(e1)throw err(e1);
       for(let i=0;i<ids.length;i+=80){const {data,error}=await sb.from(T).select("id,data").eq("collection","jobs").in("id",ids.slice(i,i+80).map(r=>r.id));if(error)throw err(error);out.push(...data)}
       const docs=out.map(r=>docSnap(r.id,r.data));return {docs,size:docs.length,empty:!docs.length,docChanges:()=>[],metadata:{fromCache:false,hasPendingWrites:false}};
     }
