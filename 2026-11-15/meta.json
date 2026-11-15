@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-15",
+  "theme": "bergen",
+  "items": [
+    {
+      "type": "post",
+      "label": "Instagram + Facebook post",
+      "time": "13:00",
+      "file": "post.jpg",
+      "captions": {
+        "no": "Nye jobber i Bergen 🌿\n\n• Salg- og servicemedarbeider SATS Wergeland – SATS (ca. 470–570k kr/år (estimat, ikke bekreftet))\n• Vil du være med å skape fremtidens eldreomsorg i Bergen? – Kalfaret sykehjem (ca. 540–650k kr/år (estimat, ikke bekreftet))\n• Rådgjevar (jurist) - helse og omsorg – Statsforvaltaren i Vestland (ca. 710–860k kr/år (estimat, ikke bekreftet))\n\n174 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio.\nHavn er alltid gratis for jobbsøkere.\n\n#bergen #jobbibergen #ledigstilling #jobb #havn",
+        "en": "New jobs in Bergen 🌿\n\n• Salg- og servicemedarbeider SATS Wergeland – SATS (ca. 470–570k kr/yr (estimate, not confirmed))\n• Vil du være med å skape fremtidens eldreomsorg i Bergen? – Kalfaret sykehjem (ca. 540–650k kr/yr (estimate, not confirmed))\n• Rådgjevar (jurist) - helse og omsorg – Statsforvaltaren i Vestland (ca. 710–860k kr/yr (estimate, not confirmed))\n\n174 open jobs right now. See them all and apply directly with the employer – link in bio.\nHavn is always free for job seekers.\n\n#bergen #jobbibergen #ledigstilling #jobb #havn",
+        "ro": "Joburi noi în Bergen 🌿\n\n• Salg- og servicemedarbeider SATS Wergeland – SATS (ca. 470–570k kr/an (estimare, neconfirmat))\n• Vil du være med å skape fremtidens eldreomsorg i Bergen? – Kalfaret sykehjem (ca. 540–650k kr/an (estimare, neconfirmat))\n• Rådgjevar (jurist) - helse og omsorg – Statsforvaltaren i Vestland (ca. 710–860k kr/an (estimare, neconfirmat))\n\n174 joburi disponibile acum. Vezi toate joburile și aplică direct la angajator – link în bio.\nHavn este mereu gratuit pentru candidați.\n\n#bergen #jobbibergen #ledigstilling #jobb #havn"
+      },
+      "lang": "no"
+    },
+    {
+      "type": "video",
+      "label": "TikTok / Reels / Stories video",
+      "time": "19:00",
+      "file": "video.mp4",
+      "poster": "s1.jpg",
+      "captions": {
+        "no": "Nye jobber i Bergen 🌿 174 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio. #bergen #jobbibergen #ledigstilling #jobb #havn",
+        "en": "New jobs in Bergen 🌿 174 open jobs right now. See them all and apply directly with the employer – link in bio. #bergen #jobbibergen #ledigstilling #jobb #havn",
+        "ro": "Joburi noi în Bergen 🌿 174 joburi disponibile acum. Vezi toate joburile și aplică direct la angajator – link în bio. #bergen #jobbibergen #ledigstilling #jobb #havn"
+      },
+      "lang": "no",
+      "note": "Add a calm trending sound in TikTok/Instagram before posting."
+    }
+  ]
+}
