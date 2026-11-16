@@ -124,9 +124,8 @@ ul.jobs a{font-weight:600;text-decoration:none;color:var(--fg)}ul.jobs span{disp
 @media (prefers-reduced-motion:reduce){.art *{animation:none!important}}`;
 
 const UI = {
-  nb: { all: "Alle jobber", emp: "For arbeidsgivere", foot: "Havn – jobber i Norge, Romania og fjernarbeid i Europa. Alltid gratis for jobbsøkere.", priv: "Personvern" },
-  en: { all: "All jobs", emp: "For employers", foot: "Havn – international jobs in Norway, Romania and remote across Europe. Always free for job seekers.", priv: "Privacy" },
-  ro: { all: "Toate joburile", emp: "Pentru angajatori", foot: "Havn – joburi internaționale în Norvegia, România și la distanță în Europa. Mereu gratuit pentru candidați.", priv: "Confidențialitate" },
+  nb: { all: "Alle jobber", emp: "For arbeidsgivere", foot: "Havn – jobber i Norge som viser lønnen. Gratis å bla i.", priv: "Personvern" },
+  en: { all: "All jobs", emp: "For employers", foot: "Havn – jobs in Norway that show the pay. Free to browse.", priv: "Privacy" },
 };
 function page({ title, description, canonical, body, jsonld, lang = "nb", alternates = null }) {
   const u = UI[lang] || UI.nb;
@@ -141,7 +140,7 @@ ${body}
 }
 
 function isPublic(j) { return !j.source || ["nav", "jobtech", "ats"].includes(j.source); }
-const WHO = { Worldwide: "fra hele verden", Europe: "bor du i Europa", Nordics: "bor du i Norden", Norway: "bor du i Norge", Romania: "bor du i Romania", "EU": "bor du i EU" };
+const WHO = { Worldwide: "fra hele verden", Europe: "bor du i Europa", Nordics: "bor du i Norden", Norway: "bor du i Norge", "EU": "bor du i EU" };
 function jobRow(j, lang = "nb") {
   const where = [normCity(j), j.country].filter(Boolean).join(", ");
   const pay = payText(j, lang);
@@ -265,44 +264,24 @@ const GUIDE = {
     jobsH: "Jobs open to international applicants",
     guideH: "Moving to Norway for work: the short guide",
     faq: [
-      ["Do I need a work permit?", "No, not if you are a citizen of an EU/EEA country, such as Romania, Poland or Lithuania. You can start working in Norway right away. Citizens of other countries usually need a residence permit for work from UDI."],
+      ["Do I need a work permit?", "No, not if you are a citizen of an EU/EEA country, such as Poland or Lithuania. You can start working in Norway right away. Citizens of other countries usually need a residence permit for work from UDI."],
       ["What do I do when I arrive?", "If you stay more than three months, register with the police under the EU/EEA registration scheme (book it through UDI's website). Then go to the tax office (Skatteetaten) for an ID check to get a D-number and a tax deduction card. Your employer needs both to pay you correctly."],
       ["Is there a minimum wage in Norway?", "There is no general minimum wage, but several industries have legally binding minimum pay, for example construction, cleaning, fish processing, hotels and restaurants, agriculture, electrical work, shipyards and freight transport. The Norwegian Labour Inspection Authority (arbeidstilsynet.no) lists the current rates."],
       ["How do I avoid job scams?", "A real employer never asks you to pay to get a job. Never send money for a job offer, a work permit or a flat you have not seen. Get a written employment contract – it is required by law in Norway."],
       ["How do I find housing?", "Ask the employer – many jobs in construction, fish processing and agriculture include housing. For private rentals, the deposit should go into a separate deposit account in your name (depositumskonto), never in cash to the landlord."],
     ],
-    other: "Pe românește",
-  },
-  ro: {
-    path: "/ro/lucru-in-norvegia/", lang: "ro",
-    title: "Locuri de muncă în Norvegia pentru români – fără norvegiană",
-    desc: (n) => `${n} locuri de muncă în Norvegia deschise candidaților străini: anunțuri în engleză și posturi unde norvegiana nu este obligatorie. Plus un ghid simplu pentru a lucra în Norvegia.`,
-    h1: "Lucru în Norvegia",
-    intro: (n) => `${n} locuri de muncă disponibile acum în Norvegia, potrivite pentru cei din străinătate – anunțul este în engleză sau norvegiana nu este obligatorie. Actualizat de mai multe ori pe zi. Aplicați direct la angajator.`,
-    cta: "Caută și filtrează aceste joburi în Havn",
-    jobsH: "Joburi deschise candidaților străini",
-    guideH: "Cum ajungi să lucrezi în Norvegia: ghid scurt",
-    faq: [
-      ["Am nevoie de permis de muncă?", "Nu. Ca cetățean român (UE/SEE) poți începe să lucrezi în Norvegia imediat, fără permis de muncă."],
-      ["Ce fac când ajung?", "Dacă stai mai mult de trei luni, te înregistrezi la poliție prin schema de înregistrare pentru cetățeni UE/SEE (programarea se face pe site-ul UDI). Apoi mergi la biroul fiscal (Skatteetaten) pentru verificarea identității, ca să primești un număr D (D-nummer) și cardul fiscal (skattekort). Angajatorul are nevoie de ambele ca să te plătească corect."],
-      ["Există salariu minim în Norvegia?", "Nu există un salariu minim general, dar mai multe domenii au salarii minime obligatorii prin lege, de exemplu construcții, curățenie, procesarea peștelui, hoteluri și restaurante, agricultură, lucrări electrice, șantiere navale și transport de marfă. Inspectoratul Muncii din Norvegia (arbeidstilsynet.no) publică nivelurile actuale."],
-      ["Cum evit țepele?", "Un angajator real nu îți cere niciodată bani ca să te angajeze. Nu trimite bani pentru o ofertă de muncă, un permis sau o locuință pe care nu ai văzut-o. Cere un contract de muncă scris – în Norvegia este obligatoriu prin lege."],
-      ["Cum găsesc locuință?", "Întreabă angajatorul – multe joburi în construcții, procesarea peștelui și agricultură includ cazare. La chirii private, garanția se depune într-un cont separat pe numele tău (depositumskonto), niciodată cash la proprietar."],
-    ],
-    other: "In English",
   },
 };
 
 function guidePage(g, jobs, otherPath, extra = "") {
   const sorted = jobs.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
   const canonical = `${SITE}${g.path}`;
-  const body = `<p class="meta"><a href="${SITE}${otherPath}">${g.other}</a></p>
-${ART_SEARCH}<h1>${esc(g.h1)}</h1><p class="meta">${esc(g.intro(sorted.length))}</p>
+  const body = `${ART_SEARCH}<h1>${esc(g.h1)}</h1><p class="meta">${esc(g.intro(sorted.length))}</p>
 <p><a class="btn" href="${SITE}/?intl=1">${esc(g.cta)}</a></p>
 <h2>${esc(g.guideH)}</h2>${g.faq.map(([q, a]) => `<h3>${esc(q)}</h3><p>${esc(a)}</p>`).join("")}
 ${extra}<h2>${esc(g.jobsH)} (${sorted.length})</h2><ul class="jobs">${sorted.slice(0, 150).map((j) => jobRow(j, g.lang)).join("")}</ul>`;
   const jsonld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: g.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) };
-  const alternates = { en: `${SITE}${GUIDE.en.path}`, ro: `${SITE}${GUIDE.ro.path}` };
+  const alternates = null;
   return page({ title: `${g.title} | Havn`, description: g.desc(sorted.length), canonical, body, jsonld, lang: g.lang, alternates });
 }
 
@@ -349,7 +328,7 @@ const TOPICS = [
 const catPages = [], cityPages = [];
 const popular = []; // links for the all-jobs page
 for (const [cat, js] of Object.entries(byCat)) {
-  await put(`/jobs/${slug(cat)}/`, landing({ title: `${nameOfCat(cat)} – ledige jobber`, h1: `${nameOfCat(cat)} – ledige jobber`, desc: `${js.length} ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge, Romania og fjernarbeid. Lønn vises på hver jobb.`, intro: `Ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge, Romania og fjernarbeid. ${payLine(js, "nb")}`.trim(), path: `/jobs/${slug(cat)}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]] }));
+  await put(`/jobs/${slug(cat)}/`, landing({ title: `${nameOfCat(cat)} – ledige jobber`, h1: `${nameOfCat(cat)} – ledige jobber`, desc: `${js.length} ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge. Lønn vises på hver jobb.`, intro: `Ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge. ${payLine(js, "nb")}`.trim(), path: `/jobs/${slug(cat)}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]] }));
   urls.push(`${SITE}/jobs/${slug(cat)}/`);
 }
 for (const t of TOPICS) {
@@ -387,7 +366,7 @@ const indexBody = `<h1>Alle ledige jobber på Havn</h1><p class="meta">${live.le
 <h2>Populære søk</h2>${linkList(popular)}
 <h2>Etter by</h2><div class="links">${cities.map(([c, js]) => `<div><a href="${SITE}/by/${slug(c)}/">${esc(c)}</a> (${js.length})</div>`).join("")}</div>
 <h2>Nyeste jobber</h2><ul class="jobs">${live.slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 100).map((j) => jobRow(j)).join("")}</ul>`;
-await put(`/jobs/`, page({ title: "Alle ledige jobber | Havn", description: `${live.length} ledige stillinger i Norge, Romania og fjernarbeid i Europa. Gratis for jobbsøkere.`, canonical: `${SITE}/jobs/`, body: indexBody }));
+await put(`/jobs/`, page({ title: "Alle ledige jobber | Havn", description: `${live.length} ledige stillinger i Norge. Gratis å bla i.`, canonical: `${SITE}/jobs/`, body: indexBody }));
 
 const intl = all.filter((j) => j.status === "active" && (j.expiresAt || 0) > now && j.country === "Norway" && intlJob(j)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).slice(0, 400);
 // English city pages: jobs in each city that suit people from abroad
@@ -403,9 +382,8 @@ for (const [city, js] of intlCities) {
 }
 console.log(`English city pages: ${intlCities.length}`);
 const guideCities = intlCities.length ? `<h2>Jobs by city</h2>${linkList(intlCities.slice(0, 24).map(([c, cj]) => [`Jobs in ${c}`, `/en/jobs-in/${slug(c)}/`, cj.length]))}` : "";
-await put(GUIDE.en.path, guidePage(GUIDE.en, intl, GUIDE.ro.path, guideCities));
-await put(GUIDE.ro.path, guidePage(GUIDE.ro, intl, GUIDE.en.path));
-urls.push(`${SITE}${GUIDE.en.path}`, `${SITE}${GUIDE.ro.path}`);
+await put(GUIDE.en.path, guidePage(GUIDE.en, intl, "", guideCities));
+urls.push(`${SITE}${GUIDE.en.path}`);
 console.log(`International jobs: ${intl.length}`);
 
 // small sample of real jobs (used for app-store screenshots and previews)

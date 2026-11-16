@@ -1,6 +1,6 @@
 // Havn marketing drafts. Runs every morning in GitHub Actions.
 // Picks today's best jobs from the live board and makes ready-to-post drafts:
-//   • Instagram/Facebook post (1080×1350) + caption in Norwegian, English and Romanian
+//   • Instagram/Facebook post (1080×1350) + caption in Norwegian and English
 //   • Vertical video for TikTok / Reels / Stories (1080×1920, ~15 s)
 //   • Mondays: a LinkedIn post for employers and the weekly email newsletter
 // Nothing is published automatically. Everything lands on the review page (marketing/) for Joakim to approve and post.
@@ -65,14 +65,14 @@ function intlJob(j) {
 }
 function payLine(j, lang) {
   const a = +j.salaryMin || 0, b = +j.salaryMax || 0;
-  const per = { year: { no: "/år", en: "/yr", ro: "/an" }, month: { no: "/mnd", en: "/mo", ro: "/lună" }, hour: { no: "/t", en: "/h", ro: "/oră" } }[j.salaryPeriod || "year"]?.[lang] || "";
+  const per = { year: { no: "/år", en: "/yr" }, month: { no: "/mnd", en: "/mo" }, hour: { no: "/t", en: "/h" } }[j.salaryPeriod || "year"]?.[lang] || "";
   const cur = j.currency === "NOK" ? "kr" : j.currency || "";
   if (a || b) return `${a && b && a !== b ? nf(a) + "–" + nf(b) : nf(a || b)} ${cur}${per}`;
   if (j.payEst) {
-    const e = j.payEst, c = e.currency || "NOK", lab = { no: "estimat, ikke bekreftet", en: "estimate, not confirmed", ro: "estimare, neconfirmat" }[lang];
-    if (e.period === "hour") return `ca. ${e.min}–${e.max} ${c === "NOK" ? "kr" : c}${{ no: "/t", en: "/h", ro: "/oră" }[lang]} (${lab})`;
+    const e = j.payEst, c = e.currency || "NOK", lab = { no: "estimat, ikke bekreftet", en: "estimate, not confirmed" }[lang];
+    if (e.period === "hour") return `ca. ${e.min}–${e.max} ${c === "NOK" ? "kr" : c}${{ no: "/t", en: "/h" }[lang]} (${lab})`;
     const sym = { EUR: "€", USD: "$", GBP: "£" }[c], k = (n) => nf(n / 1000);
-    return `ca. ${sym ? sym + k(e.min) + "–" + sym + k(e.max) + "k" : k(e.min) + "–" + k(e.max) + "k " + (c === "NOK" ? "kr" : c)}${{ no: "/år", en: "/yr", ro: "/an" }[lang]} (${lab})`;
+    return `ca. ${sym ? sym + k(e.min) + "–" + sym + k(e.max) + "k" : k(e.min) + "–" + k(e.max) + "k " + (c === "NOK" ? "kr" : c)}${{ no: "/år", en: "/yr" }[lang]} (${lab})`;
   }
   return "";
 }
@@ -95,13 +95,13 @@ const fresh = live.filter((j) => now - (j.createdAt || 0) < 4 * DAY);
 const pool = fresh.length > 40 ? fresh : live;
 const inCity = (c) => (j) => (j.location || "").toLowerCase().startsWith(c);
 const THEMES = [
-  { key: "bergen", lang: "no", art: "search", filter: inCity("bergen"), h: { no: "Nye jobber i Bergen", en: "New jobs in Bergen", ro: "Joburi noi în Bergen" }, tags: "#bergen #jobbibergen #ledigstilling #jobb #havn" },
-  { key: "stavanger", lang: "no", art: "hero", filter: (j) => /stavanger|sandnes|sola|randaberg/i.test(j.location || ""), h: { no: "Nye jobber i Stavanger-regionen", en: "New jobs around Stavanger", ro: "Joburi noi în zona Stavanger" }, tags: "#stavanger #sandnes #rogaland #ledigstilling #jobb #havn" },
-  { key: "intl", lang: "ro", art: "search", filter: (j) => j.country === "Norway" && intlJob(j), h: { no: "Jobber i Norge – norsk ikke påkrevd", en: "Jobs in Norway – no Norwegian needed", ro: "Joburi în Norvegia – fără norvegiană" }, tags: "#lucruinnorvegia #norvegia #romaniinnorvegia #locuridemunca #jobsinnorway #havn" },
-  { key: "remote", lang: "en", art: "hero", filter: (j) => j.workplace === "remote", h: { no: "Fjernjobber du kan ta hjemmefra", en: "Remote jobs you can do from home", ro: "Joburi remote de acasă" }, tags: "#remotejobs #remotework #workfromhome #europejobs #havn" },
-  { key: "pay", lang: "no", art: "wave", filter: (j) => j.paySrc === "ad" || j.paySrc === "listed", h: { no: "Jobber der lønnen står i annonsen", en: "Jobs that show the pay", ro: "Joburi cu salariul afișat" }, tags: "#lønn #ledigstilling #jobb #norge #havn" },
-  { key: "oslo", lang: "no", art: "hero", filter: inCity("oslo"), h: { no: "Nye jobber i Oslo", en: "New jobs in Oslo", ro: "Joburi noi în Oslo" }, tags: "#oslo #jobbioslo #ledigstilling #jobb #havn" },
-  { key: "noexp", lang: "no", art: "wave", filter: (j) => /(ekstrahjelp|deltid|butikk|servitør|lager|renhold|assistent|tilkalling|student)/i.test(j.title || ""), h: { no: "Jobber du kan søke uten mye erfaring", en: "Jobs for getting started", ro: "Joburi pentru început" }, tags: "#deltidsjobb #studentjobb #ledigstilling #jobb #havn" },
+  { key: "bergen", lang: "no", art: "search", filter: inCity("bergen"), h: { no: "Nye jobber i Bergen", en: "New jobs in Bergen" }, tags: "#bergen #jobbibergen #ledigstilling #jobb #havn" },
+  { key: "stavanger", lang: "no", art: "hero", filter: (j) => /stavanger|sandnes|sola|randaberg/i.test(j.location || ""), h: { no: "Nye jobber i Stavanger-regionen", en: "New jobs around Stavanger" }, tags: "#stavanger #sandnes #rogaland #ledigstilling #jobb #havn" },
+  { key: "intl", lang: "en", art: "search", filter: (j) => j.country === "Norway" && intlJob(j), h: { no: "Jobber i Norge – norsk ikke påkrevd", en: "Jobs in Norway – no Norwegian needed" }, tags: "#lucruinnorvegia #norvegia #romaniinnorvegia #locuridemunca #jobsinnorway #havn" },
+  { key: "remote", lang: "en", art: "hero", filter: (j) => j.workplace === "remote", h: { no: "Fjernjobber du kan ta hjemmefra", en: "Remote jobs you can do from home" }, tags: "#remotejobs #remotework #workfromhome #europejobs #havn" },
+  { key: "pay", lang: "no", art: "wave", filter: (j) => j.paySrc === "ad" || j.paySrc === "listed", h: { no: "Jobber der lønnen står i annonsen", en: "Jobs that show the pay" }, tags: "#lønn #ledigstilling #jobb #norge #havn" },
+  { key: "oslo", lang: "no", art: "hero", filter: inCity("oslo"), h: { no: "Nye jobber i Oslo", en: "New jobs in Oslo" }, tags: "#oslo #jobbioslo #ledigstilling #jobb #havn" },
+  { key: "noexp", lang: "no", art: "wave", filter: (j) => /(ekstrahjelp|deltid|butikk|servitør|lager|renhold|assistent|tilkalling|student)/i.test(j.title || ""), h: { no: "Jobber du kan søke uten mye erfaring", en: "Jobs for getting started" }, tags: "#deltidsjobb #studentjobb #ledigstilling #jobb #havn" },
 ];
 let theme = THEMES[process.env.THEME !== undefined ? +process.env.THEME : weekday];
 const USED_FILE = process.env.USED_FILE;
@@ -115,9 +115,9 @@ const count = live.filter(theme.filter).length;
 if (USED_FILE) { jobs.slice(0, 4).forEach((j) => { used.add(key(j)); used.add(coKey(j)); }); await writeFile(USED_FILE, JSON.stringify([...used])); }
 
 // ---------- captions ----------
-const CTA = { no: "Se alle og søk direkte hos arbeidsgiveren – lenke i bio.", en: "See them all and apply directly with the employer – link in bio.", ro: "Vezi toate joburile și aplică direct la angajator – link în bio." };
-const FREE = { no: "Havn er alltid gratis for jobbsøkere.", en: "Havn is always free for job seekers.", ro: "Havn este mereu gratuit pentru candidați." };
-const COUNT = { no: (n) => `${n} ledige stillinger akkurat nå.`, en: (n) => `${n} open jobs right now.`, ro: (n) => `${n} joburi disponibile acum.` };
+const CTA = { no: "Se alle og søk direkte hos arbeidsgiveren – lenke i bio.", en: "See them all and apply directly with the employer – link in bio." };
+const FREE = { no: "Havn er alltid gratis for jobbsøkere.", en: "Havn is always free for job seekers." };
+const COUNT = { no: (n) => `${n} ledige stillinger akkurat nå.`, en: (n) => `${n} open jobs right now.` };
 function caption(lang) {
   const lines = jobs.map((j) => `• ${clip(j.title, 60)} – ${clip(j.company, 32)}${payLine(j, lang) ? ` (${payLine(j, lang)})` : ""}`);
   return `${theme.h[lang]} 🌿\n\n${lines.join("\n")}\n\n${COUNT[lang](count)} ${CTA[lang]}\n${FREE[lang]}\n\n${theme.tags}`;
@@ -169,7 +169,7 @@ function storyHtml(kind, lang, j) {
       ${pay ? `<div><span class="pill${est ? " est" : ""}" style="font-size:40px;padding:12px 28px">${esc(pay)}</span></div>` : ""}
     </div>${ART.search.replace("<svg ", '<svg class="art" style="width:460px" ')}</div></body></html>`;
   }
-  return `${head}${ART.wave.replace("<svg ", '<svg class="art" ')}<div class="f" style="font-size:84px;line-height:1.05">${esc({ no: "Søk gratis på Havn", en: "Search free on Havn", ro: "Caută gratuit pe Havn" }[lang])}</div>
+  return `${head}${ART.wave.replace("<svg ", '<svg class="art" ')}<div class="f" style="font-size:84px;line-height:1.05">${esc({ no: "Søk gratis på Havn", en: "Search free on Havn" }[lang])}</div>
     <div style="font-size:42px;color:#6E675D">${esc(CTA[lang])}</div><div class="f" style="font-size:44px;color:#4F7A5A">${esc(SITE.replace(/^https?:\/\//, ""))}</div></body></html>`;
 }
 function linkedinHtml(stats) {
@@ -201,7 +201,7 @@ const items = [];
 const mainLang = theme.lang;
 await shot(feedHtml(mainLang), 1080, 1350, `${dir}/post.jpg`);
 items.push({ type: "post", label: "Instagram + Facebook post", time: "13:00", file: "post.jpg",
-  captions: { no: caption("no"), en: caption("en"), ro: caption("ro") }, lang: mainLang });
+  captions: { no: caption("no"), en: caption("en") }, lang: mainLang });
 
 // vertical video
 const slides = [storyHtml("intro", mainLang), ...jobs.slice(0, 4).map((j) => storyHtml("job", mainLang, j)), storyHtml("end", mainLang)];
@@ -210,7 +210,7 @@ try {
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", "1/2.6", "-i", `${dir}/s%d.jpg`,
     "-vf", "zoompan=z='min(zoom+0.0004,1.035)':d=78:s=1080x1920:fps=30,format=yuv420p", "-c:v", "libx264", "-r", "30", "-movflags", "+faststart", `${dir}/video.mp4`]);
   items.push({ type: "video", label: "TikTok / Reels / Stories video", time: "19:00", file: "video.mp4", poster: "s1.jpg",
-    captions: { no: `${theme.h.no} 🌿 ${COUNT.no(count)} ${CTA.no} ${theme.tags}`, en: `${theme.h.en} 🌿 ${COUNT.en(count)} ${CTA.en} ${theme.tags}`, ro: `${theme.h.ro} 🌿 ${COUNT.ro(count)} ${CTA.ro} ${theme.tags}` }, lang: mainLang,
+    captions: { no: `${theme.h.no} 🌿 ${COUNT.no(count)} ${CTA.no} ${theme.tags}`, en: `${theme.h.en} 🌿 ${COUNT.en(count)} ${CTA.en} ${theme.tags}` }, lang: mainLang,
     note: "Add a calm trending sound in TikTok/Instagram before posting." });
 } catch (e) { console.log("Video skipped:", String(e).slice(0, 200)); }
 for (let i = 2; i <= slides.length; i++) await rm(`${dir}/s${i}.jpg`, { force: true });
