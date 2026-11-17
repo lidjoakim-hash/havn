@@ -2,24 +2,24 @@
 
 > Havn Career Hub (havncareerhub.com) is a job board for Norway. Every job shows pay: either stated by the employer, or a clearly marked estimate. It is always free for job seekers, and employers can post jobs. The site is Norwegian first, with English under.
 
-Updated: 2026-11-17. Open jobs listed right now in scope: 8 294 (5 583 in Norway, 2 719 remote jobs that people living in Norway can take). Pay stated by the employer on 491 jobs; the rest show a labelled estimate ("ca." and "estimat"). Estimates are typical pay for similar jobs (from Statistics Norway earnings data and public pay scales), never an offer.
+Updated: 2026-11-17. Open jobs listed right now in scope: 8 272 (5 561 in Norway, 2 719 remote jobs that people living in Norway can take). Pay stated by the employer on 493 jobs; the rest show a labelled estimate ("ca." and "estimat"). Estimates are typical pay for similar jobs (from Statistics Norway earnings data and public pay scales), never an offer.
 
 ## For job seekers
 - [Remote jobb](https://havncareerhub.com/remote-jobb/): 2 719 remote jobber du kan søke på fra Norge. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. Oppdateres flere ganger om dagen.
-- [Jobb med hjemmekontor](https://havncareerhub.com/hjemmekontor-jobb/): 192 jobber i Norge med hybrid eller hjemmekontor, med lønn vist på hver jobb. Slik avtaler du hjemmekontor og hva arbeidsgiveren må sørge for.
-- [Jobb på engelsk](https://havncareerhub.com/jobb-pa-engelsk/): 273 jobber i Norge der annonsen er på engelsk eller norsk ikke er påkrevd. Lønn vises på hver jobb. Oppdateres flere ganger om dagen.
-- [Jobb med lønn oppgitt](https://havncareerhub.com/jobb-med-lonn-oppgitt/): 491 jobber i Norge og remote jobber du kan ta fra Norge der arbeidsgiveren har oppgitt lønn. På Havn viser alle jobber lønn, og estimater er alltid merket.
+- [Jobb med hjemmekontor](https://havncareerhub.com/hjemmekontor-jobb/): 193 jobber i Norge med hybrid eller hjemmekontor, med lønn vist på hver jobb. Slik avtaler du hjemmekontor og hva arbeidsgiveren må sørge for.
+- [Jobb på engelsk](https://havncareerhub.com/jobb-pa-engelsk/): 268 jobber i Norge der annonsen er på engelsk eller norsk ikke er påkrevd. Lønn vises på hver jobb. Oppdateres flere ganger om dagen.
+- [Jobb med lønn oppgitt](https://havncareerhub.com/jobb-med-lonn-oppgitt/): 493 jobber i Norge og remote jobber du kan ta fra Norge der arbeidsgiveren har oppgitt lønn. På Havn viser alle jobber lønn, og estimater er alltid merket.
 
 ## City pages (ledige stillinger)
-- [Ledige stillinger i Oslo](https://havncareerhub.com/ledige-stillinger-oslo/): 918 ledige stillinger i Oslo. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 90 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Oslo](https://havncareerhub.com/ledige-stillinger-oslo/): 919 ledige stillinger i Oslo. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 90 på engelsk. Oppdatert flere ganger om dagen.
 - [Ledige stillinger i Bærum](https://havncareerhub.com/ledige-stillinger-baerum/): 59 ledige stillinger i Bærum. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 1 på engelsk. Oppdatert flere ganger om dagen.
 - [Ledige stillinger i Lillestrøm](https://havncareerhub.com/ledige-stillinger-lillestrom/): 66 ledige stillinger i Lillestrøm. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 3 på engelsk. Oppdatert flere ganger om dagen.
 - [Ledige stillinger i Asker](https://havncareerhub.com/ledige-stillinger-asker/): 36 ledige stillinger i Asker. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 1 på engelsk. Oppdatert flere ganger om dagen.
-- [Ledige stillinger i Lørenskog](https://havncareerhub.com/ledige-stillinger-lorenskog/): 51 ledige stillinger i Lørenskog. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Lørenskog](https://havncareerhub.com/ledige-stillinger-lorenskog/): 50 ledige stillinger i Lørenskog. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. Oppdatert flere ganger om dagen.
 - [Ledige stillinger i Drammen](https://havncareerhub.com/ledige-stillinger-drammen/): 95 ledige stillinger i Drammen. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 1 på engelsk. Oppdatert flere ganger om dagen.
 - [Ledige stillinger i Ski](https://havncareerhub.com/ledige-stillinger-ski/): 29 ledige stillinger i Ski. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 2 på engelsk. Oppdatert flere ganger om dagen.
-- [Ledige stillinger i Stavanger](https://havncareerhub.com/ledige-stillinger-stavanger/): 133 ledige stillinger i Stavanger. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 6 på engelsk. Oppdatert flere ganger om dagen.
-- [Ledige stillinger i Bergen](https://havncareerhub.com/ledige-stillinger-bergen/): 199 ledige stillinger i Bergen. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 21 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Stavanger](https://havncareerhub.com/ledige-stillinger-stavanger/): 132 ledige stillinger i Stavanger. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 6 på engelsk. Oppdatert flere ganger om dagen.
+- [Ledige stillinger i Bergen](https://havncareerhub.com/ledige-stillinger-bergen/): 198 ledige stillinger i Bergen. Lønn vises på hver jobb, enten oppgitt eller som merket estimat. 21 på engelsk. Oppdatert flere ganger om dagen.
 
 ## Guides and articles (Norwegian)
 - [Remote jobb i Norge – slik finner du det](https://havncareerhub.com/artikler/remote-jobb-i-norge/): Slik finner du en remote jobb fra Norge: hva som skiller remote fra hjemmekontor, hvor du leter, hva du må sjekke om skatt og kontrakt, og hvordan du unngår svindel.

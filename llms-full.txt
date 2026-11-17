@@ -15,31 +15,31 @@ Havn Career Hub (https://havncareerhub.com) is a job board for the Norwegian mar
 - Job pages are rebuilt regularly. Closed or expired jobs are removed; the apply button also hides itself if an ad closes between rebuilds.
 
 ## Numbers right now (2026-11-17)
-- Open jobs in scope: 8 294
-- Norway: 5 583; remote jobs open to people in Norway: 2 719
-- Jobs in Norway that suit people without Norwegian (English ad or Norwegian not required): 273
-- Jobs with pay stated by the employer: 491
+- Open jobs in scope: 8 272
+- Norway: 5 561; remote jobs open to people in Norway: 2 719
+- Jobs in Norway that suit people without Norwegian (English ad or Norwegian not required): 268
+- Jobs with pay stated by the employer: 493
 
 ## For employers
 - Post a job on Havn: Standard (free at launch, 30 days live, human review within one working day), Boost (more visibility for a week), Featured (pinned at the top for 30 days and shared on Havn's social channels), Hiring Pro (monthly plan with unlimited posts, company page, verified badge and applicant inbox).
 - Salary and remote-from rules are required fields, so candidates who cannot take the job filter themselves out.
 
 ## Pages and what each answers
-- https://havncareerhub.com/remote-jobb/ (2 719 jobs): Akkurat nå har Havn 2 719 remote jobber du kan søke på mens du bor i Norge. 2 605 er åpne for hele Europa, 103 for hele verden og 11 for Norge eller Norden. Hver jobb viser lønn: 284 har lønn oppgitt av arbeidsgiveren, de andre har et estimat som er merket «ca.».
-- https://havncareerhub.com/hjemmekontor-jobb/ (192 jobs): Havn har akkurat nå 181 hybridjobber i Norge og 11 remote-jobber som er åpne for deg som bor i Norge eller Norden. Hybrid betyr at du jobber hjemmefra noen dager og på kontoret andre dager. Alle jobbene viser lønn: 8 har lønn oppgitt av arbeidsgiveren, resten har et estimat merket «ca.».
-- https://havncareerhub.com/jobb-pa-engelsk/ (273 jobs): Havn har akkurat nå 273 jobber i Norge der annonsen er på engelsk, eller der norsk ikke er påkrevd. De ligger hovedsakelig i Oslo (75), Trondheim (25) og Bergen (21). Hver jobb viser lønn: 19 har lønn oppgitt av arbeidsgiveren, resten har et estimat merket «ca.».
-- https://havncareerhub.com/jobb-med-lonn-oppgitt/ (491 jobs): 491 ledige jobber i Norge og remote jobber du kan ta fra Norge har lønn oppgitt av arbeidsgiveren. I Norge gjelder det 207 av 5 583 jobber (4 %), fordi de fleste norske annonser ikke skriver lønn. På Havn viser vi likevel lønn på hver jobb: er den ikke oppgitt, får du et estimat som alltid er merket «ca.» og «estimat».
+- https://havncareerhub.com/remote-jobb/ (2 719 jobs): Akkurat nå har Havn 2 719 remote jobber du kan søke på mens du bor i Norge. 2 605 er åpne for hele Europa, 103 for hele verden og 11 for Norge eller Norden. Hver jobb viser lønn: 286 har lønn oppgitt av arbeidsgiveren, de andre har et estimat som er merket «ca.».
+- https://havncareerhub.com/hjemmekontor-jobb/ (193 jobs): Havn har akkurat nå 182 hybridjobber i Norge og 11 remote-jobber som er åpne for deg som bor i Norge eller Norden. Hybrid betyr at du jobber hjemmefra noen dager og på kontoret andre dager. Alle jobbene viser lønn: 8 har lønn oppgitt av arbeidsgiveren, resten har et estimat merket «ca.».
+- https://havncareerhub.com/jobb-pa-engelsk/ (268 jobs): Havn har akkurat nå 268 jobber i Norge der annonsen er på engelsk, eller der norsk ikke er påkrevd. De ligger hovedsakelig i Oslo (75), Trondheim (25) og Bergen (21). Hver jobb viser lønn: 19 har lønn oppgitt av arbeidsgiveren, resten har et estimat merket «ca.».
+- https://havncareerhub.com/jobb-med-lonn-oppgitt/ (493 jobs): 493 ledige jobber i Norge og remote jobber du kan ta fra Norge har lønn oppgitt av arbeidsgiveren. I Norge gjelder det 207 av 5 561 jobber (4 %), fordi de fleste norske annonser ikke skriver lønn. På Havn viser vi likevel lønn på hver jobb: er den ikke oppgitt, får du et estimat som alltid er merket «ca.» og «estimat».
 
 ## City pages
-- https://havncareerhub.com/ledige-stillinger-oslo/ (918 jobs): Akkurat nå har Havn 918 ledige stillinger i Oslo. De fleste jobbene er innen Helse (204), Kontor og administrasjon (134) og Salg (123). 38 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 88 er hybridjobber.
+- https://havncareerhub.com/ledige-stillinger-oslo/ (919 jobs): Akkurat nå har Havn 919 ledige stillinger i Oslo. De fleste jobbene er innen Helse (204), Kontor og administrasjon (134) og Salg (124). 38 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 89 er hybridjobber.
 - https://havncareerhub.com/ledige-stillinger-baerum/ (59 jobs): Akkurat nå har Havn 59 ledige stillinger i Bærum. De fleste jobbene er innen Undervisning (9), Helse (9) og IT og utvikling (8). 4 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 4 er hybridjobber.
 - https://havncareerhub.com/ledige-stillinger-lillestrom/ (66 jobs): Akkurat nå har Havn 66 ledige stillinger i Lillestrøm. De fleste jobbene er innen Helse (11), Undervisning (10) og Bygg og håndverk (10). 2 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 12 er hybridjobber.
 - https://havncareerhub.com/ledige-stillinger-asker/ (36 jobs): Akkurat nå har Havn 36 ledige stillinger i Asker. De fleste jobbene er innen Undervisning (11), Helse (6) og Lager og logistikk (4). 2 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat».
-- https://havncareerhub.com/ledige-stillinger-lorenskog/ (51 jobs): Akkurat nå har Havn 51 ledige stillinger i Lørenskog. De fleste jobbene er innen Helse (29), Undervisning (6) og Kontor og administrasjon (5). 4 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 1 er hybridjobber.
+- https://havncareerhub.com/ledige-stillinger-lorenskog/ (50 jobs): Akkurat nå har Havn 50 ledige stillinger i Lørenskog. De fleste jobbene er innen Helse (28), Undervisning (6) og Kontor og administrasjon (5). 4 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 1 er hybridjobber.
 - https://havncareerhub.com/ledige-stillinger-drammen/ (95 jobs): Akkurat nå har Havn 95 ledige stillinger i Drammen. De fleste jobbene er innen Helse (24), Undervisning (19) og Salg (12). 2 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 8 er hybridjobber.
 - https://havncareerhub.com/ledige-stillinger-ski/ (29 jobs): Akkurat nå har Havn 29 ledige stillinger i Ski. De fleste jobbene er innen Helse (10), Salg (4) og Bygg og håndverk (3). 1 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat».
-- https://havncareerhub.com/ledige-stillinger-stavanger/ (133 jobs): Akkurat nå har Havn 133 ledige stillinger i Stavanger. De fleste jobbene er innen Helse (52), Undervisning (20) og Bygg og håndverk (12). 5 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 4 er hybridjobber.
-- https://havncareerhub.com/ledige-stillinger-bergen/ (199 jobs): Akkurat nå har Havn 199 ledige stillinger i Bergen. De fleste jobbene er innen Helse (58), Bygg og håndverk (23) og Undervisning (21). 23 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 4 er hybridjobber.
+- https://havncareerhub.com/ledige-stillinger-stavanger/ (132 jobs): Akkurat nå har Havn 132 ledige stillinger i Stavanger. De fleste jobbene er innen Helse (52), Undervisning (19) og Bygg og håndverk (12). 5 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 4 er hybridjobber.
+- https://havncareerhub.com/ledige-stillinger-bergen/ (198 jobs): Akkurat nå har Havn 198 ledige stillinger i Bergen. De fleste jobbene er innen Helse (58), Bygg og håndverk (22) og Undervisning (21). 23 har lønn oppgitt av arbeidsgiveren. De andre viser et estimat som er merket «ca.» og «estimat». 4 er hybridjobber.
 
 ## Articles (Norwegian, direct answer first)
 - https://havncareerhub.com/artikler/remote-jobb-i-norge/: Du finner remote jobb i Norge ved å lete etter annonser merket «remote» eller «fjernarbeid» og sjekke at arbeidsgiveren tar imot søkere fra Norge. Les hvem som kan søke, sjekk kontrakt, skatt og tidssone før du sier ja, og se bort fra tilbud som ber deg betale penger.
