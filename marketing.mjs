@@ -1,6 +1,6 @@
 // Havn marketing drafts. Runs every morning in GitHub Actions.
 // Picks today's best jobs from the live board and makes ready-to-post drafts:
-//   • Instagram/Facebook post (1080×1350) + caption in Norwegian, English and Romanian
+//   • Instagram/Facebook post (1080×1350) + caption in Norwegian and English
 //   • Vertical video for TikTok / Reels / Stories (1080×1920, ~15 s)
 //   • Mondays: a LinkedIn post for employers and the weekly email newsletter
 // Nothing is published automatically. Everything lands on the review page (marketing/) for Joakim to approve and post.
@@ -13,7 +13,7 @@ const SITE = process.env.HAVN_SITE || "https://havncareerhub.com";
 const OUT = process.env.OUT_DIR || "drafts";
 const now = Date.now();
 const DAY = 86400000;
-const today = new Date(now + 3600000).toISOString().slice(0, 10); // Norway morning
+const today = process.env.DAY_LABEL || new Date(now + 3600000).toISOString().slice(0, 10); // Norway morning
 const weekday = new Date(now + 3600000).getUTCDay(); // 0 Sunday
 
 const { enrichPay } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay };`)();
@@ -29,11 +29,17 @@ async function fetchJobs() {
   const p = await (await fetch(`https://raw.githubusercontent.com/lidjoakim-hash/havn/main/data/pointer.json?x=${now}`)).json();
   const base = `https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@${p.sha}/`;
   const out = [];
+  const get = async (f) => { // jsDelivr sometimes refuses this large repository, so read from GitHub first
+    for (const u of [`https://raw.githubusercontent.com/lidjoakim-hash/havn/${p.sha}/${f}`, base + f]) {
+      for (let tries = 0; tries < 2; tries++) { try { const r = await fetch(u); if (r.ok) return await r.json(); } catch { /* try next */ } await new Promise((x) => setTimeout(x, 1500)); }
+    }
+    throw new Error(`Could not load ${f}`);
+  };
   for (const f of p.files) {
-    const { cols, rows } = await (await fetch(base + f)).json();
+    const { cols, rows } = await get(f);
     for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); }
   }
-  return out.concat(await fetchCol("jobs", "&data->>source=is.null"));
+  return out.concat(await fetchCol("jobs", "&id=not.like.nav-*&id=not.like.jobtech-*&id=not.like.ats-*&id=not.like.remoteok-*&id=not.like.jobicy-*&id=not.like.arbeitnow-*"));
 }
 async function fetchCol(col, extra = "") {
     const out = [];
@@ -53,20 +59,20 @@ function intlJob(j) {
   let en = 0, no = 0;
   for (const x of tx.split(/[^a-zæøåäöü]+/)) { if (/^(the|and|you|we|with|our|will|your|are|this|have)$/.test(x)) en++; else if (/^(og|du|vi|med|er|på|som|har|deg|det|ikke|eller)$/.test(x)) no++; }
   const english = en >= 15 && en > no * 1.5;
-  const mentions = /(no norwegian|norwegian (language )?(is )?not (required|necessary|needed)|norsk(kunnskaper)? er ikke (et )?krav|ikke krav (om|til) norsk|english[- ]speaking|engelsktalende|eu citizens|foreign workers|relocation|accommodation (is )?provided|housing (is )?provided|we are hiring|polsk|rumensk|romanian|lithuanian)/.test(tx);
+  const mentions = /(no norwegian|norwegian (language )?(is )?not (required|necessary|needed)|norsk(kunnskaper)? er ikke (et )?krav|ikke krav (om|til) norsk|english[- ]speaking|engelsktalende|eu citizens|foreign workers|relocation|accommodation (is )?provided|housing (is )?provided|we are hiring|polsk|lithuanian)/.test(tx);
   const needNo = /(norsk muntlig og skriftlig|beherske norsk|behersker norsk|flytende norsk|gode norskkunnskaper|norskkunnskaper|fluent (in )?norwegian|norwegian (is )?(required|a must)|skandinavisk språk|speak norwegian|norsk språk)/.test(tx);
   return (english || mentions) && !needNo;
 }
 function payLine(j, lang) {
   const a = +j.salaryMin || 0, b = +j.salaryMax || 0;
-  const per = { year: { no: "/år", en: "/yr", ro: "/an" }, month: { no: "/mnd", en: "/mo", ro: "/lună" }, hour: { no: "/t", en: "/h", ro: "/oră" } }[j.salaryPeriod || "year"]?.[lang] || "";
+  const per = { year: { no: "/år", en: "/yr" }, month: { no: "/mnd", en: "/mo" }, hour: { no: "/t", en: "/h" } }[j.salaryPeriod || "year"]?.[lang] || "";
   const cur = j.currency === "NOK" ? "kr" : j.currency || "";
   if (a || b) return `${a && b && a !== b ? nf(a) + "–" + nf(b) : nf(a || b)} ${cur}${per}`;
   if (j.payEst) {
-    const e = j.payEst, c = e.currency || "NOK", lab = { no: "estimat, ikke bekreftet", en: "estimate, not confirmed", ro: "estimare, neconfirmat" }[lang];
-    if (e.period === "hour") return `ca. ${e.min}–${e.max} ${c === "NOK" ? "kr" : c}${{ no: "/t", en: "/h", ro: "/oră" }[lang]} (${lab})`;
+    const e = j.payEst, c = e.currency || "NOK", lab = { no: "estimat, ikke bekreftet", en: "estimate, not confirmed" }[lang];
+    if (e.period === "hour") return `ca. ${e.min}–${e.max} ${c === "NOK" ? "kr" : c}${{ no: "/t", en: "/h" }[lang]} (${lab})`;
     const sym = { EUR: "€", USD: "$", GBP: "£" }[c], k = (n) => nf(n / 1000);
-    return `ca. ${sym ? sym + k(e.min) + "–" + sym + k(e.max) + "k" : k(e.min) + "–" + k(e.max) + "k " + (c === "NOK" ? "kr" : c)}${{ no: "/år", en: "/yr", ro: "/an" }[lang]} (${lab})`;
+    return `ca. ${sym ? sym + k(e.min) + "–" + sym + k(e.max) + "k" : k(e.min) + "–" + k(e.max) + "k " + (c === "NOK" ? "kr" : c)}${{ no: "/år", en: "/yr" }[lang]} (${lab})`;
   }
   return "";
 }
@@ -89,24 +95,29 @@ const fresh = live.filter((j) => now - (j.createdAt || 0) < 4 * DAY);
 const pool = fresh.length > 40 ? fresh : live;
 const inCity = (c) => (j) => (j.location || "").toLowerCase().startsWith(c);
 const THEMES = [
-  { key: "bergen", lang: "no", art: "search", filter: inCity("bergen"), h: { no: "Nye jobber i Bergen", en: "New jobs in Bergen", ro: "Joburi noi în Bergen" }, tags: "#bergen #jobbibergen #ledigstilling #jobb #havn" },
-  { key: "stavanger", lang: "no", art: "hero", filter: (j) => /stavanger|sandnes|sola|randaberg/i.test(j.location || ""), h: { no: "Nye jobber i Stavanger-regionen", en: "New jobs around Stavanger", ro: "Joburi noi în zona Stavanger" }, tags: "#stavanger #sandnes #rogaland #ledigstilling #jobb #havn" },
-  { key: "intl", lang: "ro", art: "search", filter: (j) => j.country === "Norway" && intlJob(j), h: { no: "Jobber i Norge – norsk ikke påkrevd", en: "Jobs in Norway – no Norwegian needed", ro: "Joburi în Norvegia – fără norvegiană" }, tags: "#lucruinnorvegia #norvegia #romaniinnorvegia #locuridemunca #jobsinnorway #havn" },
-  { key: "remote", lang: "en", art: "hero", filter: (j) => j.workplace === "remote", h: { no: "Fjernjobber du kan ta hjemmefra", en: "Remote jobs you can do from home", ro: "Joburi remote de acasă" }, tags: "#remotejobs #remotework #workfromhome #europejobs #havn" },
-  { key: "pay", lang: "no", art: "wave", filter: (j) => j.paySrc === "ad" || j.paySrc === "listed", h: { no: "Jobber der lønnen står i annonsen", en: "Jobs that show the pay", ro: "Joburi cu salariul afișat" }, tags: "#lønn #ledigstilling #jobb #norge #havn" },
-  { key: "oslo", lang: "no", art: "hero", filter: inCity("oslo"), h: { no: "Nye jobber i Oslo", en: "New jobs in Oslo", ro: "Joburi noi în Oslo" }, tags: "#oslo #jobbioslo #ledigstilling #jobb #havn" },
-  { key: "noexp", lang: "no", art: "wave", filter: (j) => /(ekstrahjelp|deltid|butikk|servitør|lager|renhold|assistent|tilkalling|student)/i.test(j.title || ""), h: { no: "Jobber du kan søke uten mye erfaring", en: "Jobs for getting started", ro: "Joburi pentru început" }, tags: "#deltidsjobb #studentjobb #ledigstilling #jobb #havn" },
+  { key: "bergen", lang: "no", art: "search", filter: inCity("bergen"), h: { no: "Nye jobber i Bergen", en: "New jobs in Bergen" }, tags: "#bergen #jobbibergen #ledigstilling #jobb #havn" },
+  { key: "stavanger", lang: "no", art: "hero", filter: (j) => /stavanger|sandnes|sola|randaberg/i.test(j.location || ""), h: { no: "Nye jobber i Stavanger-regionen", en: "New jobs around Stavanger" }, tags: "#stavanger #sandnes #rogaland #ledigstilling #jobb #havn" },
+  { key: "intl", lang: "en", art: "search", filter: (j) => j.country === "Norway" && intlJob(j), h: { no: "Jobber i Norge – norsk ikke påkrevd", en: "Jobs in Norway – no Norwegian needed" }, tags: "#jobsinnorway #workinnorway #havn" },
+  { key: "remote", lang: "en", art: "hero", filter: (j) => j.workplace === "remote", h: { no: "Fjernjobber du kan ta hjemmefra", en: "Remote jobs you can do from home" }, tags: "#remotejobs #remotework #workfromhome #europejobs #havn" },
+  { key: "pay", lang: "no", art: "wave", filter: (j) => j.paySrc === "ad" || j.paySrc === "listed", h: { no: "Jobber der lønnen står i annonsen", en: "Jobs that show the pay" }, tags: "#lønn #ledigstilling #jobb #norge #havn" },
+  { key: "oslo", lang: "no", art: "hero", filter: inCity("oslo"), h: { no: "Nye jobber i Oslo", en: "New jobs in Oslo" }, tags: "#oslo #jobbioslo #ledigstilling #jobb #havn" },
+  { key: "noexp", lang: "no", art: "wave", filter: (j) => /(ekstrahjelp|deltid|butikk|servitør|lager|renhold|assistent|tilkalling|student)/i.test(j.title || ""), h: { no: "Jobber du kan søke uten mye erfaring", en: "Jobs for getting started" }, tags: "#deltidsjobb #studentjobb #ledigstilling #jobb #havn" },
 ];
-let theme = THEMES[weekday];
-let jobs = pick(pool.filter(theme.filter));
-if (jobs.length < 3) { jobs = pick(live.filter(theme.filter)); }
+let theme = THEMES[process.env.THEME !== undefined ? +process.env.THEME : weekday];
+const USED_FILE = process.env.USED_FILE;
+const used = new Set(USED_FILE ? JSON.parse(await readFile(USED_FILE, "utf8").catch(() => "[]")) : []);
+const key = (j) => j.id || `${j.title}|${j.company}`, coKey = (j) => "co:" + (j.company || "").toLowerCase();
+const notUsed = (j) => !used.has(key(j)) && !used.has(coKey(j));
+let jobs = pick(pool.filter((j) => theme.filter(j) && notUsed(j)));
+if (jobs.length < 3) { jobs = pick(live.filter((j) => theme.filter(j) && notUsed(j))); }
 if (jobs.length < 3) { theme = THEMES[1]; jobs = pick(live.filter(theme.filter)); }
 const count = live.filter(theme.filter).length;
+if (USED_FILE) { jobs.slice(0, 4).forEach((j) => { used.add(key(j)); used.add(coKey(j)); }); await writeFile(USED_FILE, JSON.stringify([...used])); }
 
 // ---------- captions ----------
-const CTA = { no: "Se alle og søk direkte hos arbeidsgiveren – lenke i bio.", en: "See them all and apply directly with the employer – link in bio.", ro: "Vezi toate joburile și aplică direct la angajator – link în bio." };
-const FREE = { no: "Havn er alltid gratis for jobbsøkere.", en: "Havn is always free for job seekers.", ro: "Havn este mereu gratuit pentru candidați." };
-const COUNT = { no: (n) => `${n} ledige stillinger akkurat nå.`, en: (n) => `${n} open jobs right now.`, ro: (n) => `${n} joburi disponibile acum.` };
+const CTA = { no: "Se alle og søk direkte hos arbeidsgiveren – lenke i bio.", en: "See them all and apply directly with the employer – link in bio." };
+const FREE = { no: "Havn er alltid gratis for jobbsøkere.", en: "Havn is always free for job seekers." };
+const COUNT = { no: (n) => `${n} ledige stillinger akkurat nå.`, en: (n) => `${n} open jobs right now.` };
 function caption(lang) {
   const lines = jobs.map((j) => `• ${clip(j.title, 60)} – ${clip(j.company, 32)}${payLine(j, lang) ? ` (${payLine(j, lang)})` : ""}`);
   return `${theme.h[lang]} 🌿\n\n${lines.join("\n")}\n\n${COUNT[lang](count)} ${CTA[lang]}\n${FREE[lang]}\n\n${theme.tags}`;
@@ -158,7 +169,7 @@ function storyHtml(kind, lang, j) {
       ${pay ? `<div><span class="pill${est ? " est" : ""}" style="font-size:40px;padding:12px 28px">${esc(pay)}</span></div>` : ""}
     </div>${ART.search.replace("<svg ", '<svg class="art" style="width:460px" ')}</div></body></html>`;
   }
-  return `${head}${ART.wave.replace("<svg ", '<svg class="art" ')}<div class="f" style="font-size:84px;line-height:1.05">${esc({ no: "Søk gratis på Havn", en: "Search free on Havn", ro: "Caută gratuit pe Havn" }[lang])}</div>
+  return `${head}${ART.wave.replace("<svg ", '<svg class="art" ')}<div class="f" style="font-size:84px;line-height:1.05">${esc({ no: "Søk gratis på Havn", en: "Search free on Havn" }[lang])}</div>
     <div style="font-size:42px;color:#6E675D">${esc(CTA[lang])}</div><div class="f" style="font-size:44px;color:#4F7A5A">${esc(SITE.replace(/^https?:\/\//, ""))}</div></body></html>`;
 }
 function linkedinHtml(stats) {
@@ -190,7 +201,7 @@ const items = [];
 const mainLang = theme.lang;
 await shot(feedHtml(mainLang), 1080, 1350, `${dir}/post.jpg`);
 items.push({ type: "post", label: "Instagram + Facebook post", time: "13:00", file: "post.jpg",
-  captions: { no: caption("no"), en: caption("en"), ro: caption("ro") }, lang: mainLang });
+  captions: { no: caption("no"), en: caption("en") }, lang: mainLang });
 
 // vertical video
 const slides = [storyHtml("intro", mainLang), ...jobs.slice(0, 4).map((j) => storyHtml("job", mainLang, j)), storyHtml("end", mainLang)];
@@ -199,7 +210,7 @@ try {
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", "1/2.6", "-i", `${dir}/s%d.jpg`,
     "-vf", "zoompan=z='min(zoom+0.0004,1.035)':d=78:s=1080x1920:fps=30,format=yuv420p", "-c:v", "libx264", "-r", "30", "-movflags", "+faststart", `${dir}/video.mp4`]);
   items.push({ type: "video", label: "TikTok / Reels / Stories video", time: "19:00", file: "video.mp4", poster: "s1.jpg",
-    captions: { no: `${theme.h.no} 🌿 ${COUNT.no(count)} ${CTA.no} ${theme.tags}`, en: `${theme.h.en} 🌿 ${COUNT.en(count)} ${CTA.en} ${theme.tags}`, ro: `${theme.h.ro} 🌿 ${COUNT.ro(count)} ${CTA.ro} ${theme.tags}` }, lang: mainLang,
+    captions: { no: `${theme.h.no} 🌿 ${COUNT.no(count)} ${CTA.no} ${theme.tags}`, en: `${theme.h.en} 🌿 ${COUNT.en(count)} ${CTA.en} ${theme.tags}` }, lang: mainLang,
     note: "Add a calm trending sound in TikTok/Instagram before posting." });
 } catch (e) { console.log("Video skipped:", String(e).slice(0, 200)); }
 for (let i = 2; i <= slides.length; i++) await rm(`${dir}/s${i}.jpg`, { force: true });
@@ -219,7 +230,7 @@ if (weekday === 1 || process.env.FORCE_WEEKLY) {
   const mail = `<!doctype html><html><body style="margin:0;background:#F6F1E7;font-family:Arial,sans-serif"><div style="max-width:600px;margin:0 auto;padding:28px 18px">
   <div style="font-family:Georgia,serif;font-size:26px;font-weight:bold;color:#4F7A5A">Havn</div>
   <h1 style="font-family:Georgia,serif;font-size:28px;color:#2E2B27;margin:18px 0 6px">Ukens jobber 🌿</h1><p style="color:#6E675D;margin:0">${nf(stats.newJobs)} nye stillinger denne uken. Her er et lite utvalg.</p>
-  ${sec("Nye jobber i Norge", top)}${sec("Norsk ikke påkrevd · Fără norvegiană", intl)}${sec("Fjernarbeid · Remote", remote)}
+  ${sec("Nye jobber i Norge", top)}${sec("Norsk ikke påkrevd · No Norwegian needed", intl)}${sec("Fjernarbeid · Remote", remote)}
   <p style="margin:26px 0 0"><a href="${SITE}/" style="background:#4F7A5A;color:#fff;padding:12px 22px;border-radius:999px;text-decoration:none;font-weight:bold">Se alle jobbene</a></p>
   <p style="color:#9A9286;font-size:12px;margin-top:30px">Du får denne e-posten fordi du meldte deg på Havns ukentlige oversikt. {{unsubscribe}}</p></div></body></html>`;
   await writeFile(`${dir}/newsletter.html`, mail);

@@ -6,7 +6,7 @@ How havncareerhub.com is built and deployed
 
 What `generate.mjs` writes (code in `seo/`)
 - `job/<id>/` one page per open job with `JobPosting` JSON-LD (`seo/job.mjs`). Expired jobs are deleted (GitHub Pages then serves `404.html`, which is noindex) and drop out of the sitemap.
-- Niche pages: `/remote-jobb/`, `/hjemmekontor-jobb/`, `/jobb-pa-engelsk/`, `/jobb-med-lonn-oppgitt/`, `/jobb-i-romania/`, `/remote-jobb-europa/`, `/ledige-stillinger-<by>/` (Oslo, Bærum, Lillestrøm, Asker, Lørenskog, Drammen, Ski, Stavanger, Bergen). A city page is only written when it has at least 5 jobs; the old `/by/<city>/` URLs of those cities become noindex stubs pointing at the new page.
+- Niche pages: `/remote-jobb/`, `/hjemmekontor-jobb/`, `/jobb-pa-engelsk/`, `/jobb-med-lonn-oppgitt/`, `/ledige-stillinger-<by>/` (Oslo, Bærum, Lillestrøm, Asker, Lørenskog, Drammen, Ski, Stavanger, Bergen). A city page is only written when it has at least 5 jobs; the old `/by/<city>/` URLs of those cities become noindex stubs pointing at the new page.
 - Articles in `/artikler/` (copy in `seo/articles.mjs`), category/city lists (newest 100 each), `/jobs/`.
 - `sitemap.xml` (index) -> `sitemap-pages.xml` + `sitemap-jobs.xml` (split at 40 000 URLs), `llms.txt`, `llms-full.txt`, `404.html`, the marked blocks in `index.html` (home text and footer links).
 - All numbers in page copy come from the live data (`seo/data.mjs`). Pay in structured data (`baseSalary`) is only emitted for pay the employer stated; estimates are never put in JSON-LD.
@@ -14,9 +14,12 @@ What `generate.mjs` writes (code in `seo/`)
 Job template version
 `TPL` in `seo/shared.mjs` is written into each job page. When it changes, the next hourly run rewrites every older job page (about 26 000 files, one time, resumable). `FULL=1` forces a rebuild.
 
+Scope
+Havn targets Norway: jobs in Norway and remote jobs open to people in Norway (`inScope` in `seo/shared.mjs`) are listed, in the sitemap and indexable. Every other job keeps a page but gets `noindex` and no JobPosting markup. `/ro/*` redirects to `/jobb-pa-engelsk/`.
+
 Test without network access to Supabase
 ```bash
-HAVN_OFFLINE=<dir with jobs-0..5.json from the job-index branch> HAVN_PICK_JOBS=<id,id> node generate.mjs
+HAVN_LOCAL_DATA=<dir with pointer.json + jobs-N.json>   # or HAVN_OFFLINE=<dir with jobs-N.json> HAVN_PICK_JOBS=<id,id> node generate.mjs
 node scripts/validate-seo.mjs <same dir>     # JobPosting rules for every live job + JSON-LD/meta of the generated pages
 ```
 

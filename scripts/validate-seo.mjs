@@ -2,6 +2,7 @@
 // Usage: node scripts/validate-seo.mjs [dir with jobs-N.json]   (checks JobPosting objects for every live job + the JSON-LD/meta of every generated niche, article and sample job page)
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { jobPostingLd } from "../seo/job.mjs";
+import { TPL } from "../seo/shared.mjs";
 const { payEstimate } = new Function(`${readFileSync(new URL("../pay-core.js", import.meta.url), "utf8")};return { payEstimate };`)();
 
 const errors = [], warns = [];
@@ -74,12 +75,12 @@ if (process.argv[1].endsWith("validate-seo.mjs")) {
     console.log(`JobPosting objects checked for ${n} live jobs: ${n - nulls} emitted, ${nulls} without markup (worldwide remote or unknown country); baseSalary withheld for ${guarded} text-derived pay values that look implausible`);
   }
   const root = new URL("..", import.meta.url).pathname;
-  const files = ["/jobs/", "/artikler/", "/en/work-in-norway/", "/ro/lucru-in-norvegia/", "/404.html"].map((p) => root + p.replace(/^\//, "") + (p.endsWith("/") ? "index.html" : ""));
-  for (const d of readdirSync(root)) { if (/^(remote-jobb|hjemmekontor-jobb|jobb-pa-engelsk|jobb-med-lonn-oppgitt|jobb-i-romania|remote-jobb-europa|ledige-stillinger-.+)$/.test(d)) files.push(`${root}${d}/index.html`); }
+  const files = ["/jobs/", "/artikler/", "/en/work-in-norway/", "/404.html"].map((p) => root + p.replace(/^\//, "") + (p.endsWith("/") ? "index.html" : ""));
+  for (const d of readdirSync(root)) { if (/^(remote-jobb|hjemmekontor-jobb|jobb-pa-engelsk|jobb-med-lonn-oppgitt|ledige-stillinger-.+)$/.test(d)) files.push(`${root}${d}/index.html`); }
   for (const d of readdirSync(root + "artikler")) if (!d.endsWith(".html")) files.push(`${root}artikler/${d}/index.html`);
   for (const f of files) checkPage(f, "page");
   const jobs = readdirSync(root + "job"); let jp = 0;
-  for (const id of jobs) { const f = `${root}job/${id}/index.html`; const h = readFileSync(f, "utf8"); if (!h.includes('name="havn-tpl" content="4"')) continue; jp++; checkPage(f, "job"); }
+  for (const id of jobs) { const f = `${root}job/${id}/index.html`; const h = readFileSync(f, "utf8"); if (!h.includes(`name="havn-tpl" content="${TPL}"`)) continue; jp++; checkPage(f, "job"); }
   // sitemaps + robots: well-formed, https on the right host, no duplicates, every URL has a file (or is the home page), size limits, robots points at the index
   const read = (f) => readFileSync(root + f, "utf8"), locs = (x) => [...x.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   const idxXml = read("sitemap.xml"), subs = locs(idxXml).map((u) => u.replace("https://havncareerhub.com/", ""));
@@ -105,6 +106,18 @@ if (process.argv[1].endsWith("validate-seo.mjs")) {
   for (const ua of ["Googlebot", "Bingbot", "GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended"]) if (!new RegExp(`User-agent: ${ua}\\nAllow: /`).test(robots)) bad("robots.txt", `${ua} not allowed`);
   if (/^Disallow:\s*\/\s*$/m.test(robots)) bad("robots.txt", "blocks the whole site");
   if (!existsSync(root + "llms.txt") || !existsSync(root + "llms-full.txt")) bad("llms", "missing");
+  // Norway only: no Romania/Romanian text on the home page or any generated landing page, and no jobs outside the scope in the sitemap
+  for (const f of ["index.html", "llms.txt", "llms-full.txt", "robots.txt", ...files.map((x) => x.replace(root, ""))]) { const t = read(f).replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, ""); const m = t.match(/\b(?:romania|romanian|rumen\w*)|română|românia|lucru în/i); if (m) bad(f, `mentions "${m[0]}"`); }
+  if (existsSync(root + "ro/lucru-in-norvegia/index.html") && !/rel="canonical" href="https:\/\/havncareerhub\.com\/jobb-pa-engelsk\/"/.test(read("ro/lucru-in-norvegia/index.html"))) bad("ro/", "must point to the Norwegian page");
+  if (dir) {
+    const inScope = new Map();
+    for (let i = 0; existsSync(`${dir}/jobs-${i}.json`); i++) { const f = JSON.parse(readFileSync(`${dir}/jobs-${i}.json`, "utf8")); for (const r of f.rows) { const j = {}; f.cols.forEach((c, k) => { if (r[k] !== null) j[c] = r[k]; }); inScope.set(j.id, j.country === "Norway" || (j.workplace === "remote" && ["Worldwide", "Europe", "Nordics", "Norway", "EU"].includes(j.remoteFrom))); } }
+    let out = 0, noindexMissing = 0;
+    for (const u of seen) { const m = u.match(/\/job\/([^/]+)\/$/); if (m && inScope.get(m[1]) !== true) { out++; } }
+    if (out) bad("sitemap", `${out} job URLs outside Norway scope`);
+    for (const id of readdirSync(root + "job")) { if (inScope.get(id) === false && !/name="robots" content="noindex/.test(readFileSync(`${root}job/${id}/index.html`, "utf8").slice(0, 3000))) noindexMissing++; }
+    if (noindexMissing) bad("job/", `${noindexMissing} out-of-scope job pages without noindex`);
+  }
   console.log(`Sitemaps: ${subs.length} files, ${urlsTotal} URLs, all point at existing pages; robots.txt ok`);
   console.log(`Pages checked: ${files.length} landing/list pages, ${jp} job pages on current template`);
   if (warns.length) console.log(`Notes:\n  ${warns.slice(0, 20).join("\n  ")}`);

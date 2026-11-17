@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 export const SITE = "https://havncareerhub.com";
 export const DAY = 86400000;
 // Bump when the job page template or its structured data changes: the generator then rebuilds every existing job page (resumable).
-export const TPL = "4";
+export const TPL = "5";
 
 export const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const slug = (s) => String(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/æ/g, "ae").replace(/ø/g, "o").replace(/å/g, "a").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "x";
@@ -17,25 +17,30 @@ export const jsonLd = (o) => `<script type="application/ld+json">${JSON.stringif
 export const CAT_NO = { "Engineering": "IT og utvikling", "Design": "Design", "Product": "Produkt", "Marketing": "Markedsføring", "Sales": "Salg", "Customer support": "Kundeservice", "Operations": "Drift og produksjon", "Admin & office": "Kontor og administrasjon", "Hospitality & events": "Servering og reiseliv", "Creative & media": "Kreativt og media", "Logistics & warehouse": "Lager og logistikk", "Maritime": "Maritim", "Healthcare": "Helse", "Education": "Undervisning", "Construction & trades": "Bygg og håndverk", "Other": "Andre jobber" };
 export const TYPE_NO = { "Full-time": "Heltid", "Part-time": "Deltid", "Contract": "Kontrakt", "Freelance": "Frilans", "Seasonal": "Sesong", "Internship": "Praksis" };
 
-export function payText(j) {
+export const normCity = (j) => { const l = String(j.location || "").replace(/,\s*(norway|norge)$/i, "").replace(/^(norway|norge),\s*/i, "").replace(/^(?:norway|norge)\s*\((.+)\)$/i, "$1").trim(); return j.country === "Norway" ? l.replace(/\s+S$/, "") : l; };
+
+export function payText(j, lang = "nb") {
+  const en = lang === "en";
   const a = +j.salaryMin || 0, b = +j.salaryMax || 0;
+  const f = (n) => new Intl.NumberFormat(en ? "en-GB" : "nb-NO").format(n);
   if (!a && !b) {
     if (!j.payEst) return "";
-    const e = j.payEst, c = e.currency || "NOK";
-    const cur = c === "NOK" ? "kr" : c;
-    if (e.period === "hour") return `ca. ${e.min}–${e.max} ${cur}/time (estimat · vanlig lønn, ikke bekreftet)`;
-    if (e.period === "month") return `ca. ${nf(e.min)}–${nf(e.max)} ${cur}/mnd (estimat · vanlig lønn, ikke bekreftet)`;
-    return `ca. ${nf(e.min)}–${nf(e.max)} ${cur}/år (estimat · vanlig lønn, ikke bekreftet)`;
+    const e = j.payEst, c = e.currency || "NOK", cu = c === "NOK" && !en ? "kr" : c;
+    if (e.period === "hour") return en ? `approx. ${e.min}–${e.max} ${c}/hour (estimate · typical pay, not confirmed)` : `ca. ${e.min}–${e.max} ${cu}/time (estimat · vanlig lønn, ikke bekreftet)`;
+    if (e.period === "month") return en ? `approx. ${f(e.min)}–${f(e.max)} ${c}/month (estimate · typical pay, not confirmed)` : `ca. ${f(e.min)}–${f(e.max)} ${cu}/mnd (estimat · vanlig lønn, ikke bekreftet)`;
+    return en ? `approx. ${f(e.min)}–${f(e.max)} ${c}/year (estimate · typical pay, not confirmed)` : `ca. ${f(e.min)}–${f(e.max)} ${cu}/år (estimat · vanlig lønn, ikke bekreftet)`;
   }
-  const per = { year: "/år", month: "/mnd", hour: "/time" }[j.salaryPeriod] || "";
-  return `${a && b && a !== b ? nf(a) + "–" + nf(b) : nf(a || b)} ${j.currency || ""}${per}${j.paySrc === "ad" ? " (fra annonsen)" : ""}`;
+  const per = (en ? { year: "/year", month: "/month", hour: "/hour" } : { year: "/år", month: "/mnd", hour: "/time" })[j.salaryPeriod] || "";
+  return `${a && b && a !== b ? f(a) + "–" + f(b) : f(a || b)} ${j.currency || ""}${per}${j.paySrc === "ad" ? (en ? " (from the ad)" : " (fra annonsen)") : ""}`;
 }
 export const hasStatedPay = (j) => (+j.salaryMin || 0) > 0;
+// Havn targets the Norwegian market: jobs in Norway, and remote jobs that people living in Norway can take. Everything else stays reachable but is not promoted (noindex, no sitemap).
+export function inScope(j) { return j.country === "Norway" || (j.workplace === "remote" && ["Worldwide", "Europe", "Nordics", "Norway", "EU"].includes(j.remoteFrom)); }
 export function isPublic(j) { return !j.source || ["nav", "jobtech", "ats"].includes(j.source); }
 
-export function jobRow(j) {
-  const where = [j.location, j.country].filter(Boolean).join(", ");
-  const pay = payText(j);
+export function jobRow(j, lang = "nb") {
+  const where = [normCity(j), j.country].filter(Boolean).join(", ");
+  const pay = payText(j, lang);
   const href = isPublic(j) ? `${SITE}/job/${esc(j.id)}/` : `${SITE}/#job-${esc(j.id)}`;
   return `<li><a href="${href}">${esc(j.title)}</a><span>${esc(j.company)}${where ? " · " + esc(where) : ""}${pay ? ` · <b class="${hasStatedPay(j) ? "pay" : ""}" style="font-weight:${hasStatedPay(j) ? 600 : 400}">${esc(pay)}</b>` : ""}</span></li>`;
 }
@@ -51,16 +56,14 @@ export const CSS_URL = `${SITE}/assets/site.css?v=${cssHash}`;
 export const FONTS = "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=DM+Sans:opsz,wght@9..40,400..700&display=swap";
 
 const UI = {
-  nb: { find: "Ledige stillinger", remote: "Remote", pay: "Med lønn", articles: "Artikler", emp: "For arbeidsgivere", foot: "Havn Career Hub – jobber i Norge, Romania og fjernarbeid i Europa. Lønn vises på hver jobb: oppgitt av arbeidsgiver, eller et tydelig merket estimat. Alltid gratis for jobbsøkere.", priv: "Personvern", topics: "Jobber etter tema", cities: "Ledige stillinger etter by", arts: "Guider og artikler", skip: "Hopp til innhold" },
-  en: { find: "All jobs", remote: "Remote", pay: "Pay shown", articles: "Articles", emp: "For employers", foot: "Havn Career Hub – international jobs in Norway, Romania and remote across Europe. Pay is shown on every job: stated by the employer, or a clearly marked estimate. Always free for job seekers.", priv: "Privacy", topics: "Jobs by topic", cities: "Jobs by city", arts: "Guides and articles", skip: "Skip to content" },
-  ro: { find: "Toate joburile", remote: "La distanță", pay: "Cu salariu", articles: "Articole", emp: "Pentru angajatori", foot: "Havn Career Hub – joburi internaționale în Norvegia, România și la distanță în Europa. Salariul este afișat la fiecare job: indicat de angajator sau o estimare marcată clar. Mereu gratuit pentru candidați.", priv: "Confidențialitate", topics: "Joburi pe teme", cities: "Joburi pe orașe", arts: "Ghiduri și articole", skip: "Sari la conținut" },
+  nb: { find: "Ledige stillinger", remote: "Remote", pay: "Med lønn", articles: "Artikler", emp: "For arbeidsgivere", foot: "Havn Career Hub – ledige stillinger i Norge. Lønn vises på hver jobb: oppgitt av arbeidsgiver, eller et tydelig merket estimat. Alltid gratis for jobbsøkere.", priv: "Personvern", topics: "Jobber etter tema", cities: "Ledige stillinger etter by", arts: "Guider og artikler", skip: "Hopp til innhold" },
+  en: { find: "All jobs", remote: "Remote", pay: "Pay shown", articles: "Articles", emp: "For employers", foot: "Havn Career Hub – jobs in Norway. Pay is shown on every job: stated by the employer, or a clearly marked estimate. Always free for job seekers.", priv: "Privacy", topics: "Jobs by topic", cities: "Jobs by city", arts: "Guides and articles", skip: "Skip to content" },
 };
-const GUIDE_LINK = { nb: ["/en/work-in-norway/", "English: work in Norway"], en: ["/jobb-pa-engelsk/", "Norsk: jobb på engelsk"], ro: ["/en/work-in-norway/", "English: work in Norway"] };
-
 export const orgNode = () => ({
   "@type": "Organization", "@id": `${SITE}/#organization`, name: "Havn Career Hub", alternateName: "Havn", url: `${SITE}/`,
   logo: { "@type": "ImageObject", url: `${SITE}/icons/icon-512.png`, width: 512, height: 512 },
-  description: "Havn Career Hub er en jobbportal for Norge, Romania og fjernarbeid i Europa. Hver jobb viser lønn, enten oppgitt av arbeidsgiver eller som et tydelig merket estimat.",
+  sameAs: ["https://www.instagram.com/havn.careerhub/"],
+  description: "Havn Career Hub er en jobbportal for Norge. Hver jobb viser lønn, enten oppgitt av arbeidsgiver eller som et tydelig merket estimat.",
 });
 export const websiteNode = () => ({
   "@type": "WebSite", "@id": `${SITE}/#website`, url: `${SITE}/`, name: "Havn Career Hub", alternateName: "Havn", inLanguage: ["nb", "en"], publisher: { "@id": `${SITE}/#organization` },
@@ -72,7 +75,7 @@ function footerHtml(lang) {
   const u = UI[lang] || UI.nb;
   const list = (arr) => arr.length ? `<ul>${arr.map(([h, t]) => `<li><a href="${SITE}${h}">${esc(t)}</a></li>`).join("")}</ul>` : "";
   return `<footer class="foot"><nav aria-label="${esc(u.topics)}"><h2>${u.topics}</h2>${list(registry.niches)}<h2>${u.cities}</h2>${list(registry.cities)}<h2>${u.arts}</h2>${list(registry.articles)}</nav>
-<p style="margin-top:16px">${u.foot} <a href="${SITE}/jobs/">${UI[lang === "nb" ? "nb" : lang].find}</a> · <a href="${SITE}/#employers">${u.emp}</a> · <a href="${SITE}/#privacy">${u.priv}</a> · <a href="${SITE}/en/work-in-norway/">Work in Norway</a> · <a href="${SITE}/ro/lucru-in-norvegia/">Lucru în Norvegia</a></p></footer>`;
+<p style="margin-top:16px">${u.foot} <a href="${SITE}/jobs/">${UI[lang === "nb" ? "nb" : lang].find}</a> · <a href="${SITE}/#employers">${u.emp}</a> · <a href="${SITE}/#privacy">${u.priv}</a> · <a href="${SITE}/en/work-in-norway/">Work in Norway</a></p></footer>`;
 }
 
 // One shell for all pages. `graph` = array of schema.org nodes (Organization/WebSite are added on every page).
@@ -80,7 +83,7 @@ export function page({ title, description, path, body, graph = [], lang = "nb", 
   const u = UI[lang] || UI.nb;
   const url = canonical || `${SITE}${path}`;
   const nodes = [...(site ? [orgNode(), websiteNode()] : []), ...graph];
-  const locale = { nb: "nb_NO", en: "en_GB", ro: "ro_RO" }[lang] || "nb_NO";
+  const locale = { nb: "nb_NO", en: "en_GB" }[lang] || "nb_NO";
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="havn-tpl" content="${TPL}"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(url)}"><meta name="robots" content="${robots}">
 ${alternates ? Object.entries(alternates).map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="${h}">`).join("") : ""}

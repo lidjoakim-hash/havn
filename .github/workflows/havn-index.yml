@@ -2,7 +2,7 @@ name: Havn job index
 
 on:
   schedule:
-    - cron: "11,41 * * * *"   # every 30 minutes
+    - cron: "11 * * * *"   # hourly (saves database egress)
   workflow_dispatch:
     inputs:
       full:

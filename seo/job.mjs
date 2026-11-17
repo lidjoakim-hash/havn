@@ -1,15 +1,15 @@
 // One job page: visible content plus Google for Jobs structured data (JobPosting) built only from the job's own data.
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { SITE, esc, slug, lines, iso, DAY, CAT_NO, TYPE_NO, payText, hasStatedPay, page, breadcrumb } from "./shared.mjs";
+import { SITE, esc, slug, lines, iso, DAY, CAT_NO, TYPE_NO, payText, hasStatedPay, page, breadcrumb, inScope, normCity } from "./shared.mjs";
 
 const TYPE_SCHEMA = { "Full-time": "FULL_TIME", "Part-time": "PART_TIME", "Contract": "CONTRACTOR", "Freelance": "CONTRACTOR", "Seasonal": "TEMPORARY", "Internship": "INTERN" };
 // ISO 3166-1 alpha-2 codes for every country name the job sources use (a missing country must never default to Norway)
-export const COUNTRY_CODE = { Norway: "NO", Romania: "RO", Sweden: "SE", Denmark: "DK", Finland: "FI", Iceland: "IS", Germany: "DE", Netherlands: "NL", Belgium: "BE", Luxembourg: "LU", Austria: "AT", Switzerland: "CH", Ireland: "IE", "United Kingdom": "GB", France: "FR", Spain: "ES", Portugal: "PT", Italy: "IT", Poland: "PL", Czechia: "CZ", Slovakia: "SK", Slovenia: "SI", Hungary: "HU", Croatia: "HR", Serbia: "RS", Bulgaria: "BG", Greece: "GR", Estonia: "EE", Latvia: "LV", Lithuania: "LT", Ukraine: "UA", Malta: "MT", Cyprus: "CY", "United States": "US", Canada: "CA", Australia: "AU", India: "IN", Singapore: "SG", Japan: "JP", Brazil: "BR", Mexico: "MX", Israel: "IL", UAE: "AE", "United Arab Emirates": "AE" };
+export const COUNTRY_CODE = { Norway: "NO", Sweden: "SE", Denmark: "DK", Finland: "FI", Iceland: "IS", Germany: "DE", Netherlands: "NL", Belgium: "BE", Luxembourg: "LU", Austria: "AT", Switzerland: "CH", Ireland: "IE", "United Kingdom": "GB", France: "FR", Spain: "ES", Portugal: "PT", Italy: "IT", Poland: "PL", Czechia: "CZ", Slovakia: "SK", Slovenia: "SI", Hungary: "HU", Croatia: "HR", Serbia: "RS", Bulgaria: "BG", Greece: "GR", Estonia: "EE", Latvia: "LV", Lithuania: "LT", Ukraine: "UA", Malta: "MT", Cyprus: "CY", "United States": "US", Canada: "CA", Australia: "AU", India: "IN", Singapore: "SG", Japan: "JP", Brazil: "BR", Mexico: "MX", Israel: "IL", UAE: "AE", "United Arab Emirates": "AE" };
 const EUROPE = ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IS", "IE", "IT", "LV", "LI", "LT", "LU", "MT", "NL", "NO", "PL", "PT", "RO", "SK", "SI", "ES", "SE", "CH", "GB"];
 const NORDICS = ["NO", "SE", "DK", "FI", "IS"];
-const WHO = { Worldwide: "fra hele verden", Europe: "bor du i Europa", Nordics: "bor du i Norden", Norway: "bor du i Norge", Romania: "bor du i Romania", EU: "bor du i EU" };
-const DEFAULT_CUR = { Norway: "NOK", Sweden: "SEK", Denmark: "DKK", Romania: "RON", Poland: "PLN", Switzerland: "CHF", "United Kingdom": "GBP" };
+const WHO = { Worldwide: "fra hele verden", Europe: "bor du i Europa", Nordics: "bor du i Norden", Norway: "bor du i Norge", EU: "bor du i EU" };
+const DEFAULT_CUR = { Norway: "NOK", Sweden: "SEK", Denmark: "DKK", Poland: "PLN", Switzerland: "CHF", "United Kingdom": "GBP" };
 
 const jobJsHash = (() => { try { return createHash("sha1").update(readFileSync(new URL("../assets/job.js", import.meta.url))).digest("hex").slice(0, 8); } catch { return "0"; } })();
 
@@ -50,7 +50,7 @@ export function jobPostingLd(j, now = Date.now(), payEstimate = null) {
   };
   const code = COUNTRY_CODE[j.country];
   if (j.workplace === "remote") {
-    const reg = { Norway: ["NO"], Romania: ["RO"], Nordics: NORDICS, Europe: EUROPE, EU: EUROPE }[j.remoteFrom];
+    const reg = { Norway: ["NO"], Nordics: NORDICS, Europe: EUROPE, EU: EUROPE }[j.remoteFrom];
     if (!reg) return null; // "Worldwide" can't be expressed as a list of countries, so no JobPosting markup for those
     ld.jobLocationType = "TELECOMMUTE";
     ld.applicantLocationRequirements = reg.map((c) => ({ "@type": "Country", name: c }));
@@ -71,11 +71,10 @@ export function jobPostingLd(j, now = Date.now(), payEstimate = null) {
 export function relatedLinks(j, ctx) {
   const out = [];
   const add = (path, label) => { if (ctx.exists(path)) out.push([path, label]); };
-  if (j.workplace === "remote") { add("/remote-jobb/", "Remote jobber"); add("/remote-jobb-europa/", "Remote jobber i Europa"); }
+  if (j.workplace === "remote") add("/remote-jobb/", "Remote jobber");
   if (j.workplace === "hybrid" && j.country === "Norway") add("/hjemmekontor-jobb/", "Jobber med hjemmekontor");
   const c = ctx.cityOf(j); if (c) add(c.path, `Ledige stillinger i ${c.name}`);
   if (j.country === "Norway" && j._intl) add("/jobb-pa-engelsk/", "Jobb på engelsk i Norge");
-  if (j.country === "Romania") add("/jobb-i-romania/", "Jobb i Romania");
   if (hasStatedPay(j)) add("/jobb-med-lonn-oppgitt/", "Jobber der lønn er oppgitt");
   return out;
 }
@@ -89,13 +88,14 @@ export function jobPage(j, ctx, now = Date.now()) {
   const applyUrl = j.applyUrl || j.sourceUrl || `${SITE}/#job-${j.id}`;
   const path = `/job/${j.id}/`;
   const descText = String(j.description || j.summary || "");
-  const ld = jobPostingLd({ ...j, description: descText }, now, ctx.payEstimate);
+  const scoped = inScope(j);
+  const ld = scoped ? jobPostingLd({ ...j, description: descText }, now, ctx.payEstimate) : null;
   const cat = CAT_NO[j.category] || j.category || "";
   const rel = relatedLinks(j, ctx);
   const crumbs = [["Havn", `${SITE}/`], ["Alle jobber", `${SITE}/jobs/`]];
   if (j.category) crumbs.push([cat, `${SITE}/jobs/${slug(j.category)}/`]);
   const expires = j.expiresAt || now;
-  const body = `<p class="crumbs"><a href="${SITE}/jobs/">Alle jobber</a>${j.category ? ` › <a href="${SITE}/jobs/${slug(j.category)}/">${esc(cat)}</a>` : ""}${j.location && ctx.cityLink(j) ? ` › <a href="${SITE}${ctx.cityLink(j)}">${esc(j.location)}</a>` : ""}</p>
+  const body = `<p class="crumbs"><a href="${SITE}/jobs/">Alle jobber</a>${j.category ? ` › <a href="${SITE}/jobs/${slug(j.category)}/">${esc(cat)}</a>` : ""}${normCity(j) && ctx.cityLink(j) ? ` › <a href="${SITE}${ctx.cityLink(j)}">${esc(normCity(j))}</a>` : ""}</p>
 <h1>${esc(j.title)}</h1><p class="meta"><strong>${esc(j.company)}</strong>${where ? " · " + esc(where) : ""}</p>
 <div class="tags">${pay ? `<span class="tag${stated ? " pay" : ""}">${esc(pay)}</span>` : `<span class="tag">Lønn ikke oppgitt</span>`}${j.jobType ? `<span class="tag">${esc(TYPE_NO[j.jobType] || j.jobType)}</span>` : ""}${j.workplace === "remote" ? `<span class="tag">Fjernarbeid${j.remoteFrom ? " · " + esc(j.remoteFrom) : ""}</span>` : j.workplace === "hybrid" ? `<span class="tag">Hybrid</span>` : ""}${{ nav: `<span class="tag">via NAV</span>`, jobtech: `<span class="tag">via Arbetsförmedlingen</span>`, ats: `<span class="tag">Direkte fra arbeidsgiver</span>` }[j.source] || ""}<span class="tag">Frist ${esc(new Date(expires).toLocaleDateString("nb-NO", { timeZone: "Europe/Oslo" }))}</span></div>
 <p><a class="btn" href="${esc(applyUrl)}" rel="nofollow noopener" target="_blank">Søk på stillingen</a><a class="btn ghost" href="${SITE}/#job-${esc(j.id)}">Åpne i Havn (lagre, sammenlign, KI-hjelp)</a></p>
@@ -112,5 +112,5 @@ ${rel.length ? `<h2>Liknende jobber</h2><ul class="pills">${rel.map(([p, t]) => 
   const cut = (t, n) => (t.length > n ? t.slice(0, n - 1).trimEnd() + "…" : t);
   const tail = ` – ${cut(j.company || "", 28)}${j.location ? " – " + cut(j.location.split(",")[0], 18) : ""} | Havn`;
   const title = cut(j.title, Math.max(30, 88 - tail.length)) + tail;
-  return page({ title, description, path, body, graph: [breadcrumb(crumbs.concat([[j.title, `${SITE}${path}`]]))], site: false, extraHead: ld ? `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>` : "" });
+  return page({ title, description, path, body, graph: [breadcrumb(crumbs.concat([[j.title, `${SITE}${path}`]]))], site: false, robots: scoped ? undefined : "noindex,follow", extraHead: ld ? `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>` : "" });
 }

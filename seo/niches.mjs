@@ -17,7 +17,7 @@ const catLinks = (f, k = 8) => `<ul class="pills">${f.cats.slice(0, k).map(([nam
 const APP = `${SITE}/#jobs`;
 
 const OTHER = [
-  ["/remote-jobb/", "Remote jobb"], ["/hjemmekontor-jobb/", "Jobb med hjemmekontor"], ["/jobb-pa-engelsk/", "Jobb på engelsk"], ["/jobb-med-lonn-oppgitt/", "Jobb med lønn oppgitt"], ["/jobb-i-romania/", "Jobb i Romania"], ["/remote-jobb-europa/", "Remote jobb i Europa"],
+  ["/remote-jobb/", "Remote jobb"], ["/hjemmekontor-jobb/", "Jobb med hjemmekontor"], ["/jobb-pa-engelsk/", "Jobb på engelsk"], ["/jobb-med-lonn-oppgitt/", "Jobb med lønn oppgitt"],
 ];
 
 // ---------- city definitions ----------
@@ -200,7 +200,7 @@ export function buildNiches(ctx) {
 <p><strong>Tidssone og arbeidstid.</strong> Mange remote-jobber krever at du er tilgjengelig noen timer i overlapp med teamet, ofte europeisk tid. Det står som regel i annonsen.</p>
 <p><strong>Lønn og valuta.</strong> Utenlandske annonser oppgir ofte lønn i euro, pund eller dollar. Havn viser valutaen annonsen bruker. Regn om til norske kroner og tenk på skatt før du sammenligner med en jobb i Norge. Der arbeidsgiveren ikke har oppgitt lønn, er beløpet vi viser et estimat og står med «ca.».</p>
 <p><strong>Svindel.</strong> En ekte arbeidsgiver ber aldri om penger for å gi deg en jobb, og sender deg ikke utstyr du må betale for selv. Vær skeptisk til tilbud som kommer uten intervju.</p>
-<p>Vil du ha en grundigere veiledning, les ${link("/artikler/remote-jobb-i-norge/", "Remote jobb i Norge – slik finner du det")}. Jobber du helst noen dager hjemme og noen dager på kontor, se ${link("/hjemmekontor-jobb/", "jobber med hjemmekontor")}. Vil du se jobbene gruppert på land, se ${link("/remote-jobb-europa/", "remote jobb i Europa")}.</p>`,
+<p>Vil du ha en grundigere veiledning, les ${link("/artikler/remote-jobb-i-norge/", "Remote jobb i Norge – slik finner du det")}. Jobber du helst noen dager hjemme og noen dager på kontor, se ${link("/hjemmekontor-jobb/", "jobber med hjemmekontor")}.</p>`,
       faq: [
         ["Kan jeg jobbe remote for et utenlandsk selskap mens jeg bor i Norge?", "Ofte ja, hvis annonsen er åpen for Europa eller for hele verden. Noen arbeidsgivere ansetter bare i bestemte land, så les annonsen. Spør arbeidsgiveren hvem som er formell arbeidsgiver og hvilket lands regler som gjelder."],
         ["Hvor betaler jeg skatt hvis jeg jobber remote for en utenlandsk arbeidsgiver?", `Det avhenger av hvor du bor, hvor du utfører arbeidet og avtalen din. Dette er ikke noe Havn kan svare på for deg. Kontakt ${ext("https://www.skatteetaten.no/", "Skatteetaten")} med det konkrete tilfellet.`],
@@ -264,7 +264,7 @@ ${f.employers.length ? `<p>Blant arbeidsgiverne akkurat nå er ${names(f.employe
 <ul><li><strong>Skriv CV og søknad på engelsk</strong> hvis annonsen er på engelsk. Hold CV-en kort, én til to sider, med de nyeste jobbene først.</li><li><strong>Vis hva du kan.</strong> Norske arbeidsgivere ser etter konkrete eksempler og resultater, ikke store ord om deg selv.</li><li><strong>Ta med referanser.</strong> Det er vanlig i Norge å ringe referanser, så spør noen på forhånd.</li><li><strong>Lær litt norsk.</strong> Det trengs ikke for å få jobben, men det hjelper på arbeidsplassen og i hverdagen. Spør om arbeidsgiveren betaler norskkurs.</li></ul>
 <p>Mer om søknaden finner du i ${link("/artikler/slik-skriver-du-en-god-sokad/", "Slik skriver du en god søknad")}, og om byen mange søker seg til i ${link("/artikler/jobb-pa-engelsk-i-oslo/", "Jobb på engelsk i Oslo")}.</p>
 <h2>Arbeidstillatelse og første uker</h2>
-<p>Er du borger av et EU- eller EØS-land, trenger du ikke arbeidstillatelse for å jobbe i Norge. Blir du mer enn tre måneder, må du registrere deg hos politiet. Borgere fra andre land trenger vanligvis oppholdstillatelse for arbeid. UDI har oppdatert informasjon om hva som gjelder for deg på ${ext("https://www.udi.no/", "udi.no")}. Etter at du har startet, trenger du et skattekort og et d-nummer eller fødselsnummer via ${ext("https://www.skatteetaten.no/", "Skatteetaten")} for at arbeidsgiveren skal kunne betale deg riktig. Et enkelt overblikk over flytting til Norge finner du på engelsk i ${link("/en/work-in-norway/", "guiden vår")}, og på rumensk i ${link("/ro/lucru-in-norvegia/", "ghidul în română")}.</p>`,
+<p>Er du borger av et EU- eller EØS-land, trenger du ikke arbeidstillatelse for å jobbe i Norge. Blir du mer enn tre måneder, må du registrere deg hos politiet. Borgere fra andre land trenger vanligvis oppholdstillatelse for arbeid. UDI har oppdatert informasjon om hva som gjelder for deg på ${ext("https://www.udi.no/", "udi.no")}. Etter at du har startet, trenger du et skattekort og et d-nummer eller fødselsnummer via ${ext("https://www.skatteetaten.no/", "Skatteetaten")} for at arbeidsgiveren skal kunne betale deg riktig. Et enkelt overblikk over flytting til Norge finner du på engelsk i ${link("/en/work-in-norway/", "guiden vår")}.</p>`,
       faq: [
         ["Kan jeg få jobb i Norge uten å kunne norsk?", "Ja, det finnes jobber der arbeidsspråket er engelsk, særlig i teknologi, forskning, shipping, hotell og restaurant og i noen industribedrifter. Konkurransen er ofte høyere enn for jobber som ikke krever norsk."],
         ["Hvordan vet jeg om jobben krever norsk?", "Havn bruker teksten i annonsen: er den på engelsk, eller står det at norsk ikke kreves, merker vi jobben som åpen for utenlandske søkere. Les alltid annonsen selv, og spør arbeidsgiveren hvis du er usikker."],
@@ -277,22 +277,21 @@ ${f.employers.length ? `<p>Blant arbeidsgiverne akkurat nå er ${names(f.employe
 
   // 4. /jobb-med-lonn-oppgitt -------------------------------------------------------------------
   {
-    const regional = live.filter((j) => hasStatedPay(j) && (j.country === "Norway" || j.country === "Romania" || j.workplace === "remote"));
+    const regional = live.filter((j) => hasStatedPay(j) && (j.country === "Norway" || j.workplace === "remote"));
     const stNo = regional.filter((j) => j.country === "Norway");
     const stRemote = regional.filter((j) => j.workplace === "remote" && j.country !== "Norway");
-    const stRo = regional.filter((j) => j.country === "Romania");
     const f = facts(regional);
     const allStated = live.filter(hasStatedPay).length;
     const withEst = live.filter((j) => !hasStatedPay(j) && j.payEst).length;
     const pctNo = pct(stNo.length, norway.length);
-    const shown = [...pick(stNo, 24), ...pick(stRemote, 16), ...pick(stRo, 6)];
+    const shown = [...pick(stNo, 30), ...pick(stRemote, 16)];
     pages.push({ path: "/jobb-med-lonn-oppgitt/", n: regional.length, spec: {
       path: "/jobb-med-lonn-oppgitt/", crumbName: "Jobb med lønn oppgitt",
       title: `Jobb med lønn oppgitt: ${nf(regional.length)} stillinger der du ser lønnen | Havn`,
-      description: `${nf(regional.length)} jobber i Norge, Romania og remote i Europa der arbeidsgiveren har oppgitt lønn. På Havn viser alle jobber lønn, og estimater er alltid merket.`,
+      description: `${nf(regional.length)} jobber i Norge og remote jobber du kan ta fra Norge der arbeidsgiveren har oppgitt lønn. På Havn viser alle jobber lønn, og estimater er alltid merket.`,
       h1: "Jobber der lønn er oppgitt",
-      answer: `<p><strong>${nf(regional.length)} ledige jobber</strong> i Norge, Romania og remote i Europa har lønn oppgitt av arbeidsgiveren. I Norge gjelder det ${nf(stNo.length)} av ${nf(norway.length)} jobber (${pctNo} %), fordi de fleste norske annonser ikke skriver lønn. På Havn viser vi likevel lønn på hver jobb: er den ikke oppgitt, får du et estimat som alltid er merket «ca.» og «estimat».</p>`,
-      en: `English: ${nf(regional.length)} open jobs in Norway, Romania and remote across Europe where the employer has stated the pay. Most Norwegian ads leave it out, so on every other Havn job we show a clearly marked estimate instead.`,
+      answer: `<p><strong>${nf(regional.length)} ledige jobber</strong> i Norge og remote jobber du kan ta fra Norge har lønn oppgitt av arbeidsgiveren. I Norge gjelder det ${nf(stNo.length)} av ${nf(norway.length)} jobber (${pctNo} %), fordi de fleste norske annonser ikke skriver lønn. På Havn viser vi likevel lønn på hver jobb: er den ikke oppgitt, får du et estimat som alltid er merket «ca.» og «estimat».</p>`,
+      en: `English: ${nf(regional.length)} open jobs in Norway, and remote jobs you can take from Norway, where the employer has stated the pay. Most Norwegian ads leave it out, so on every other Havn job we show a clearly marked estimate instead.`,
       jobs: regional, shown, jobsH: `Jobber med oppgitt lønn (${nf(regional.length)})`,
       sections: `<h2>Slik viser Havn lønn</h2>
 <p>Lønn er det mange spør om først og får svar på sist. Derfor viser Havn lønn på alle jobber, på tre måter som du kan se forskjell på:</p>
@@ -302,77 +301,12 @@ ${f.employers.length ? `<p>Blant arbeidsgiverne akkurat nå er ${names(f.employe
 <p>Sjekk først <strong>enheten</strong>: lønn kan stå som årslønn, månedslønn eller timelønn, og Havn viser alltid hva det gjelder («/år», «/mnd» eller «/time»). Sjekk så <strong>valutaen</strong>: utenlandske annonser bruker ofte euro eller pund. Husk at oppgitt lønn er brutto, altså før skatt. Står det «fra» et beløp, er det bunnen i spennet.</p>
 <p>Bruk tallene i lønnsforhandlingen, men vær ærlig om hva de er. En oppgitt lønn er et godt ankerpunkt. Et estimat er et grovt bilde av hva andre får for liknende jobber. For vanlige jobber, se ${link("/artikler/hva-tjener-man-lonn-i-vanlige-jobber/", "Hva tjener man? Lønn i vanlige jobber")}. Norske tariffavtaler og lønnsforhandlinger kan gi andre tall enn estimatet, så spør alltid hva som gjelder i den konkrete stillingen.</p>
 <h2>Fordeling akkurat nå</h2>
-<p>Jobbene med oppgitt lønn ligger hovedsakelig innen ${listCounts(f.cats, 4)}. Fordelt på region: ${nf(stNo.length)} i Norge, ${nf(stRemote.length)} remote-jobber hos arbeidsgivere utenfor Norge og ${nf(stRo.length)} i Romania.</p>${catLinks(f, 8)}`,
+<p>Jobbene med oppgitt lønn ligger hovedsakelig innen ${listCounts(f.cats, 4)}. Fordelt på region: ${nf(stNo.length)} i Norge, ${nf(stRemote.length)} remote-jobber hos arbeidsgivere utenfor Norge.</p>${catLinks(f, 8)}`,
       faq: [
         ["Er estimatet en lønn jeg kan kreve?", "Nei. Estimatet viser vanlig lønn for liknende jobber og er ikke et tilbud eller en garanti fra arbeidsgiveren. Den faktiske lønnen avtaler du med arbeidsgiveren."],
         ["Hvordan lager Havn estimater?", "Havn bruker jobbtittelen og landet til å finne vanlig lønn for samme type jobb. Tallene bygger på lønnsstatistikk fra Statistisk sentralbyrå og offentlige lønnsregulativ, avrundet og satt forsiktig. Estimater er alltid merket «ca.» og «estimat»."],
         ["Hvorfor oppgir ikke alle arbeidsgivere lønn?", "Mange norske arbeidsgivere skriver «etter avtale» eller «lønn etter kvalifikasjoner». Havn kan ikke tvinge noen til å oppgi lønn, men vi viser den når den finnes og merker tydelig når den ikke gjør det."],
         ["Hva betyr «fra annonsen»?", "At lønnen står i selve annonseteksten og er lest ut av Havn. Det er arbeidsgiverens eget tall."],
-      ],
-    } });
-  }
-
-  // 5. /jobb-i-romania --------------------------------------------------------------------------
-  {
-    const jobs = live.filter((j) => j.country === "Romania");
-    const f = facts(jobs);
-    const cityList = f.cities.map(([c, k]) => [c.replace(/^Bucure(ș|s|ş)ti$/i, "Bucharest").replace(/^Timi[sșş]oara$/i, "Timișoara"), k]);
-    const merged = [...cityList.reduce((m, [c, k]) => m.set(c, (m.get(c) || 0) + k), new Map())].sort((a, b) => b[1] - a[1]);
-    pages.push({ path: "/jobb-i-romania/", n: f.n, spec: {
-      path: "/jobb-i-romania/", crumbName: "Jobb i Romania",
-      title: `Jobb i Romania: ${nf(f.n)} ledige stillinger med lønn | Havn`,
-      description: `${nf(f.n)} ledige jobber i Romania, blant annet i Bucuresti, Cluj-Napoca og Timișoara. Lønn vises på hver jobb, enten oppgitt eller som merket estimat.`,
-      h1: "Jobb i Romania",
-      answer: `<p>Havn har akkurat nå <strong>${nf(f.n)} ledige jobber i Romania</strong>, flest i ${listCounts(merged, 3)}. De fleste annonsene kommer fra arbeidsgivernes egne karrieresider, og ${nf(f.english)} av dem er på engelsk eller krever ikke romansk. ${f.stated ? `${nf(f.stated)} har lønn oppgitt av arbeidsgiveren.` : "Ingen av dem har lønn oppgitt av arbeidsgiveren akkurat nå, så Havn viser et estimat merket «ca.» og «estimat» i stedet."}</p>`,
-      en: `English: ${nf(f.n)} open jobs in Romania right now, mostly in Bucharest, Cluj-Napoca and Timișoara. Pay is shown on every job. ${f.stated ? "Pay is stated by the employer on some." : "Pay is a clearly marked estimate for these jobs, as employers have not stated it."} For Romanians moving to Norway, see <a href="${SITE}/ro/lucru-in-norvegia/">Lucru în Norvegia</a>.`,
-      jobs, jobsH: `Jobber i Romania (${nf(f.n)})`,
-      sections: `<h2>Hvem er jobbene for?</h2>
-<p>Siden er laget for deg som bor i Romania eller vurderer å flytte dit, og for norske arbeidsgivere og jobbsøkere som vil se hva som finnes. Jobbene fordeler seg slik: ${listCounts(f.cats, 4)}.${f.employers.length ? ` Blant arbeidsgiverne akkurat nå er ${names(f.employers, 6).map(esc).join(", ")}.` : ""} Kategorier:</p>${catLinks(f, 6)}
-<h2>Jobbe i Romania: det praktiske</h2>
-<p>Romania er medlem av EU, så du som er borger av et EU- eller EØS-land kan jobbe der uten arbeidstillatelse. Borgere fra andre land trenger vanligvis tillatelse. Valutaen er rumensk leu (RON), men mange selskaper i Bucuresti, Cluj-Napoca og Timișoara bruker euro og engelsk i annonsene. Sjekk alltid hvilken valuta lønnen er oppgitt i, og om den er brutto eller netto.</p>
-<p>Lønnsnivået i Romania er lavere enn i Norge for samme type jobb. Havn viser lønn på hver jobb: er den ikke oppgitt, får du et estimat som er merket tydelig og regnet ut for rumensk lønnsnivå. Estimatet bygger på vanlig lønn for samme type jobb i Norge justert for landet. Det er ikke et tilbud, og faktisk lønn varierer med arbeidsgiver og erfaring.</p>
-<h2>Fra Romania til Norge, eller omvendt</h2>
-<p>Er du rumener og vil jobbe i Norge, har vi en egen guide på rumensk: ${link("/ro/lucru-in-norvegia/", "Lucru în Norvegia")}. Den forklarer registrering, skatt og hvordan du unngår svindel. Du finner også jobbene i Norge som ikke krever norsk på ${link("/jobb-pa-engelsk/", "jobb på engelsk")}. Vil du jobbe for et selskap i Europa mens du bor i Romania, se ${link("/remote-jobb-europa/", "remote jobb i Europa")}.</p>`,
-      faq: [
-        ["Trenger jeg arbeidstillatelse i Romania?", "Ikke hvis du er borger av et EU- eller EØS-land. Andre må vanligvis søke om tillatelse. Sjekk offisielle kilder før du reiser."],
-        ["Er jobbene på engelsk?", `${nf(f.english)} av ${nf(f.n)} annonser er på engelsk eller krever ikke romansk. Resten er skrevet på romansk eller annet språk.`],
-        ["Hvilken lønn kan jeg forvente?", `Det avhenger av jobb og arbeidsgiver. Havn viser ${f.stated ? "oppgitt lønn der den finnes og" : ""} et merket estimat der den ikke finnes. Estimatet er ikke en garanti.`],
-        ["Hvor kommer jobbene fra?", "Hovedsakelig fra selskapenes egne karrieresider. Du søker direkte hos arbeidsgiveren, og Havn tar ikke betalt av jobbsøkere."],
-      ],
-    } });
-  }
-
-  // 6. /remote-jobb-europa ----------------------------------------------------------------------
-  {
-    const jobs = remoteAll.filter((j) => ["Europe", "Nordics", "Norway", "Romania", "Worldwide"].includes(j.remoteFrom));
-    const f = facts(jobs);
-    const top = f.countries.slice(0, 6);
-    const secs = top.map(([c]) => {
-      const js = jobs.filter((j) => j.country === c);
-      return `<h3>${esc(c)} (${nf(js.length)})</h3><ul class="jobs">${pick(js, 5, 2).map(jobRow).join("")}</ul>`;
-    }).join("");
-    const worldwide = jobs.filter((j) => j.remoteFrom === "Worldwide").length;
-    const shown = pick(jobs, 12, 2);
-    pages.push({ path: "/remote-jobb-europa/", n: f.n, spec: {
-      path: "/remote-jobb-europa/", crumbName: "Remote jobb i Europa",
-      title: `Remote jobb i Europa: ${nf(f.n)} stillinger fordelt på land | Havn`,
-      description: `${nf(f.n)} remote jobber hos arbeidsgivere i Europa, gruppert på land: ${top.slice(0, 3).map(([c]) => c).join(", ")} og flere. Lønn vises på hver jobb.`,
-      h1: "Remote jobb i Europa",
-      answer: `<p>Havn har akkurat nå <strong>${nf(f.n)} remote jobber</strong> hos arbeidsgivere i Europa og ellers, fordelt på ${nf(f.countries.length)} land. Flest er det hos arbeidsgivere i ${listCounts(top, 3)}. Hver jobb viser lønn: ${nf(f.stated)} har lønn oppgitt, resten har et merket estimat.</p>`,
-      en: `English: ${nf(f.n)} remote jobs with employers across Europe and beyond, grouped by employer country${worldwide ? `; ${nf(worldwide)} of them are open to applicants worldwide` : ""}. Pay is shown on every job: stated by the employer or a clearly marked estimate.`,
-      jobs, shown, jobsH: `Nyeste remote jobber i Europa`,
-      sections: `<h2>Remote jobber etter land</h2><p>Landet er der arbeidsgiveren holder til. Hvem som kan søke, står på hver jobb: «Europa» betyr at alle som bor i Europa kan søke.</p>${secs}
-<h2>Slik fungerer remote i Europa</h2>
-<p><strong>Ansatt eller selvstendig.</strong> Mange selskaper ansetter deg gjennom en lokal enhet eller et selskap som tar på seg rollen som arbeidsgiver. Andre bruker kontrakter der du fakturerer selv. Havn viser om jobben er heltid, kontrakt eller frilans. Det avgjør hvem som betaler skatt og avgifter, og om du har feriepenger og pensjon.</p>
-<p><strong>Tidssone.</strong> De fleste remote-jobbene krever overlapp med teamet i europeisk tid. Fra Norge og Romania er forskjellen liten mot resten av Europa, men Romania ligger en time foran Norge.</p>
-<p><strong>Valuta og lønn.</strong> Lønn står ofte i euro eller pund. Havn viser valutaen annonsen bruker, og merker estimater tydelig. Regn om til din valuta og husk at oppgitt lønn er brutto.</p>
-<p><strong>Språk.</strong> Nesten alle remote-jobbene i Europa har engelsk som arbeidsspråk. Annonsen sier hvis du i tillegg må kunne tysk, fransk eller et annet språk.</p>
-<p>Bor du i Norge, finner du jobbene som passer deg best på ${link("/remote-jobb/", "remote jobb i Norge")}. Vil du heller ha hybrid, se ${link("/hjemmekontor-jobb/", "jobb med hjemmekontor")}.</p>`,
-      faq: [
-        ["Kan jeg jobbe remote for et selskap i et annet europeisk land?", "Ofte ja, hvis annonsen er åpen for Europa. Spør arbeidsgiveren om hvem som er formell arbeidsgiver og hvilket lands regler som gjelder for kontrakt, skatt og trygd."],
-        ["Hva betyr «Europa» på en remote-jobb?", "At arbeidsgiveren tar imot søkere fra hele Europa. Står det et land i annonsen, er det annonsen som gjelder."],
-        ["Er det forskjell på remote og hybrid?", `Ja. Remote betyr hele jobben på nett. Hybrid betyr en blanding av kontor og hjemme. Se ${link("/hjemmekontor-jobb/", "jobb med hjemmekontor")} for hybrid.`],
-        ["Hvilken valuta er lønnen i?", "Den valutaen annonsen bruker, ofte euro eller pund. Havn viser valutaen og merker estimater tydelig."],
       ],
     } });
   }

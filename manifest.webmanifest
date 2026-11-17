@@ -1,7 +1,7 @@
 {
   "name": "Havn – Jobs in Norway & Europe",
   "short_name": "Havn",
-  "description": "Calm job search: jobs in Norway, Romania and remote across Europe, with the pay shown. Free for job seekers.",
+  "description": "Calm job search: jobs in Norway with the pay shown. Free to browse.",
   "id": "./",
   "start_url": "./?source=app",
   "scope": "./",

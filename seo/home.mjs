@@ -3,9 +3,9 @@ import { SITE, esc, nf, registry } from "./shared.mjs";
 
 export function homeBlock(c) {
   const li = (arr) => arr.map(([p, t]) => `<li><a href="${SITE}${p}">${esc(t)}</a></li>`).join("");
-  return `<div class="wrap seo-home" lang="nb"><h2>Ledige stillinger i Norge, Romania og Europa</h2>
-<p>Havn Career Hub har ${nf(c.live)} ledige stillinger med egen annonseside i Norge, Romania og remote i Europa. Hver jobb viser lønn: ${nf(c.stated)} har lønn oppgitt av arbeidsgiveren, og resten viser et estimat som alltid er merket «ca.» og «estimat». Du søker direkte hos arbeidsgiveren, og det er alltid gratis for jobbsøkere.</p>
-<p class="seo-en" lang="en">English: ${nf(c.live)} open jobs in Norway, Romania and remote across Europe. Every job shows pay, stated by the employer or a clearly marked estimate. Free for job seekers.</p>
+  return `<div class="wrap seo-home" lang="nb"><h2>Ledige stillinger i Norge</h2>
+<p>Havn Career Hub har ${nf(c.live)} ledige stillinger i Norge, pluss remote jobber du kan ta fra Norge. Hver jobb viser lønn: ${nf(c.stated)} har lønn oppgitt av arbeidsgiveren, og resten viser et estimat som alltid er merket «ca.» og «estimat». Du søker direkte hos arbeidsgiveren, og det er alltid gratis for jobbsøkere.</p>
+<p class="seo-en" lang="en">English: ${nf(c.live)} open jobs in Norway, plus remote jobs you can take from Norway. Every job shows pay, stated by the employer or a clearly marked estimate. Free for job seekers.</p>
 <h3>Jobber etter tema</h3><ul class="seo-pills">${li(registry.niches)}<li><a href="${SITE}/jobs/">Alle jobber</a></li></ul>
 <h3>Ledige stillinger etter by</h3><ul class="seo-pills">${li(registry.cities.map(([p, t]) => [p, t.replace("Ledige stillinger ", "")]))}</ul>
 <h3>Guider</h3><ul class="seo-pills">${li(registry.articles.slice(1))}</ul></div>`;
