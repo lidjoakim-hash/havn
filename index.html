@@ -511,8 +511,8 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
       <form class="search" id="searchForm" role="search">
         <input id="q" type="search" data-i18n-ph="search.ph" placeholder="Job title, skill or company" aria-label="Search jobs" autocomplete="off">
         <select id="fromWhere" aria-label="Where you can work from">
-          <option value="" data-i18n="from.any">Working from anywhere</option>
-          <option value="Norway" data-i18n="from.no">I'm in Norway</option>
+          <option value="" data-i18n="from.any">All countries</option>
+          <option value="Norway" data-i18n="from.no">Jobs in Norway</option>
           <option value="EU" data-i18n="from.eu">I'm elsewhere in the EU</option>
         </select>
         <button class="btn btn-primary" type="submit" data-i18n="search.btn">Search</button>
@@ -779,7 +779,7 @@ en:{
 "hero.h1":"Find your next job. <em>See the pay</em> first.",
 "hero.lede":"Jobs posted directly on Havn are checked by a person, always show the salary and expire after 30 days. Alongside them you can search thousands of jobs gathered from NAV, Arbetsförmedlingen, remote job boards and company career pages. When an ad doesn't state the pay, we show a typical pay estimate and label it as one.",
 "p1":"Pay on every job, stated or estimate","p2":"Human-reviewed Havn posts","p3":"Free for job seekers, always","p4":"Clear \"remote from\" rules",
-"search.ph":"Job title, skill or company — or describe the job you want","from.any":"Working from anywhere","from.no":"I'm in Norway","from.eu":"I'm elsewhere in the EU","search.btn":"Search",
+"search.ph":"Job title, skill or company — or describe the job you want","from.any":"All countries","from.no":"Jobs in Norway","from.eu":"I'm elsewhere in the EU","search.btn":"Search",
 "ai.search":"Search with AI","ai.try":"Try: \"customer support in Stavanger, at least 450 000 kr\"","ai.thinking":"Thinking…","ai.set":"Filters set from your search.","ai.typefirst":"Type what you're looking for first.",
 "chip.no":"Remote from Norway","chip.stv":"Stavanger","chip.new":"New this week","chip.noexp":"No experience needed","chip.direct":"Direct employers","chip.visa":"Relocation help","chip.pay":"€50k+ a year","chip.cet":"European hours",
 "f.work":"Workplace","any":"Any","remote":"Remote","hybrid":"Hybrid","onsite":"On-site","f.cat":"Category","allcats":"All categories","f.type":"Job type","f.level":"Seniority","f.min":"Minimum yearly pay (EUR)","nomin":"No minimum","f.tz":"Working hours","tz.cet":"Fits European time (CET)","f.sort":"Sort","sort.new":"Newest first","sort.pay":"Highest pay","sort.match":"Best match to my CV","f.direct":"Direct employers only","f.noexp":"No experience needed","f.visa":"Relocation or visa help","clear":"Clear filters","filters":"Filters",
@@ -811,7 +811,7 @@ no:{
 "hero.h1":"Finn din neste jobb. <em>Se lønna</em> først.",
 "hero.lede":"Jobber som legges ut direkte på Havn sjekkes av et menneske, viser alltid lønn og utløper etter 30 dager. I tillegg kan du søke i tusenvis av jobber hentet fra NAV, Arbetsförmedlingen, fjernarbeidstavler og bedrifters egne karrieresider. Når annonsen ikke oppgir lønn, viser vi et estimat av vanlig lønn og merker det tydelig.",
 "p1":"Lønn på hver jobb, oppgitt eller estimat","p2":"Havn-annonser sjekkes av et menneske","p3":"Alltid gratis for jobbsøkere","p4":"Tydelig hvor du kan jobbe fra",
-"search.ph":"Stilling, ferdighet eller firma – eller beskriv jobben du vil ha","from.any":"Jobber fra hvor som helst","from.no":"Jeg er i Norge","from.eu":"Jeg er et annet sted i EU","search.btn":"Søk",
+"search.ph":"Stilling, ferdighet eller firma – eller beskriv jobben du vil ha","from.any":"Alle land","from.no":"Jobber i Norge","from.eu":"Jeg er et annet sted i EU","search.btn":"Søk",
 "ai.search":"Søk med KI","ai.try":"Prøv: «kundeservice hjemmefra i Norge, minst 450 000 kr»","ai.thinking":"Tenker …","ai.set":"Filtrene er satt ut fra søket ditt.","ai.typefirst":"Skriv hva du ser etter først.",
 "chip.no":"Fjernarbeid fra Norge","chip.stv":"Stavanger","chip.new":"Nye denne uken","chip.noexp":"Ingen erfaring kreves","chip.direct":"Direkte arbeidsgivere","chip.visa":"Hjelp med flytting","chip.pay":"€50k+ i året","chip.cet":"Europeisk arbeidstid",
 "f.work":"Arbeidssted","any":"Alle","remote":"Fjernarbeid","hybrid":"Hybrid","onsite":"På stedet","f.cat":"Kategori","allcats":"Alle kategorier","f.type":"Stillingstype","f.level":"Nivå","f.min":"Minste årslønn (EUR)","nomin":"Ingen minimum","f.tz":"Arbeidstid","tz.cet":"Passer europeisk tid (CET)","f.sort":"Sorter","sort.new":"Nyeste først","sort.pay":"Høyest lønn","sort.match":"Best match med CV-en min","f.direct":"Bare direkte arbeidsgivere","f.noexp":"Ingen erfaring kreves","f.visa":"Hjelp med flytting eller visum","clear":"Nullstill filtre","filters":"Filtre",
@@ -906,7 +906,7 @@ const SPARK='<svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hid
 const catSel=$("#fCat");CATS.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;catSel.appendChild(o)});
 function regionCovers(region,me){if(!me)return true;if(region==="Worldwide"||region==="Europe")return true;if(me==="Norway")return region==="Nordics"||region==="Norway";if(me==="Romania")return region==="Romania";return false}
 function readFilters(){return{q:$("#q").value.trim(),from:$("#fromWhere").value,work:$("#fWork").value,cat:$("#fCat").value,type:$("#fType").value,level:$("#fLevel").value,lang:$("#fLang").value,min:+$("#fMin").value||0,tz:$("#fTz").value,sort:$("#fSort").value,direct:$("#fDirect").checked,noexp:$("#fNoExp").checked,visa:$("#fVisa").checked,newOnly:S.newOnly,payOnly:S.payOnly,intl:S.intl}}
-function writeFilters(f){$("#q").value=f.q||"";$("#fromWhere").value=f.from||"";$("#fWork").value=f.work||"";$("#fCat").value=f.cat||"";$("#fType").value=f.type||"";$("#fLevel").value=f.level||"";$("#fLang").value=f.lang||"";$("#fMin").value=String(f.min||0);if(![...$("#fMin").options].some(o=>o.value===String(f.min||0)))$("#fMin").value="0";$("#fTz").value=f.tz||"";$("#fSort").value=f.sort==="match"&&!Object.keys(S.match).length?"new":(f.sort||"new");$("#fDirect").checked=!!f.direct;$("#fNoExp").checked=!!f.noexp;$("#fVisa").checked=!!f.visa;S.newOnly=!!f.newOnly;S.payOnly=!!f.payOnly;S.intl=!!f.intl;S.limit=PAGE}
+function writeFilters(f){$("#q").value=f.q||"";$("#fromWhere").value=f.from===undefined?"Norway":f.from;$("#fWork").value=f.work||"";$("#fCat").value=f.cat||"";$("#fType").value=f.type||"";$("#fLevel").value=f.level||"";$("#fLang").value=f.lang||"";$("#fMin").value=String(f.min||0);if(![...$("#fMin").options].some(o=>o.value===String(f.min||0)))$("#fMin").value="0";$("#fTz").value=f.tz||"";$("#fSort").value=f.sort==="match"&&!Object.keys(S.match).length?"new":(f.sort||"new");$("#fDirect").checked=!!f.direct;$("#fNoExp").checked=!!f.noexp;$("#fVisa").checked=!!f.visa;S.newOnly=!!f.newOnly;S.payOnly=!!f.payOnly;S.intl=!!f.intl;S.limit=PAGE}
 function fitsCet(j){return j.workplace!=="remote"||!j.tz||j.tz==="CET ±2h"||j.tz==="Flexible"||j.tz==="UK hours"}
 // weekly digest email for the owner to send by hand: Featured jobs first, then the newest jobs with stated pay
 function digestText(){const live=S.jobs.filter(isLive);const wk=now()-7*DAY;
