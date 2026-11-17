@@ -477,6 +477,64 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
   .ask-fab>span{display:none}
 }
 @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}.hero h1 em{animation:none;background-size:100% 100%}.detail .panel,.detail .prose,.big-pay,.mbar{animation:none!important}}
+</style><style id="polish">
+/* Polish pass on the calm theme: same cream, sage and peach. Pay reads first, the hero has more presence, cards answer the pointer. */
+/* hero: larger serif line over a soft harbour swell */
+body{overflow-x:clip}
+.hero{position:relative;padding-block:44px 6px}
+.hero::before{content:"";position:absolute;top:0;left:50%;width:100vw;transform:translateX(-50%);height:260px;z-index:-1;pointer-events:none;opacity:.6;-webkit-mask-image:linear-gradient(#000 30%,transparent);mask-image:linear-gradient(#000 30%,transparent);
+  background:
+    radial-gradient(60% 120% at 86% -10%,color-mix(in srgb,var(--butter) 70%,transparent) 0,transparent 62%),
+    radial-gradient(46% 110% at 6% -20%,color-mix(in srgb,var(--sage) 38%,transparent) 0,transparent 60%)}
+.hero .eyebrow{align-items:center;gap:8px;letter-spacing:.12em}
+@media (min-width:641px){.hero .eyebrow{display:inline-flex}}
+.hero .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 4px color-mix(in srgb,var(--sage) 28%,transparent)}
+.hero h1{font-size:clamp(32px,5.2vw,62px);line-height:1.04;letter-spacing:-.025em;margin-top:10px;font-variation-settings:"SOFT" 100,"opsz" 144}
+.hero h1 em{font-weight:500}
+/* search: one calm object that lights up when used */
+.search{margin-top:24px;padding:9px;border-radius:28px;box-shadow:var(--shadow-up),inset 0 0 0 1px color-mix(in srgb,var(--line) 70%,transparent);transition:box-shadow .35s ease,transform .35s cubic-bezier(.2,.7,.2,1)}
+.search:focus-within{box-shadow:0 2px 4px rgba(46,43,39,.05),0 22px 48px rgba(79,122,90,.18),inset 0 0 0 2px color-mix(in srgb,var(--primary) 55%,transparent);transform:translateY(-1px)}
+.search input:focus-visible,.search select:focus-visible{outline:none}
+.search input{font-size:17px;padding-inline:16px}
+.search .btn{padding:13px 26px;font-size:15px}
+/* job cards: pay first, a sage edge on hover */
+.results-head{margin:8px 0 16px}
+.results-head h2{font-size:26px;letter-spacing:-.015em}
+.list{gap:12px}
+.job{padding:20px 20px 20px 22px;overflow:hidden}
+.job::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--sage);transform:scaleY(0);transform-origin:center;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.job:hover::before,.job:focus-visible::before{transform:scaleY(1)}
+.job.featured::before{background:var(--accent);transform:scaleY(1)}
+.job h3{font-size:17.5px;letter-spacing:-.005em;transition:color .3s ease}
+.job:hover h3{color:var(--primary)}
+.mark{transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.job:hover .mark{transform:scale(1.06) rotate(-3deg)}
+.pay .amt{font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--primary)}
+.pay .amt.est{font-size:14.5px;font-weight:500;color:var(--muted)}
+.estlbl{border-radius:999px;padding:2px 8px;letter-spacing:.05em}
+.save{transition:color .25s ease,transform .25s ease,background .25s ease}
+.save:hover{color:var(--primary);background:var(--surface-2);transform:scale(1.08)}
+/* quick filters and the filter toggle */
+.chip{font-weight:500}
+.chip[aria-pressed="true"]{box-shadow:0 6px 16px color-mix(in srgb,var(--primary) 28%,transparent)}
+/* employers, salaries, detail */
+.emp-live b{color:var(--primary);font-size:30px;letter-spacing:-.02em}
+.emp-live>div{transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s ease}
+.emp-live>div:hover{transform:translateY(-3px);box-shadow:var(--shadow-up)}
+.plan{transition:transform .45s cubic-bezier(.2,.7,.2,1),box-shadow .45s ease}
+.plan:hover{transform:translateY(-4px);box-shadow:var(--shadow-up)}
+.plan.hot:hover{box-shadow:var(--shadow-up),inset 0 0 0 2px var(--primary)}
+.detail h1{font-size:clamp(30px,4.8vw,46px);line-height:1.06;letter-spacing:-.025em}
+.big-pay:not(.est){color:var(--primary)}
+::selection{background:var(--butter);color:var(--fg)}
+@media (max-width:640px){
+  .hero{padding-block:18px 0}.hero::before{height:150px}
+  .hero h1{font-size:31px;margin-top:0}
+  .search{border-radius:22px}.search .btn{padding-block:12px}
+  .job{padding:16px 16px 16px 18px}
+  .pay .amt{font-size:16px}
+}
+@media (prefers-reduced-motion: reduce){.job::before,.mark,.search,.plan,.emp-live>div,.save{transition:none}.job:hover .mark{transform:none}}
 </style>
 </head><body>
 
