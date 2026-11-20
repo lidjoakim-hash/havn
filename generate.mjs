@@ -391,7 +391,19 @@ await writeFile("jobs-sample.json", JSON.stringify(live.slice().sort((a, b) => (
 urls.push(`${SITE}/privacy.html`);
 
 const lastmod = new Date().toISOString().slice(0, 10);
-await writeFile("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `<url><loc>${u}</loc><lastmod>${lastmod}</lastmod></url>`).join("\n")}\n</urlset>\n`);
+// Google allows 50,000 URLs per sitemap file, so above 40,000 we write an index plus chunk files.
+{
+  const row = (u) => `<url><loc>${u}</loc><lastmod>${lastmod}</lastmod></url>`;
+  const wrap = (list) => `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${list.map(row).join("\n")}\n</urlset>\n`;
+  const CHUNK = 40000;
+  for (const f of (await readdir(".")).filter((f) => /^sitemap-\d+\.xml$/.test(f))) await rm(f);
+  if (urls.length <= CHUNK) await writeFile("sitemap.xml", wrap(urls));
+  else {
+    const parts = Math.ceil(urls.length / CHUNK);
+    for (let n = 0; n < parts; n++) await writeFile(`sitemap-${n + 1}.xml`, wrap(urls.slice(n * CHUNK, (n + 1) * CHUNK)));
+    await writeFile("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${Array.from({ length: parts }, (_, n) => `<sitemap><loc>${SITE}/sitemap-${n + 1}.xml</loc><lastmod>${lastmod}</lastmod></sitemap>`).join("\n")}\n</sitemapindex>\n`);
+  }
+}
 
 // health: newest NAV ad should be recent
 const nav = live.filter((j) => j.source === "nav");

@@ -33,7 +33,7 @@ jobs:
         run: |
           git config user.name "havn-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A job jobs by en sitemap.xml health.json jobs-sample.json
+          git add -A job jobs by en sitemap.xml sitemap-*.xml health.json jobs-sample.json
           if git diff --cached --quiet; then
             echo "No changes"
           else
