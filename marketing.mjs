@@ -39,7 +39,9 @@ async function fetchJobs() {
     const { cols, rows } = await get(f);
     for (const r of rows) { const o = { _payDone: true }; cols.forEach((c, i) => { if (r[i] !== null) o[c] = r[i]; }); out.push(o); }
   }
-  return out.concat(await fetchCol("jobs", "&id=not.like.nav-*&id=not.like.jobtech-*&id=not.like.ats-*&id=not.like.remoteok-*&id=not.like.jobicy-*&id=not.like.arbeitnow-*"));
+  let own = [];
+  try { own = await fetchCol("jobs", "&id=not.like.nav-*&id=not.like.jobtech-*&id=not.like.ats-*&id=not.like.remoteok-*&id=not.like.jobicy-*&id=not.like.arbeitnow-*"); } catch (e) { console.log("Skipping jobs posted on Havn:", String(e).slice(0, 120)); }
+  return out.concat(own);
 }
 async function fetchCol(col, extra = "") {
     const out = [];
