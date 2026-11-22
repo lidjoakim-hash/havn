@@ -1,6 +1,36 @@
 {
- "cdn": "https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@d8dc3a913f8c6305c8a13623f1ae9c0eb252a85e",
+ "cdn": "https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@3ccecbc5cb7fcf03d0b52652a9badb94589540b8",
  "days": [
+  {
+   "date": "2026-11-22",
+   "theme": "bergen",
+   "items": [
+    {
+     "type": "post",
+     "label": "Instagram + Facebook post",
+     "time": "13:00",
+     "file": "post.jpg",
+     "captions": {
+      "no": "Nye jobber i Bergen 🌿\n\n• Driftsleder Grunnarbeid Veidekke bygg Bergen – Veidekke (ca. 700–840k kr/år (estimat, ikke bekreftet))\n• Vil du være med å skape fremtidens eldreomsorg i Bergen? – Kalfaret sykehjem (ca. 540–650k kr/år (estimat, ikke bekreftet))\n• Barnehagelærer – Norlandia Nyhavn (ca. 560–640k kr/år (estimat, ikke bekreftet))\n• Renholder – HVITVASK AS (ca. 420–470k kr/år (estimat, ikke bekreftet))\n\n242 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio.\nHavn er alltid gratis for jobbsøkere.\n\n#bergen #jobbibergen #ledigstilling #jobb #havn",
+      "en": "New jobs in Bergen 🌿\n\n• Driftsleder Grunnarbeid Veidekke bygg Bergen – Veidekke (ca. 700–840k kr/yr (estimate, not confirmed))\n• Vil du være med å skape fremtidens eldreomsorg i Bergen? – Kalfaret sykehjem (ca. 540–650k kr/yr (estimate, not confirmed))\n• Barnehagelærer – Norlandia Nyhavn (ca. 560–640k kr/yr (estimate, not confirmed))\n• Renholder – HVITVASK AS (ca. 420–470k kr/yr (estimate, not confirmed))\n\n242 open jobs right now. See them all and apply directly with the employer – link in bio.\nHavn is always free for job seekers.\n\n#bergen #jobbibergen #ledigstilling #jobb #havn"
+     },
+     "lang": "no"
+    },
+    {
+     "type": "video",
+     "label": "TikTok / Reels / Stories video",
+     "time": "19:00",
+     "file": "video.mp4",
+     "poster": "s1.jpg",
+     "captions": {
+      "no": "Nye jobber i Bergen 🌿 242 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio. #bergen #jobbibergen #ledigstilling #jobb #havn",
+      "en": "New jobs in Bergen 🌿 242 open jobs right now. See them all and apply directly with the employer – link in bio. #bergen #jobbibergen #ledigstilling #jobb #havn"
+     },
+     "lang": "no",
+     "note": "Add a calm trending sound in TikTok/Instagram before posting."
+    }
+   ]
+  },
   {
    "date": "2026-11-15",
    "theme": "bergen",
