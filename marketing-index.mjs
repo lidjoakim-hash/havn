@@ -10,7 +10,7 @@ const LANG = { no: "Norsk", en: "English" };
 
 const days = [];
 for (const d of (await readdir(dir).catch(() => [])).filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x)).sort().reverse()) {
-  try { days.push(JSON.parse(await readFile(`${dir}/${d}/meta.json`, "utf8"))); } catch { /* skip */ }
+  try { const m = JSON.parse(await readFile(`${dir}/${d}/meta.json`, "utf8")); for (const it of m.items || []) if (it.captions) delete it.captions.ro; days.push(m); } catch { /* skip */ }
 }
 
 let n = 0;
