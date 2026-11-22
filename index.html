@@ -1235,7 +1235,7 @@ OPEN JOBS (${live.length}):\n${JSON.stringify(live)}`;
 
 /* ================= employers ================= */
 // employer page: live numbers from the job index (real counts, refreshed every 30 min) and a sample Featured card
-function renderEmp(){const m=S.indexMeta;const el=$("#empLive");if(el&&m&&m.count){const f=n=>new Intl.NumberFormat(S.lang==="en"?"en-GB":S.lang==="ro"?"ro-RO":"nb-NO").format(n);
+function renderEmp(){const m=S.indexMeta;const el=$("#empLive");if(el&&m&&m.count){const f=n=>new Intl.NumberFormat(S.lang==="en"?"en-GB":"nb-NO").format(n);
     el.innerHTML=[[m.count,"open jobs on Havn"],[m.companies,"companies hiring"],[m.countries,"countries"],[m.new24h,"new jobs in 24 hours"]].map(([n,l])=>`<div><b>${f(n||0)}</b><span>${esc(l)}</span></div>`).join("")}
   const sm=$("#empSample");if(sm&&!sm.dataset.done){sm.dataset.done=1;sm.innerHTML=card({id:"sample",title:"Warehouse Team Lead",company:"Your Company AS",category:"Logistics & warehouse",jobType:"Full-time",workplace:"onsite",country:"Norway",location:"Stavanger",salaryMin:520000,salaryMax:600000,currency:"NOK",salaryPeriod:"year",languages:"English",tier:"featured",createdAt:now(),seniority:"Mid"},{preview:true})}}
 function renderPlans(){
