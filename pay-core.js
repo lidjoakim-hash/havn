@@ -132,10 +132,10 @@ const NOK_TO = { NOK: 1, EUR: 0.085, USD: 0.092, GBP: 0.073, SEK: 0.97, DKK: 0.6
 const COUNTRY = { // pay level vs Norway for the same job, and the currency shown
   Norway: [1, "NOK"], Denmark: [1.05, "DKK"], Sweden: [0.75, "SEK"], Finland: [0.75, "EUR"], Iceland: [0.95, "EUR"], Germany: [0.9, "EUR"], Netherlands: [0.9, "EUR"], Belgium: [0.75, "EUR"],
   Austria: [0.75, "EUR"], Switzerland: [1.3, "CHF"], Ireland: [0.9, "EUR"], "United Kingdom": [0.85, "GBP"], France: [0.65, "EUR"], Spain: [0.5, "EUR"], Portugal: [0.4, "EUR"], Italy: [0.55, "EUR"],
-  Poland: [0.35, "PLN"], Romania: [0.28, "EUR"], Czechia: [0.4, "EUR"], Estonia: [0.45, "EUR"], Lithuania: [0.4, "EUR"], Latvia: [0.38, "EUR"], Greece: [0.38, "EUR"], Hungary: [0.33, "EUR"], Bulgaria: [0.25, "EUR"], Croatia: [0.38, "EUR"],
+  Poland: [0.35, "PLN"], Czechia: [0.4, "EUR"], Estonia: [0.45, "EUR"], Lithuania: [0.4, "EUR"], Latvia: [0.38, "EUR"], Greece: [0.38, "EUR"], Hungary: [0.33, "EUR"], Bulgaria: [0.25, "EUR"], Croatia: [0.38, "EUR"],
   "United States": [1.15, "USD"], Canada: [0.8, "USD"], Australia: [0.85, "USD"], Singapore: [0.85, "USD"], Japan: [0.6, "USD"], India: [0.15, "USD"], Brazil: [0.2, "USD"], Mexico: [0.2, "USD"], UAE: [0.85, "USD"], Israel: [0.85, "USD"],
 };
-const REMOTE_LEVEL = { Worldwide: [0.85, "USD"], Europe: [0.75, "EUR"], Nordics: [0.9, "EUR"], Norway: [1, "NOK"], Romania: [0.5, "EUR"] };
+const REMOTE_LEVEL = { Worldwide: [0.85, "USD"], Europe: [0.75, "EUR"], Nordics: [0.9, "EUR"], Norway: [1, "NOK"] };
 const CAT_EST = { Engineering: [700000, 900000], Design: [560000, 720000], Product: [750000, 950000], Marketing: [560000, 700000], Sales: [480000, 650000], "Customer support": [420000, 500000],
   Operations: [520000, 700000], "Admin & office": [480000, 580000], "Hospitality & events": [400000, 480000], "Creative & media": [520000, 680000], "Logistics & warehouse": [450000, 530000],
   Maritime: [520000, 720000], Healthcare: [520000, 680000], Education: [520000, 680000], "Construction & trades": [500000, 610000], Other: [450000, 600000] };
@@ -174,7 +174,7 @@ function seniorityOf(j, text) {
   return "Mid";
 }
 const LANGS = [["Norwegian", /(norsk|norwegian)/], ["English", /(english|engelsk|englisch)/], ["German", /(german|deutsch|tysk)/], ["Swedish", /(swedish|svensk)/], ["Danish", /(danish|dansk)/],
-  ["Polish", /(polish|polsk|polski)/], ["Romanian", /(romanian|rumensk|română|limba română)/], ["French", /(french|fransk|français)/], ["Spanish", /(spanish|spansk|español)/], ["Dutch", /(dutch|nederlands)/], ["Lithuanian", /(lithuanian|litauisk)/], ["Ukrainian", /(ukrainian|ukrainsk)/]];
+  ["Polish", /(polish|polsk|polski)/], ["French", /(french|fransk|français)/], ["Spanish", /(spanish|spansk|español)/], ["Dutch", /(dutch|nederlands)/], ["Lithuanian", /(lithuanian|litauisk)/], ["Ukrainian", /(ukrainian|ukrainsk)/]];
 // Language of the ad text itself, from words that are typical for one language only (shared words like "vi", "med", "som", "på" are left out on purpose).
 const STOP = {
   Norwegian: /^(og|ikke|ikkje|eller|deg|dere|skal|vår|våre|også|hos|stilling|arbeidsoppgaver|søker|søknad|frå|vere|eit|ein|kvalifikasjoner|erfaring)$/,
@@ -182,7 +182,7 @@ const STOP = {
   Danish: /^(af|jeg|vores|søger|ansøgning|arbejde|arbejdsopgaver|virksomhed|medarbejder|nogle|mellem|hvis|ansøg|dygtig)$/, // only words Norwegian does not use
   English: /^(the|and|you|we|with|our|will|your|are|this|for|of)$/,
   German: /^(und|die|der|wir|sie|mit|für|das|ist|ihre|bei|nicht)$/,
-  Romanian: /^(și|în|pentru|cu|este|sau|care|la)$/, Polish: /^(jest|oraz|dla|się|nie|lub)$/,
+ Polish: /^(jest|oraz|dla|się|nie|lub)$/,
 };
 function adLanguage(text) {
   const c = {}; for (const k in STOP) c[k] = 0;

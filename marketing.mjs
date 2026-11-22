@@ -59,7 +59,7 @@ function intlJob(j) {
   let en = 0, no = 0;
   for (const x of tx.split(/[^a-zæøåäöü]+/)) { if (/^(the|and|you|we|with|our|will|your|are|this|have)$/.test(x)) en++; else if (/^(og|du|vi|med|er|på|som|har|deg|det|ikke|eller)$/.test(x)) no++; }
   const english = en >= 15 && en > no * 1.5;
-  const mentions = /(no norwegian|norwegian (language )?(is )?not (required|necessary|needed)|norsk(kunnskaper)? er ikke (et )?krav|ikke krav (om|til) norsk|english[- ]speaking|engelsktalende|eu citizens|foreign workers|relocation|accommodation (is )?provided|housing (is )?provided|we are hiring|polsk|rumensk|romanian|lithuanian)/.test(tx);
+  const mentions = /(no norwegian|norwegian (language )?(is )?not (required|necessary|needed)|norsk(kunnskaper)? er ikke (et )?krav|ikke krav (om|til) norsk|english[- ]speaking|engelsktalende|eu citizens|foreign workers|relocation|accommodation (is )?provided|housing (is )?provided|we are hiring|polsk|lithuanian)/.test(tx);
   const needNo = /(norsk muntlig og skriftlig|beherske norsk|behersker norsk|flytende norsk|gode norskkunnskaper|norskkunnskaper|fluent (in )?norwegian|norwegian (is )?(required|a must)|skandinavisk språk|speak norwegian|norsk språk)/.test(tx);
   return (english || mentions) && !needNo;
 }
@@ -97,7 +97,7 @@ const inCity = (c) => (j) => (j.location || "").toLowerCase().startsWith(c);
 const THEMES = [
   { key: "bergen", lang: "no", art: "search", filter: inCity("bergen"), h: { no: "Nye jobber i Bergen", en: "New jobs in Bergen" }, tags: "#bergen #jobbibergen #ledigstilling #jobb #havn" },
   { key: "stavanger", lang: "no", art: "hero", filter: (j) => /stavanger|sandnes|sola|randaberg/i.test(j.location || ""), h: { no: "Nye jobber i Stavanger-regionen", en: "New jobs around Stavanger" }, tags: "#stavanger #sandnes #rogaland #ledigstilling #jobb #havn" },
-  { key: "intl", lang: "en", art: "search", filter: (j) => j.country === "Norway" && intlJob(j), h: { no: "Jobber i Norge – norsk ikke påkrevd", en: "Jobs in Norway – no Norwegian needed" }, tags: "#lucruinnorvegia #norvegia #romaniinnorvegia #locuridemunca #jobsinnorway #havn" },
+  { key: "intl", lang: "en", art: "search", filter: (j) => j.country === "Norway" && intlJob(j), h: { no: "Jobber i Norge – norsk ikke påkrevd", en: "Jobs in Norway – no Norwegian needed" }, tags: "#jobsinnorway #workinnorway #jobbinorge #havn" },
   { key: "remote", lang: "en", art: "hero", filter: (j) => j.workplace === "remote", h: { no: "Fjernjobber du kan ta hjemmefra", en: "Remote jobs you can do from home" }, tags: "#remotejobs #remotework #workfromhome #europejobs #havn" },
   { key: "pay", lang: "no", art: "wave", filter: (j) => j.paySrc === "ad" || j.paySrc === "listed", h: { no: "Jobber der lønnen står i annonsen", en: "Jobs that show the pay" }, tags: "#lønn #ledigstilling #jobb #norge #havn" },
   { key: "oslo", lang: "no", art: "hero", filter: inCity("oslo"), h: { no: "Nye jobber i Oslo", en: "New jobs in Oslo" }, tags: "#oslo #jobbioslo #ledigstilling #jobb #havn" },
@@ -230,7 +230,7 @@ if (weekday === 1 || process.env.FORCE_WEEKLY) {
   const mail = `<!doctype html><html><body style="margin:0;background:#F6F1E7;font-family:Arial,sans-serif"><div style="max-width:600px;margin:0 auto;padding:28px 18px">
   <div style="font-family:Georgia,serif;font-size:26px;font-weight:bold;color:#4F7A5A">Havn</div>
   <h1 style="font-family:Georgia,serif;font-size:28px;color:#2E2B27;margin:18px 0 6px">Ukens jobber 🌿</h1><p style="color:#6E675D;margin:0">${nf(stats.newJobs)} nye stillinger denne uken. Her er et lite utvalg.</p>
-  ${sec("Nye jobber i Norge", top)}${sec("Norsk ikke påkrevd · Fără norvegiană", intl)}${sec("Fjernarbeid · Remote", remote)}
+  ${sec("Nye jobber i Norge", top)}${sec("Norsk ikke påkrevd · No Norwegian needed", intl)}${sec("Fjernarbeid · Remote", remote)}
   <p style="margin:26px 0 0"><a href="${SITE}/" style="background:#4F7A5A;color:#fff;padding:12px 22px;border-radius:999px;text-decoration:none;font-weight:bold">Se alle jobbene</a></p>
   <p style="color:#9A9286;font-size:12px;margin-top:30px">Du får denne e-posten fordi du meldte deg på Havns ukentlige oversikt. {{unsubscribe}}</p></div></body></html>`;
   await writeFile(`${dir}/newsletter.html`, mail);

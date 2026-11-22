@@ -6,7 +6,7 @@ const [dir = "drafts", sha = "marketing-drafts"] = process.argv.slice(2);
 const REPO = process.env.GITHUB_REPOSITORY || "lidjoakim-hash/havn";
 const CDN = `https://cdn.jsdelivr.net/gh/${REPO}@${sha}`;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const LANG = { no: "Norsk", en: "English", ro: "Română" };
+const LANG = { no: "Norsk", en: "English" };
 
 const days = [];
 for (const d of (await readdir(dir).catch(() => [])).filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x)).sort().reverse()) {

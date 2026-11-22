@@ -20,9 +20,9 @@ function havnModerate(text) {
     // pregnancy, marriage, children
     ["hide", "Pregnancy or family status", /\b(?:not pregnant|ikke gravid|inte gravid|nu (?:este )?însărcinată|unmarried only|ugift|ogift|no children|ingen barn|without children|fără copii)\b/i],
     // origin
-    ["hide", "Excludes by origin", /\b(?:no foreigners|ingen utlendinger|inga utlänningar|keine ausländer|fără străini|white (?:only|candidates|people)|caucasian only|ethnic (?:norwegians?|swedes?|romanians?) only|etnisk norsk)\b/i],
-    ["review", "Citizenship requirement", /\b(?:only|kun|endast|doar|nur)\s+(?:for\s+)?(?:norwegian|swedish|romanian|german|norske|svenska|români|romani|deutsche|eu|eøs|eea)\s+(?:citizens|nationals|statsborgere|medborgare|cetățeni|cetateni|staatsbürger)\b/i],
-    ["review", "Native speaker wanted", /\bnative\s+(?:english|norwegian|swedish|german|romanian|danish|dutch|french|spanish)?\s*speakers?\b/i],
+    ["hide", "Excludes by origin", /\b(?:no foreigners|ingen utlendinger|inga utlänningar|keine ausländer|white (?:only|candidates|people)|caucasian only|ethnic (?:norwegians?|swedes?s?) only|etnisk norsk)\b/i],
+    ["review", "Citizenship requirement", /\b(?:only|kun|endast|nur)\s+(?:for\s+)?(?:norwegian|swedish|german|norske|svenska|deutsche|eu|eøs|eea)\s+(?:citizens|nationals|statsborgere|medborgare|staatsbürger)\b/i],
+    ["review", "Native speaker wanted", /\bnative\s+(?:english|norwegian|swedish|german|danish|dutch|french|spanish)?\s*speakers?\b/i],
     // looks
     ["review", "Looks or photo", /\b(?:good[- ]looking (?:candidates?|people|wom[ae]n|men|girls?|staff|person)|attractive (?:appearance|woman|women|man|men|girl|lady)|pleasant appearance|well[- ]groomed appearance required|pen og blid|aspect fizic plăcut|aspect fizic placut|prezență plăcută|prezenta placuta|photo required|bilde må legges ved)\b/i],
     // young
