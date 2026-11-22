@@ -20,7 +20,7 @@ function item(day, it) {
     ? `<video controls preload="none" playsinline poster="${CDN}/${day.date}/${it.poster}" src="${url}"></video>`
     : it.type === "newsletter" ? `<iframe loading="lazy" src="${url}" title="Newsletter preview" sandbox=""></iframe>`
     : `<img loading="lazy" src="${url}" alt="${esc(it.label)}">`;
-  const langs = Object.keys(it.captions || {});
+  const langs = Object.keys(it.captions || {}).filter((l) => l !== "ro");
   const tabs = langs.map((l) => { const id = `c${++n}`; return `<details ${l === it.lang ? "open" : ""}><summary>${LANG[l] || l}${l === it.lang ? " · suggested" : ""}</summary><textarea id="${id}" readonly>${esc(it.captions[l])}</textarea><button type="button" data-copy="${id}">Copy text</button></details>`; }).join("");
   return `<article class="item"><div class="media">${media}</div><div class="body"><div class="kind">${esc(it.label)}</div><div class="when">Suggested time: ${esc(it.time)}</div>
   ${it.note ? `<p class="note">${esc(it.note)}</p>` : ""}${tabs}<p><a class="dl" href="${url}" target="_blank" rel="noopener">Open / download file</a></p></div></article>`;
