@@ -127,8 +127,27 @@ const UI = {
   nb: { all: "Alle jobber", emp: "For arbeidsgivere", foot: "Havn – jobber i Norge som viser lønnen. Gratis å bla i.", priv: "Personvern" },
   en: { all: "All jobs", emp: "For employers", foot: "Havn – jobs in Norway that show the pay. Free to browse.", priv: "Privacy" },
 };
+// Keep every page title at 30-60 characters and every meta description at 120-160, so search results show them whole.
+function fitTitle(t, lang = "nb") {
+  t = String(t).replace(/\s+/g, " ").trim();
+  if (t.length > 60) t = t.replace(/ \| Havn$/, "");
+  if (t.length > 60) { const cut = t.slice(0, 60); const i = Math.max(cut.lastIndexOf(" – "), cut.lastIndexOf(" - "), cut.lastIndexOf(", "), cut.lastIndexOf(" ")); t = cut.slice(0, i > 30 ? i : 60).replace(/[ ,–-]+$/, ""); }
+  if (t.length < 30 && !/Havn$/.test(t)) t += " | Havn";
+  if (t.length < 30) t = t.replace(/ \| Havn$/, "") + (lang === "en" ? " – jobs with pay shown" : " – ledige jobber med lønn") + " | Havn";
+  return t;
+}
+function fitDesc(d, lang) {
+  d = String(d).replace(/\s+/g, " ").trim();
+  const more = lang === "en" ? " Pay is shown on every job. Free to use on Havn." : " Lønn vises på hver jobb. Gratis å bruke på Havn.";
+  if (d.length < 120 && !d.includes(more.trim())) d += more;
+  if (d.length < 120) d += lang === "en" ? " Updated several times a day." : " Oppdatert flere ganger om dagen.";
+  if (d.length < 120) d += lang === "en" ? " Find jobs in Norway with pay stated or clearly estimated." : " Finn jobber i Norge med oppgitt eller tydelig estimert lønn.";
+  if (d.length > 160) { const cut = d.slice(0, 157); const i = cut.lastIndexOf(" "); d = cut.slice(0, i > 100 ? i : 157).replace(/[ ,.;:–-]+$/, "") + "…"; }
+  return d;
+}
 function page({ title, description, canonical, body, jsonld, lang = "nb", alternates = null }) {
   const u = UI[lang] || UI.nb;
+  title = fitTitle(title, lang); description = fitDesc(description, lang);
   return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><link rel="icon" href="${SITE}/icons/favicon-32.png"><link rel="apple-touch-icon" href="${SITE}/icons/apple-touch-icon.png"><link rel="manifest" href="${SITE}/manifest.webmanifest"><meta name="theme-color" content="#F6F1E7"><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(canonical)}">
 ${alternates ? Object.entries(alternates).map(([l, h]) => `<link rel="alternate" hreflang="${l}" href="${h}">`).join("") : ""}
