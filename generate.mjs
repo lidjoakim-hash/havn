@@ -384,6 +384,9 @@ console.log(`English city pages: ${intlCities.length}`);
 const guideCities = intlCities.length ? `<h2>Jobs by city</h2>${linkList(intlCities.slice(0, 24).map(([c, cj]) => [`Jobs in ${c}`, `/en/jobs-in/${slug(c)}/`, cj.length]))}` : "";
 await put(GUIDE.en.path, guidePage(GUIDE.en, intl, "", guideCities));
 urls.push(`${SITE}${GUIDE.en.path}`);
+// Blog: articles written in Vekst, shown by its widget (needs JavaScript; the page itself is plain HTML).
+await put("/blog/", page({ title: "Blog: working in Norway | Havn", description: "Guides for people looking for work in Norway: pay, permits, housing and how to avoid job scams.", canonical: `${SITE}/blog/`, body: `<h1>Working in Norway: guides</h1><p class="meta">New guides from Havn about jobs, pay and moving to Norway.</p><div id="vekst-blog" data-theme="light"></div><script src="https://vekst.vercel.app/embed.js" data-site="2134eeaf-1c8d-4b0e-ab4e-7c2812387ec0" defer></script><p><a class="btn" href="${SITE}/?intl=1">Search jobs in Havn</a></p>`, lang: "en" }));
+urls.push(`${SITE}/blog/`);
 console.log(`International jobs: ${intl.length}`);
 
 // small sample of real jobs (used for app-store screenshots and previews)
