@@ -13,7 +13,7 @@ const ROWS_PER_FILE = 7000;
 const H = { apikey: KEY, Authorization: `Bearer ${KEY}` };
 
 const { havnModerate } = new Function(`${await readFile(new URL("./moderation.js", import.meta.url), "utf8")};return { havnModerate };`)();
-const { enrichPay, estimateAny } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay, estimateAny };`)();
+const { enrichPay, estimateAny, noExperienceOf } = new Function(`${await readFile(new URL("./pay-core.js", import.meta.url), "utf8")};return { enrichPay, estimateAny, noExperienceOf };`)();
 await mkdir(DIR, { recursive: true });
 
 // pages of 500 with retries: the database cancels slow statements (timeout), so keep each request small
@@ -90,6 +90,8 @@ for (const r of changed) {
 }
 // pay estimates depend only on title and place, so refresh them for every stored job (picks up estimate fixes without a full sync)
 for (const j of raw.values()) if (j.paySrc === "est" && !(+j.salaryMin || +j.salaryMax)) { try { j.payEst = estimateAny(j); } catch { /* keep old */ } }
+// re-check the "no experience needed" flag on every stored job: roles that need a degree, trade certificate or authorisation never qualify
+for (const j of raw.values()) if (j.source && j.noExperience && !noExperienceOf(j.title, "ingen erfaring")) j.noExperience = false;
 console.log(`${full ? "Full" : "Incremental"} sync: ${changed.length} changed, ${raw.size} imported jobs in store`);
 
 // ---------- clean up + remove duplicates ----------

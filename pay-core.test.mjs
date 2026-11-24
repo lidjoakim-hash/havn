@@ -19,7 +19,8 @@ for (const [txt, want] of [["100% fast stilling sjukepleier eller vernepleier me
 eq("lang sv", core.adLanguage(sv), "Swedish"); eq("lang no", core.adLanguage(no), "Norwegian"); eq("lang da", core.adLanguage(da), "Danish"); eq("lang en", core.adLanguage(en), "English");
 eq("swedish job not Norsk", core.languagesOf({ source: "jobtech", country: "Sweden", title: "Data Engineer" }, sv + " Kunskaper i svenska, norska eller danska.").includes("Norwegian"), false);
 const EXP = [["Junior Developer", "", true], ["Graduate Transport Planner", "", true], ["Developer", "No prior experience needed", true], ["Junior Developer", "You have 3+ years of experience", false],
-  ["Engineer", "2 years of experience", false], ["Trainee", "0-1 years", true], ["Senior Developer", "", false], ["Lærling elektriker", "", true], ["Developer", "5+ years", false]];
+  ["Engineer", "2 years of experience", false], ["Trainee", "0-1 years", true], ["Senior Developer", "", false], ["Lærling elektriker", "", true], ["Developer", "5+ years", false],
+  ["Sykepleier", "Nyutdannede oppfordres til å søke", false], ["Barnehagelærer/pedagogisk leder", "ingen erfaring", false], ["Butikkmedarbeider", "Ingen erfaring kreves", true], ["Kundeservicemedarbeider", "Erfaring er ikke et krav", true], ["Assistant Professor", "no experience required", false], ["Driftsleder", "", false]];
 for (const [t, x, w] of EXP) eq(`noexp "${t}" / "${x}"`, core.noExperienceOf(t, x), w);
 const est = core.enrichPay({ source: "remoteok", title: "Graduate Transport Planner", workplace: "remote", remoteFrom: "Worldwide", description: "Join our planning team." });
 eq("estimate is marked", est.paySrc, "est"); eq("estimate has no stated salary", !!est.salaryMin, false);

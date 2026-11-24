@@ -231,9 +231,18 @@ const CAT_RULES = [
 ];
 function categoryOf(text) { const t = String(text || "").toLowerCase(); for (const [c, re] of CAT_RULES) if (re.test(t)) return c; return ""; }
 // ---------- "no experience needed" ----------
-const EXP_YES = /(junior|entry[- ]level|\bgraduate\b|trainee|\bintern\b|internship|no experience|no prior experience|ingen erfaring|uten erfaring|lærling|nyutdannet|0\s*[-–]\s*1 years?)/i;
+// "No experience needed" = a first job anyone can start: no experience AND no required education or authorisation.
+// Title words that mark an entry role; ad text only counts when it says it plainly.
+const EXP_YES_TITLE = /(junior|entry[- ]level|\bgraduate\b|trainee|\bintern\b|internship|lærling|sommerjobb|ekstrahjelp|sesonghjelp|tilkallingshjelp|0\s*[-–]\s*1 years?)/i;
+const EXP_YES = /(no experience (is )?(required|needed)|no prior experience|ingen (krav til )?erfaring|uten krav til erfaring|erfaring er ikke (et )?krav|ikke krav (om|til) erfaring|0\s*[-–]\s*1 years?)/i;
 const EXP_NO = /(\b([2-9]|[1-9]\d)\s*\+\s*(years?|yrs|år)|\b([2-9]|[1-9]\d)\s*(\+|[-–]\s*\d+)?\s*(years?|yrs|år)\s+(of\s+)?(relevant\s+|professional\s+|work\s+|hands-on\s+)?(experience|erfaring|erfarenhet))/i;
-function noExperienceOf(title, text) { const x = `${title || ""}\n${text || ""}`; return EXP_YES.test(x) && !EXP_NO.test(x); }
+// roles that need a degree, a trade certificate or an authorisation are never "no experience needed"
+const EXP_NO_TITLE = /(sykepleier|sjukepleiar|spesialsykepleier|helsefagarbeider|vernepleier|lege\b|legespesialist|overlege|avtaleheimel|avtalehjemmel|psykolog|tannlege|fysioterapeut|ergoterapeut|jordmor|farmasøyt|barnehagelærer|lærer|lektor|pedagogisk leder|professor|stipendiat|postdoc|forsker|ingeniør|engineer|arkitekt|advokat|jurist|revisor|elektriker|rørlegger|tømrer|sveiser|mekaniker|leder|sjef|manager|direktør|director|head of|senior|principal|lead\b|spesialist|specialist|rådgiver|rådgjevar|saksbehandler|konsulent|consultant|controller|økonom|analytiker|analyst|architect)/i;
+function noExperienceOf(title, text) {
+  const t = String(title || ""), x = String(text || "");
+  if (EXP_NO_TITLE.test(t) && !/(lærling|trainee|junior|\bgraduate\b|\bintern\b|internship)/i.test(t)) return false;
+  return (EXP_YES_TITLE.test(t) || EXP_YES.test(x)) && !EXP_NO.test(`${t}\n${x}`);
+}
 function enrichPay(j) {
   if (j._payDone) return j; j._payDone = true;
   const text = j.description || `${j.summary || ""} | ${j.hints || ""}`;
