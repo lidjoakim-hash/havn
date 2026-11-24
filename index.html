@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta property="og:title" content="Havn – international jobs that show the pay"><meta property="og:description" content="Jobs in Norway, in English and Norwegian. Every Havn job shows the pay. Free to browse."><meta property="og:type" content="website"><meta property="og:image" content="https://havncareerhub.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta property="og:url" content="https://havncareerhub.com/"><link rel="canonical" href="https://havncareerhub.com/"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#F6F1E7"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Havn"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Havn: jobs in Norway in English and Norwegian. Every job shows the pay. Find jobs open to foreign workers, no Norwegian needed. Free for job seekers."><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style><title>Havn – jobs in Norway that show the pay</title><link rel="alternate" hreflang="en" href="https://havncareerhub.com/en/work-in-norway/">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta property="og:title" content="Havn – jobs in Norway that show the pay"><meta property="og:description" content="Jobs in Norway, in English and Norwegian. Every Havn job shows the pay. Free to browse."><meta property="og:type" content="website"><meta property="og:image" content="https://havncareerhub.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta property="og:url" content="https://havncareerhub.com/"><link rel="canonical" href="https://havncareerhub.com/"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#F6F1E7"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Havn"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Havn: jobs in Norway in English and Norwegian. Every job shows the pay. Find jobs open to foreign workers, no Norwegian needed. Free for job seekers."><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}img{max-width:100%}[hidden]{display:none!important}</style><title>Havn – jobs in Norway that show the pay</title><link rel="alternate" hreflang="en" href="https://havncareerhub.com/en/work-in-norway/">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,500..700,100;1,9..144,500..700,100&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
@@ -443,10 +443,10 @@ nav.main a.cta{background:var(--accent);color:var(--accent-ink);box-shadow:0 4px
 .mbar .t{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .detail{padding-bottom:30px}}
 @keyframes barin{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
-/* phones: one slim header row; the menu scrolls sideways, language picker stays visible */
-@media (max-width:640px){header.bar .wrap{flex-wrap:nowrap;gap:10px;padding-block:8px}.logo{font-size:19px}.logo svg{width:28px;height:28px}
-nav.main{flex-wrap:nowrap;overflow-x:auto;margin-left:0;flex:1;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch;align-items:center}nav.main::-webkit-scrollbar{display:none}
-nav.main a{flex:none;white-space:nowrap;padding:7px 10px;font-size:13.5px}nav.main .langsel{position:sticky;right:0;flex:none;margin-left:4px;box-shadow:-18px 0 14px 2px var(--bg)}
+/* phones: logo row, then the whole menu wraps underneath so every item (Post a job, Sign in) stays visible */
+@media (max-width:640px){header.bar .wrap{flex-wrap:wrap;gap:6px 10px;padding-block:8px}.logo{font-size:19px}.logo svg{width:28px;height:28px}
+nav.main{flex-wrap:wrap;overflow:visible;margin-left:0;flex:1 1 100%;min-width:0;align-items:center;gap:2px 4px}
+nav.main a{flex:none;white-space:nowrap;padding:6px 9px;font-size:13.5px}nav.main .langsel{flex:none;margin-left:auto}
 body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hidden]) .mbar) .ask-fab{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
 /* calm front page: short headline, search, a few quick filters, then the jobs */
 .hero{padding-block:30px 4px}
@@ -512,9 +512,8 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
       <form class="search" id="searchForm" role="search">
         <input id="q" type="search" data-i18n-ph="search.ph" placeholder="Job title, skill or company" aria-label="Search jobs" autocomplete="off">
         <select id="fromWhere" aria-label="Where you can work from">
-          <option value="" data-i18n="from.any">All countries</option>
+          <option value="" data-i18n="from.any">All of Norway</option>
           <option value="Norway" data-i18n="from.no">Jobs in Norway</option>
-          <option value="EU" data-i18n="from.eu">I'm elsewhere in the EU</option>
         </select>
         <button class="btn btn-primary" type="submit" data-i18n="search.btn">Search</button>
       </form>
@@ -537,8 +536,8 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
           <select id="fLevel"><option value="" data-i18n="any">Any</option><option value="Entry">Entry</option><option value="Mid">Mid</option><option value="Senior">Senior</option><option value="Lead">Lead</option></select></div>
         <div class="field"><label for="fLang" data-i18n="f.lang">Language</label>
           <select id="fLang"><option value="" data-i18n="any">Any</option><option value="English">English</option><option value="Norwegian">Norsk / Norwegian</option><option value="German">Deutsch / German</option><option value="Swedish">Svenska / Swedish</option><option value="Danish">Dansk / Danish</option><option value="Polish">Polski / Polish</option><option value="French">Français / French</option><option value="Spanish">Español / Spanish</option><option value="Dutch">Nederlands / Dutch</option></select></div>
-        <div class="field"><label for="fMin" data-i18n="f.min">Minimum yearly pay (EUR)</label>
-          <select id="fMin"><option value="0" data-i18n="nomin">No minimum</option><option value="25000">€25k+</option><option value="40000">€40k+</option><option value="60000">€60k+</option><option value="80000">€80k+</option></select></div>
+        <div class="field"><label for="fMin" data-i18n="f.min">Minimum yearly pay (NOK)</label>
+          <select id="fMin"><option value="0" data-i18n="nomin">No minimum</option><option value="25500">300 000 kr+</option><option value="34000">400 000 kr+</option><option value="42500">500 000 kr+</option><option value="51000">600 000 kr+</option><option value="68000">800 000 kr+</option></select></div>
         <div class="field"><label for="fTz" data-i18n="f.tz">Working hours</label>
           <select id="fTz"><option value="" data-i18n="any">Any</option><option value="cet" data-i18n="tz.cet">Fits European time (CET)</option></select></div>
         <div class="field"><label for="fSort" data-i18n="f.sort">Sort</label>
@@ -647,7 +646,7 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
       <div class="panel roi" style="margin-top:22px">
         <div class="flabel">WHAT A HIRE COSTS YOU</div>
         <div class="roi-grid">
-          <div class="field"><label for="roiSalary">Yearly salary of the hire (EUR)</label><input id="roiSalary" type="number" inputmode="numeric" value="45000" min="0"></div>
+          <div class="field"><label for="roiSalary">Yearly salary of the hire (NOK)</label><input id="roiSalary" type="number" inputmode="numeric" value="550000" min="0"></div>
           <div class="roi-out" id="roiOut"></div>
         </div>
         <p class="muted" style="font-size:13px;margin:8px 0 0">Recruitment agencies typically charge 15–25% of the first year's salary. Ranges vary by market and role.</p>
@@ -730,23 +729,23 @@ body:has(#v-job:not([hidden]) .mbar){padding-bottom:84px}body:has(#v-job:not([hi
 "use strict";
 /* ================= constants ================= */
 const CATS=["Engineering","Design","Product","Marketing","Sales","Customer support","Operations","Admin & office","Hospitality & events","Creative & media","Logistics & warehouse","Maritime","Healthcare","Education","Construction & trades","Other"];
-const REGIONS=["Worldwide","Europe","Nordics","Norway"];
-const COUNTRIES=["Norway","Sweden","Denmark","Germany","Netherlands","Spain","Poland","United Kingdom","Other"];
-const CUR=["NOK","EUR","USD","SEK","DKK","GBP"];
+const REGIONS=["Norway","Nordics","Europe"];
+const COUNTRIES=["Norway"];
+const CUR=["NOK","EUR"];
 const TYPES=["Full-time","Part-time","Contract","Freelance","Seasonal","Internship"];
 const LEVELS=["Entry","Mid","Senior","Lead"];
 const TO_EUR={EUR:1,NOK:0.085,USD:0.92,SEK:0.087,DKK:0.134,GBP:1.17,CHF:1.05,PLN:0.23,CAD:0.67,AUD:0.6,INR:0.011,SGD:0.69};
 const PER_YEAR={year:1,month:12,hour:1650};
 const TIERS={
   standard:{name:"Standard",price:0,label:"Free at launch",rank:0},
-  boost:{name:"Boost",price:79,label:"€79 per post",rank:1},
-  featured:{name:"Featured",price:199,label:"€199 per post",rank:2}
+  boost:{name:"Boost",price:79,label:"€79 per post (≈ 930 kr)",rank:1},
+  featured:{name:"Featured",price:199,label:"€199 per post (≈ 2 340 kr)",rank:2}
 };
 const PLANS=[
-  {id:"standard",name:"Standard",price:{month:"€0",year:"€0"},per:{month:"launch offer",year:"launch offer"},items:["1 job live for 30 days","Human review within 1 working day","Listed in search and category pages","Apply by link, email or Quick apply"],btn:"Post for free"},
-  {id:"boost",name:"Boost",price:{month:"€79",year:"€79"},per:{month:"per post",year:"per post"},items:["Everything in Standard","Highlighted and pinned in its category for 7 days","Shown first in matching weekly digests","Shareable job link with preview"],btn:"Choose Boost"},
-  {id:"featured",name:"Featured",price:{month:"€199",year:"€199"},per:{month:"per post",year:"per post"},hot:true,items:["Everything in Boost","Pinned at the top of the board for 30 days","Posted on Havn's Instagram, Facebook and LinkedIn","Top spot in the weekly digest"],btn:"Choose Featured"},
-  {id:"pro",name:"Hiring Pro",price:{month:"€349",year:"€2,990"},per:{month:"per month",year:"per year"},items:["Unlimited job posts, all Featured","Company page with all your jobs","Verified company badge","Applicant inbox, CSV export and priority support"],btn:"Talk to us"}
+  {id:"standard",name:"Standard",price:{month:"0 kr",year:"0 kr"},per:{month:"launch offer",year:"launch offer"},items:["1 job live for 30 days","Human review within 1 working day","Listed in search and category pages","Apply by link, email or Quick apply"],btn:"Post for free"},
+  {id:"boost",name:"Boost",price:{month:"€79",year:"€79"},per:{month:"per post · ≈ 930 kr",year:"per post · ≈ 930 kr"},items:["Everything in Standard","Highlighted and pinned in its category for 7 days","Shown first in matching weekly digests","Shareable job link with preview"],btn:"Choose Boost"},
+  {id:"featured",name:"Featured",price:{month:"€199",year:"€199"},per:{month:"per post · ≈ 2 340 kr",year:"per post · ≈ 2 340 kr"},hot:true,items:["Everything in Boost","Pinned at the top of the board for 30 days","Posted on Havn's Instagram, Facebook and TikTok","Top spot in the weekly digest"],btn:"Choose Featured"},
+  {id:"pro",name:"Hiring Pro",price:{month:"€349",year:"€2,990"},per:{month:"per month · ≈ 4 100 kr",year:"per year · ≈ 35 200 kr"},items:["Unlimited job posts, all Featured","Company page with all your jobs","Verified company badge","Applicant inbox, CSV export and priority support"],btn:"Talk to us"}
 ];
 const CHIPS=[
   {id:"intl",k:"chip.intl",on:f=>f.intl,set:on=>{S.intl=on}},
@@ -758,7 +757,7 @@ const CHIPS=[
   {id:"visa",k:"chip.visa",on:f=>f.visa,set:on=>{$("#fVisa").checked=on}},
   {id:"cet",k:"chip.cet",on:f=>f.tz==="cet",set:on=>{$("#fTz").value=on?"cet":""}},
   {id:"paid",k:"chip.paid",on:f=>f.payOnly,set:on=>{S.payOnly=on}},
-  {id:"pay",k:"chip.pay",on:f=>f.min>=50000,set:on=>{$("#fMin").value=on?"60000":"0"}}
+  {id:"pay",k:"chip.pay",on:f=>f.min>=50000,set:on=>{$("#fMin").value=on?"51000":"0"}}
 ];
 const DAY=86400000;const PAGE=30;
 const STAGES=["applied","interview","offer","rejected"];
@@ -774,16 +773,16 @@ const T={
 en:{
 "d.checked":"Still open at the source, checked {when}",
 "d.who":"Check the ad: some employers only hire in certain countries.","d.jobicynote":"Jobicy may ask you to sign in before it shows the apply link.",
-"meta.title":"Havn – international jobs that show the pay","meta.desc":"Jobs in Norway, in English and Norwegian. Every job shows the pay, stated by the employer or clearly marked as an estimate. Free for job seekers.",
+"meta.title":"Havn – jobs in Norway that show the pay","meta.desc":"Jobs in Norway, in English and Norwegian. Every job shows the pay, stated by the employer or clearly marked as an estimate. Free for job seekers.",
 "nav.jobs":"Find jobs","nav.my":"My jobs","nav.salaries":"Salaries","nav.employers":"For employers","nav.post":"Post a job",
 "hero.eyebrow":"Jobs in Norway · English and Norwegian",
 "hero.h1":"Find your next job. <em>See the pay</em> first.",
 "hero.lede":"Jobs posted directly on Havn are checked by a person, always show the salary and expire after 30 days. Alongside them you can search thousands of jobs gathered from NAV, Arbetsförmedlingen, remote job boards and company career pages. When an ad doesn't state the pay, we show a typical pay estimate and label it as one.",
 "p1":"Pay on every job, stated or estimate","p2":"Human-reviewed Havn posts","p3":"Free for job seekers, always","p4":"Clear \"remote from\" rules",
-"search.ph":"Job title, skill or company — or describe the job you want","from.any":"All countries","from.no":"Jobs in Norway","from.eu":"I'm elsewhere in the EU","search.btn":"Search",
+"search.ph":"Job title, skill or company — or describe the job you want","from.any":"All of Norway","from.no":"Jobs in Norway","from.eu":"I'm elsewhere in the EU","search.btn":"Search",
 "ai.search":"Search with AI","ai.try":"Try: \"customer support in Stavanger, at least 450 000 kr\"","ai.thinking":"Thinking…","ai.set":"Filters set from your search.","ai.typefirst":"Type what you're looking for first.",
-"chip.no":"Remote from Norway","chip.stv":"Stavanger","chip.new":"New this week","chip.noexp":"No experience needed","chip.direct":"Direct employers","chip.visa":"Relocation help","chip.pay":"€50k+ a year","chip.cet":"European hours",
-"f.work":"Workplace","any":"Any","remote":"Remote","hybrid":"Hybrid","onsite":"On-site","f.cat":"Category","allcats":"All categories","f.type":"Job type","f.level":"Seniority","f.min":"Minimum yearly pay (EUR)","nomin":"No minimum","f.tz":"Working hours","tz.cet":"Fits European time (CET)","f.sort":"Sort","sort.new":"Newest first","sort.pay":"Highest pay","sort.match":"Best match to my CV","f.direct":"Direct employers only","f.noexp":"No experience needed","f.visa":"Relocation or visa help","clear":"Clear filters","filters":"Filters",
+"chip.no":"Remote from Norway","chip.stv":"Stavanger","chip.new":"New this week","chip.noexp":"No experience needed","chip.direct":"Direct employers","chip.visa":"Relocation help","chip.pay":"600 000 kr+ a year","chip.cet":"European hours",
+"f.work":"Workplace","any":"Any","remote":"Remote","hybrid":"Hybrid","onsite":"On-site","f.cat":"Category","allcats":"All categories","f.type":"Job type","f.level":"Seniority","f.min":"Minimum yearly pay (NOK)","nomin":"No minimum","f.tz":"Working hours","tz.cet":"Fits European time (CET)","f.sort":"Sort","sort.new":"Newest first","sort.pay":"Highest pay","sort.match":"Best match to my CV","f.direct":"Direct employers only","f.noexp":"No experience needed","f.visa":"Relocation or visa help","clear":"Clear filters","filters":"Filters",
 "cv.title":"MATCH JOBS TO YOUR CV","cv.text":"Paste your CV. AI scores open jobs for you. Your CV is saved only in this browser, but when you run a match the CV text is sent to our AI provider (Anthropic) to create the scores.","cv.label":"YOUR CV","cv.ph":"Paste your CV or a summary of your experience","cv.btn":"Score jobs","cv.more":"Paste a bit more of your CV first.","cv.scoring":"Scoring {n} jobs…","cv.done":"Done. Jobs are sorted by match.","cv.none":"No open jobs to score yet.",
 "dg.title":"WEEKLY DIGEST","dg.text":"Get the best new jobs that match your search, once a week.","dg.btn":"Get the digest",
 "recent":"RECENTLY VIEWED","m.open":"open jobs","m.cos":"companies","m.remote":"remote","m.median":"Median pay","m.new":"new in 3 days","m.since":"{n} new since your last visit",
@@ -806,16 +805,16 @@ en:{
 no:{
 "d.checked":"Fortsatt åpen hos kilden, sjekket {when}",
 "d.who":"Sjekk annonsen: noen arbeidsgivere ansetter bare i bestemte land.","d.jobicynote":"Jobicy kan be deg logge inn før søknadslenken vises.",
-"meta.title":"Havn – jobber som viser lønnen","meta.desc":"Jobber i Norge, på norsk og engelsk. Hver jobb viser lønn, oppgitt av arbeidsgiver eller tydelig merket som estimat. Gratis for jobbsøkere.",
+"meta.title":"Havn – ledige jobber i Norge som viser lønna","meta.desc":"Jobber i Norge, på norsk og engelsk. Hver jobb viser lønn, oppgitt av arbeidsgiver eller tydelig merket som estimat. Gratis for jobbsøkere.",
 "nav.jobs":"Finn jobb","nav.my":"Mine jobber","nav.salaries":"Lønninger","nav.employers":"For arbeidsgivere","nav.post":"Legg ut jobb",
 "hero.eyebrow":"Jobber i Norge · norsk og engelsk",
 "hero.h1":"Finn din neste jobb. <em>Se lønna</em> først.",
 "hero.lede":"Jobber som legges ut direkte på Havn sjekkes av et menneske, viser alltid lønn og utløper etter 30 dager. I tillegg kan du søke i tusenvis av jobber hentet fra NAV, Arbetsförmedlingen, fjernarbeidstavler og bedrifters egne karrieresider. Når annonsen ikke oppgir lønn, viser vi et estimat av vanlig lønn og merker det tydelig.",
 "p1":"Lønn på hver jobb, oppgitt eller estimat","p2":"Havn-annonser sjekkes av et menneske","p3":"Alltid gratis for jobbsøkere","p4":"Tydelig hvor du kan jobbe fra",
-"search.ph":"Stilling, ferdighet eller firma – eller beskriv jobben du vil ha","from.any":"Alle land","from.no":"Jobber i Norge","from.eu":"Jeg er et annet sted i EU","search.btn":"Søk",
+"search.ph":"Stilling, ferdighet eller firma – eller beskriv jobben du vil ha","from.any":"Hele Norge","from.no":"Jobber i Norge","from.eu":"Jeg er et annet sted i EU","search.btn":"Søk",
 "ai.search":"Søk med KI","ai.try":"Prøv: «kundeservice hjemmefra i Norge, minst 450 000 kr»","ai.thinking":"Tenker …","ai.set":"Filtrene er satt ut fra søket ditt.","ai.typefirst":"Skriv hva du ser etter først.",
-"chip.no":"Fjernarbeid fra Norge","chip.stv":"Stavanger","chip.new":"Nye denne uken","chip.noexp":"Ingen erfaring kreves","chip.direct":"Direkte arbeidsgivere","chip.visa":"Hjelp med flytting","chip.pay":"€50k+ i året","chip.cet":"Europeisk arbeidstid",
-"f.work":"Arbeidssted","any":"Alle","remote":"Fjernarbeid","hybrid":"Hybrid","onsite":"På stedet","f.cat":"Kategori","allcats":"Alle kategorier","f.type":"Stillingstype","f.level":"Nivå","f.min":"Minste årslønn (EUR)","nomin":"Ingen minimum","f.tz":"Arbeidstid","tz.cet":"Passer europeisk tid (CET)","f.sort":"Sorter","sort.new":"Nyeste først","sort.pay":"Høyest lønn","sort.match":"Best match med CV-en min","f.direct":"Bare direkte arbeidsgivere","f.noexp":"Ingen erfaring kreves","f.visa":"Hjelp med flytting eller visum","clear":"Nullstill filtre","filters":"Filtre",
+"chip.no":"Fjernarbeid fra Norge","chip.stv":"Stavanger","chip.new":"Nye denne uken","chip.noexp":"Ingen erfaring kreves","chip.direct":"Direkte arbeidsgivere","chip.visa":"Hjelp med flytting","chip.pay":"600 000 kr+ i året","chip.cet":"Europeisk arbeidstid",
+"f.work":"Arbeidssted","any":"Alle","remote":"Fjernarbeid","hybrid":"Hybrid","onsite":"På stedet","f.cat":"Kategori","allcats":"Alle kategorier","f.type":"Stillingstype","f.level":"Nivå","f.min":"Minste årslønn (kr)","nomin":"Ingen minimum","f.tz":"Arbeidstid","tz.cet":"Passer europeisk tid (CET)","f.sort":"Sorter","sort.new":"Nyeste først","sort.pay":"Høyest lønn","sort.match":"Best match med CV-en min","f.direct":"Bare direkte arbeidsgivere","f.noexp":"Ingen erfaring kreves","f.visa":"Hjelp med flytting eller visum","clear":"Nullstill filtre","filters":"Filtre",
 "cv.title":"MATCH JOBBER MED CV-EN DIN","cv.text":"Lim inn CV-en din. KI gir ledige jobber en score for deg. CV-en lagres bare i denne nettleseren, men når du kjører matching sendes CV-teksten til vår KI-leverandør (Anthropic) for å lage scorene.","cv.label":"DIN CV","cv.ph":"Lim inn CV-en eller et sammendrag av erfaringen din","cv.btn":"Gi jobbene score","cv.more":"Lim inn litt mer av CV-en først.","cv.scoring":"Gir {n} jobber score …","cv.done":"Ferdig. Jobbene er sortert etter match.","cv.none":"Ingen ledige jobber å vurdere ennå.",
 "dg.title":"UKENTLIG OVERSIKT","dg.text":"Få de beste nye jobbene som passer søket ditt, én gang i uken.","dg.btn":"Få oversikten",
 "recent":"SIST SETT","m.open":"ledige jobber","m.cos":"bedrifter","m.remote":"fjernarbeid","m.median":"Medianlønn","m.new":"nye siste 3 dager","m.since":"{n} nye siden sist",
@@ -1237,7 +1236,7 @@ OPEN JOBS (${live.length}):\n${JSON.stringify(live)}`;
 /* ================= employers ================= */
 // employer page: live numbers from the job index (real counts, refreshed every 30 min) and a sample Featured card
 function renderEmp(){const m=S.indexMeta;const el=$("#empLive");if(el&&m&&m.count){const f=n=>new Intl.NumberFormat(S.lang==="en"?"en-GB":"nb-NO").format(n);
-    el.innerHTML=[[m.count,"open jobs on Havn"],[m.companies,"companies hiring"],[m.countries,"countries"],[m.new24h,"new jobs in 24 hours"]].map(([n,l])=>`<div><b>${f(n||0)}</b><span>${esc(l)}</span></div>`).join("")}
+    el.innerHTML=[[m.count,"open jobs on Havn"],[m.companies,"companies hiring"],[m.noExperience,"jobs for beginners"],[m.count,"jobs that show the pay"]].map(([n,l])=>`<div><b>${f(n||0)}</b><span>${esc(l)}</span></div>`).join("")}
   const sm=$("#empSample");if(sm&&!sm.dataset.done){sm.dataset.done=1;sm.innerHTML=card({id:"sample",title:"Warehouse Team Lead",company:"Your Company AS",category:"Logistics & warehouse",jobType:"Full-time",workplace:"onsite",country:"Norway",location:"Stavanger",salaryMin:520000,salaryMax:600000,currency:"NOK",salaryPeriod:"year",languages:"English",tier:"featured",createdAt:now(),seniority:"Mid"},{preview:true})}}
 function renderPlans(){
   document.querySelectorAll("[data-bill]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.bill===S.bill));
@@ -1653,7 +1652,7 @@ async function setModeration(id,show){const m=JSON.parse(JSON.stringify(S.modDoc
 async function adminAction(fn,okMsg){try{await fn();toast(okMsg)}catch(e){toast("Couldn't save. Try again.")}}
 
 /* ================= employer ROI ================= */
-function renderRoi(){const v=Math.max(0,+$("#roiSalary").value||0);$("#roiOut").innerHTML=`<div><b>${money(v*0.15,"EUR")}–${money(v*0.25,"EUR")}</b><span>Typical agency fee</span></div><div><b>${money(199,"EUR")}</b><span>Featured post on Havn</span></div>${v?`<div><b style="color:var(--good)">${money(Math.max(0,v*0.15-199),"EUR")}+</b><span>You keep</span></div>`:""}`}
+function renderRoi(){const v=Math.max(0,+$("#roiSalary").value||0);$("#roiOut").innerHTML=`<div><b>${money(v*0.15,"NOK")}–${money(v*0.25,"NOK")}</b><span>Typical agency fee</span></div><div><b>${money(2340,"NOK")}</b><span>Featured post on Havn (€199)</span></div>${v?`<div><b style="color:var(--good)">${money(Math.max(0,v*0.15-199),"EUR")}+</b><span>You keep</span></div>`:""}`}
 
 /* ================= admin bulk import ================= */
 const BULK={items:[]};

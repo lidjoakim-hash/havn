@@ -99,6 +99,8 @@ const best = new Map(); let dupes = 0;
 for (const j of raw.values()) {
   if (j.status && j.status !== "active") continue;
   if (j.country !== "Norway") continue; // Havn is Norway only
+  if (/\b(germany|deutschland|sweden|sverige|denmark|danmark|finland|poland|netherlands|united kingdom|spain|france|usa|united states)\b/i.test(j.location || "")) continue; // location says another country
+  if (/\bintern(e)? (utlysning|stilling)\b/i.test(j.title || "")) continue; // internal postings are only for the company's own staff
   if (block[j.id] || (j.mod && j.mod.level === "hide" && !allow[j.id])) continue;
   if (/^tj[äa]na\b|\bren provisjon\b|\bprovisionsbaserad\b|\bprovisjonsbasert\b/i.test(j.title || "")) continue; // commission-only sales spam // discriminatory ad (see moderation.js)
   if ((j.expiresAt || 0) < now) continue;

@@ -143,14 +143,17 @@ const TECH = /(engineer|developer|software|data|machine learning|devops|security
 function estimateAny(j) {
   const t = `${j.title || ""}`.toLowerCase();
   const HOURLY = /(sommerjobb|summer job|ekstrahjelp|extra help|extrajobb|student|tilkalling|ringevikar|timvikarie|deltid|part[- ]time|werkstudent|helgejobb|helgestilling|helgevakt|julehjelp|sesonghjelp|barnepasser|barnevakt|barnvakt|barnpassning|nanny|childminder|babysit|läxhjälp|leksehjelp|privatlärare)/;
-  if (HOURLY.test(t) && (!j.country || COUNTRY[j.country])) {
+  // part-time jobs (by type, or a job share like "60% stilling" in the title) get an hourly estimate: a full-time yearly figure misleads
+  const share = (t.match(/(\d{1,2}(?:[.,]\d+)?)\s*%/) || [])[1];
+  const partTime = j.jobType === "Part-time" || (share && +share.replace(",", ".") < 100) || /\b\d{1,2}\s+stilling\b/.test(t);
+  if ((HOURLY.test(t) || partTime) && (!j.country || COUNTRY[j.country])) {
     const [f, c] = COUNTRY[j.country || "Norway"]; const r = NOK_TO[c] || NOK_TO.EUR, step = r > 0.5 ? 5 : 1;
     let lo = 180, hi = 220; const base = payEstimate(j); // a known profession keeps its own level, as an hourly rate (full-time hours: 1,850 a year)
     if (base) { lo = Math.max(180, base.min / 1850); hi = Math.max(lo * 1.1, base.max / 1850); const mid = Math.sqrt(lo * hi); if (hi / lo > 1.22) { lo = mid / 1.1; hi = mid * 1.1; } }
     return { min: Math.round(lo * f * r / step) * step, max: Math.round(hi * f * r / step) * step, period: "hour", currency: c };
   }
   if (/(lærling|apprentice|ausbildung)/.test(t)) { const [f, c] = COUNTRY[j.country] || [1, "NOK"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(260000 * f * r / 1000) * 1000, max: Math.round(380000 * f * r / 1000) * 1000, period: "year", currency: c }; }
-  if (/(\bintern\b|\binternship|praktikant|trainee)/.test(t)) { const [f, c] = (j.workplace === "remote" ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || [0.8, "EUR"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(300000 * f * r / 1000) * 1000, max: Math.round(420000 * f * r / 1000) * 1000, period: "year", currency: c }; }
+  if (/(\bintern\b|\binternship|praktikant|trainee)/.test(t) && !/\bintern(e)? (utlysning|stilling|søknad)/.test(t)) { const [f, c] = (j.workplace === "remote" ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || [0.8, "EUR"]; const r = NOK_TO[c] || NOK_TO.EUR; return { min: Math.round(300000 * f * r / 1000) * 1000, max: Math.round(420000 * f * r / 1000) * 1000, period: "year", currency: c }; }
   let base = payEstimate(j);
   if (!base) { const c = CAT_EST[j.category] || CAT_EST.Other; base = { min: c[0], max: c[1], period: "year" }; }
   let [f, cur] = (j.workplace === "remote" && j.remoteFrom ? REMOTE_LEVEL[j.remoteFrom] : COUNTRY[j.country]) || (j.workplace === "remote" ? REMOTE_LEVEL.Europe : COUNTRY.Norway);
