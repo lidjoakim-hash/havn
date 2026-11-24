@@ -124,8 +124,8 @@ ul.jobs a{font-weight:600;text-decoration:none;color:var(--fg)}ul.jobs span{disp
 @media (prefers-reduced-motion:reduce){.art *{animation:none!important}}`;
 
 const UI = {
-  nb: { all: "Alle jobber", emp: "For arbeidsgivere", foot: "Havn – jobber i Norge som viser lønnen. Gratis å bla i.", priv: "Personvern" },
-  en: { all: "All jobs", emp: "For employers", foot: "Havn – jobs in Norway that show the pay. Free to browse.", priv: "Privacy" },
+  nb: { all: "Alle jobber", emp: "For arbeidsgivere", foot: "Havn – ledige jobber i Norge. Gratis å bla i.", priv: "Personvern" },
+  en: { all: "All jobs", emp: "For employers", foot: "Havn – jobs in Norway. Free to browse.", priv: "Privacy" },
 };
 // Keep every page title at 30-60 characters and every meta description at 120-160, so search results show them whole.
 function fitTitle(t, lang = "nb") {
@@ -138,10 +138,10 @@ function fitTitle(t, lang = "nb") {
 }
 function fitDesc(d, lang) {
   d = String(d).replace(/\s+/g, " ").trim();
-  const more = lang === "en" ? " Pay is shown on every job. Free to use on Havn." : " Lønn vises på hver jobb. Gratis å bruke på Havn.";
+  const more = lang === "en" ? " Free to use on Havn." : " Gratis å bruke på Havn.";
   if (d.length < 120 && !d.includes(more.trim())) d += more;
   if (d.length < 120) d += lang === "en" ? " Updated several times a day." : " Oppdatert flere ganger om dagen.";
-  if (d.length < 120) d += lang === "en" ? " Find jobs in Norway with pay stated or clearly estimated." : " Finn jobber i Norge med oppgitt eller tydelig estimert lønn.";
+  if (d.length < 120) d += lang === "en" ? " Free for job seekers." : " Gratis for jobbsøkere.";
   if (d.length > 160) { const cut = d.slice(0, 157); const i = cut.lastIndexOf(" "); d = cut.slice(0, i > 100 ? i : 157).replace(/[ ,.;:–-]+$/, "") + "…"; }
   return d;
 }
@@ -236,7 +236,7 @@ function payLine(jobs, lang) {
   const v = jobs.map(yearlyNok).filter(Boolean).sort((x, y) => x - y);
   if (v.length < 8) return "";
   const lo = pad(v[Math.floor(v.length * 0.25)]), hi = pad(v[Math.floor(v.length * 0.75)]);
-  return lang === "en" ? `Typical full-time pay in these ads: about ${nfmt(lo)}–${nfmt(hi)} NOK a year (stated pay and clearly marked estimates, ${v.length} ads).` : `Typisk heltidslønn i disse annonsene: ca. ${nfmt(lo)}–${nfmt(hi)} kr i året (oppgitt lønn og tydelig merkede estimater, ${v.length} annonser).`;
+  return lang === "en" ? `Typical full-time pay in these ads: about ${nfmt(lo)}–${nfmt(hi)} NOK a year (stated pay, ${v.length} ads).` : `Typisk heltidslønn i disse annonsene: ca. ${nfmt(lo)}–${nfmt(hi)} kr i året (oppgitt lønn, ${v.length} annonser).`;
 }
 function topCats(jobs, n = 3) {
   const c = {}; for (const j of jobs) if (j.category && j.category !== "Other") c[j.category] = (c[j.category] || 0) + 1;
@@ -347,7 +347,7 @@ const TOPICS = [
 const catPages = [], cityPages = [];
 const popular = []; // links for the all-jobs page
 for (const [cat, js] of Object.entries(byCat)) {
-  await put(`/jobs/${slug(cat)}/`, landing({ title: `${nameOfCat(cat)} – ledige jobber`, h1: `${nameOfCat(cat)} – ledige jobber`, desc: `${js.length} ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge. Lønn vises på hver jobb.`, intro: `Ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge. ${payLine(js, "nb")}`.trim(), path: `/jobs/${slug(cat)}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]] }));
+  await put(`/jobs/${slug(cat)}/`, landing({ title: `${nameOfCat(cat)} – ledige jobber`, h1: `${nameOfCat(cat)} – ledige jobber`, desc: `${js.length} ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge. Lønn vises når den er oppgitt.`, intro: `Ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i Norge. ${payLine(js, "nb")}`.trim(), path: `/jobs/${slug(cat)}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]] }));
   urls.push(`${SITE}/jobs/${slug(cat)}/`);
 }
 for (const t of TOPICS) {
@@ -356,11 +356,11 @@ for (const t of TOPICS) {
   const cityLinks = [];
   const byC = {}; for (const j of js) { const c = normCity(j); if (c) (byC[c] ||= []).push(j); }
   if (t.city) for (const [c, cj] of Object.entries(byC).sort((a, b) => b[1].length - a[1].length)) if (cj.length >= 5) {
-    await put(`/by/${slug(c)}/${t.key}/`, landing({ title: t.city(c), h1: t.city(c), desc: `${cj.length} ${t.name.toLowerCase()} i ${c} på Havn. Lønn vises på hver jobb.`, intro: `${t.name} i ${c}. ${payLine(cj, "nb")}`.trim(), path: `/by/${slug(c)}/${t.key}/`, jobs: cj, crumbs: [["Alle jobber", "/jobs/"], [`Jobber i ${c}`, `/by/${slug(c)}/`]] }));
+    await put(`/by/${slug(c)}/${t.key}/`, landing({ title: t.city(c), h1: t.city(c), desc: `${cj.length} ${t.name.toLowerCase()} i ${c} på Havn. Lønn vises når den er oppgitt.`, intro: `${t.name} i ${c}. ${payLine(cj, "nb")}`.trim(), path: `/by/${slug(c)}/${t.key}/`, jobs: cj, crumbs: [["Alle jobber", "/jobs/"], [`Jobber i ${c}`, `/by/${slug(c)}/`]] }));
     urls.push(`${SITE}/by/${slug(c)}/${t.key}/`); cityLinks.push([c, `/by/${slug(c)}/${t.key}/`, cj.length]);
   }
   const sec = cityLinks.length ? `<h2>Etter by</h2>${linkList(cityLinks.slice(0, 40))}` : "";
-  await put(`/jobs/${t.key}/`, landing({ title: t.h1, h1: t.h1, desc: `${js.length} ${t.name.toLowerCase()} på Havn. Lønn vises på hver jobb: oppgitt av arbeidsgiver eller et tydelig merket estimat.`, intro: `${t.intro} ${payLine(js, "nb")}`.trim(), path: `/jobs/${t.key}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]], sections: sec }));
+  await put(`/jobs/${t.key}/`, landing({ title: t.h1, h1: t.h1, desc: `${js.length} ${t.name.toLowerCase()} på Havn. Lønn vises når arbeidsgiveren har oppgitt den.`, intro: `${t.intro} ${payLine(js, "nb")}`.trim(), path: `/jobs/${t.key}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]], sections: sec }));
   urls.push(`${SITE}/jobs/${t.key}/`); popular.push([t.name, `/jobs/${t.key}/`, js.length]);
 }
 // Norwegian cities from 3 jobs; other countries only for clean city names with 10+ jobs (location strings from some feeds are messy)
@@ -368,15 +368,15 @@ const cities = Object.entries(byCity).filter(([c, js]) => (js.filter((j) => j.co
 for (const [city, js] of cities) {
   const cats = Object.entries(byCat).map(([c]) => [c, js.filter((j) => j.category === c)]).filter(([, cj]) => cj.length >= 8).sort((a, b) => b[1].length - a[1].length);
   for (const [cat, cj] of cats) {
-    await put(`/by/${slug(city)}/${slug(cat)}/`, landing({ title: `${nameOfCat(cat)} – ledige jobber i ${city}`, h1: `${nameOfCat(cat)} i ${city}`, desc: `${cj.length} ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i ${city}. Lønn vises på hver jobb.`, intro: `Ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i ${city}. ${payLine(cj, "nb")}`.trim(), path: `/by/${slug(city)}/${slug(cat)}/`, jobs: cj, crumbs: [["Alle jobber", "/jobs/"], [`Jobber i ${city}`, `/by/${slug(city)}/`]] }));
+    await put(`/by/${slug(city)}/${slug(cat)}/`, landing({ title: `${nameOfCat(cat)} – ledige jobber i ${city}`, h1: `${nameOfCat(cat)} i ${city}`, desc: `${cj.length} ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i ${city}. Lønn vises når den er oppgitt.`, intro: `Ledige stillinger innen ${nameOfCat(cat).toLowerCase()} i ${city}. ${payLine(cj, "nb")}`.trim(), path: `/by/${slug(city)}/${slug(cat)}/`, jobs: cj, crumbs: [["Alle jobber", "/jobs/"], [`Jobber i ${city}`, `/by/${slug(city)}/`]] }));
     urls.push(`${SITE}/by/${slug(city)}/${slug(cat)}/`);
   }
   const intlN = js.filter((j) => intlJob(j)).length;
   const top = topCats(js).map(([c, n]) => `${nameOfCat(c).toLowerCase()} (${n})`).join(", ");
-  const intro = `${js.length} ledige jobber i ${city} akkurat nå, fra NAV og arbeidsgivere, oppdatert flere ganger om dagen.${top ? ` Flest innen ${top}.` : ""} ${payLine(js, "nb")}${intlN >= 3 ? ` ${intlN} av jobbene passer for deg som ikke snakker norsk.` : ""} Alle jobber på Havn viser lønn: oppgitt av arbeidsgiver, eller et tydelig merket estimat.`.replace(/\s+/g, " ").trim();
+  const intro = `${js.length} ledige jobber i ${city} akkurat nå, fra NAV og arbeidsgivere, oppdatert flere ganger om dagen.${top ? ` Flest innen ${top}.` : ""} ${payLine(js, "nb")}${intlN >= 3 ? ` ${intlN} av jobbene passer for deg som ikke snakker norsk.` : ""} Lønn vises når arbeidsgiveren har oppgitt den. Vi gjetter aldri.`.replace(/\s+/g, " ").trim();
   const topicLinks = TOPICS.filter((t) => t.city).map((t) => [t, js.filter(t.test)]).filter(([, tj]) => tj.length >= 5).map(([t, tj]) => [t.city(city), `/by/${slug(city)}/${t.key}/`, tj.length]);
   const sec = `${cats.length ? `<h2>Etter fagfelt i ${esc(city)}</h2>${linkList(cats.map(([c, cj]) => [`${nameOfCat(c)} i ${city}`, `/by/${slug(city)}/${slug(c)}/`, cj.length]))}` : ""}${topicLinks.length ? `<h2>Andre søk i ${esc(city)}</h2>${linkList(topicLinks)}` : ""}<h2>Andre byer</h2>${linkList(cities.filter(([c, cj]) => c !== city && cj.filter((j) => j.country === "Norway").length >= cj.length / 2).slice(0, 14).map(([c, cj]) => [`Jobber i ${c}`, `/by/${slug(c)}/`, cj.length]))}`;
-  await put(`/by/${slug(city)}/`, landing({ title: `Ledige jobber i ${city} (${js.length}) – lønn vist`, h1: `Ledige jobber i ${city}`, desc: `${js.length} ledige jobber i ${city}. Lønn vises på hver jobb. Oppdatert flere ganger om dagen. Gratis for jobbsøkere.`, intro, path: `/by/${slug(city)}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]], sections: sec }));
+  await put(`/by/${slug(city)}/`, landing({ title: `Ledige jobber i ${city} (${js.length})`, h1: `Ledige jobber i ${city}`, desc: `${js.length} ledige jobber i ${city}. Lønn vises når den er oppgitt. Oppdatert flere ganger om dagen. Gratis for jobbsøkere.`, intro, path: `/by/${slug(city)}/`, jobs: js, crumbs: [["Alle jobber", "/jobs/"]], sections: sec }));
   urls.push(`${SITE}/by/${slug(city)}/`);
 }
 
@@ -394,7 +394,7 @@ const intlByCity = {}; for (const j of intlAll) { const c = normCity(j); if (c) 
 const intlCities = Object.entries(intlByCity).filter(([, js]) => js.length >= 6).sort((a, b) => b[1].length - a[1].length);
 for (const [city, js] of intlCities) {
   const top = topCats(js).map(([c, n]) => `${c.toLowerCase()} (${n})`).join(", ");
-  const intro = `${js.length} open jobs in ${city}, Norway, that suit people from abroad: the ad is in English, or Norwegian isn't required.${top ? ` Most are in ${top}.` : ""} ${payLine(js, "en")} Every job on Havn shows the pay: stated by the employer, or a clearly marked estimate. Apply directly with the employer.`.replace(/\s+/g, " ").trim();
+  const intro = `${js.length} open jobs in ${city}, Norway, that suit people from abroad: the ad is in English, or Norwegian isn't required.${top ? ` Most are in ${top}.` : ""} ${payLine(js, "en")} Pay is shown when the employer states it. We never guess. Apply directly with the employer.`.replace(/\s+/g, " ").trim();
   const sec = `<p><a class="btn" href="${SITE}/?intl=1">Search and filter these jobs in Havn</a></p><h2>Other cities</h2>${linkList(intlCities.filter(([c]) => c !== city).slice(0, 12).map(([c, cj]) => [`Jobs in ${c}`, `/en/jobs-in/${slug(c)}/`, cj.length]))}<p class="meta"><a href="${SITE}${GUIDE.en.path}">Moving to Norway for work: the short guide</a></p>`;
   await put(`/en/jobs-in/${slug(city)}/`, landing({ title: `Jobs in ${city} for foreigners – no Norwegian needed`, h1: `Jobs in ${city} for foreigners`, desc: `${js.length} jobs in ${city}, Norway, open to international applicants: English-language ads and jobs where Norwegian isn't required. Pay shown on every job.`, intro, path: `/en/jobs-in/${slug(city)}/`, jobs: js, lang: "en", crumbs: [["Work in Norway", GUIDE.en.path]], sections: sec }));
   urls.push(`${SITE}/en/jobs-in/${slug(city)}/`);

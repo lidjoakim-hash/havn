@@ -1,13 +1,13 @@
 # Havn Career Hub
 
-> Havn is a job board for Norway, in English and Norwegian. Every job shows the pay (stated by the employer or a clearly marked estimate). Free for job seekers.
+> Havn is a job board for Norway, in English and Norwegian. Jobs posted on Havn always show the pay and promise a reply; for other jobs, pay is shown only when the employer states it. Free for job seekers.
 
 ## Key pages
-- [Home](https://havncareerhub.com/): find jobs in Norway and see the pay first
+- [Home](https://havncareerhub.com/): find jobs in Norway
 - [All jobs](https://havncareerhub.com/jobs/): current job listings
 - [Sitemap](https://havncareerhub.com/sitemap.xml)
 
 ## Facts
 - Market: Norway only
 - Languages: English and Norwegian
-- Posts are human-reviewed; no hidden salaries
+- Posts are human-reviewed; pay is never guessed

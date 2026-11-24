@@ -113,6 +113,8 @@ for (const j of raw.values()) {
   if (a < b || (a === b && (j.createdAt || 0) > (cur.createdAt || 0))) best.set(key, j);
 }
 const shown = [...best.values()].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+// Havn never shows guessed pay: drop estimates, keep only pay the employer stated (in the ad fields or the ad text)
+for (const j of shown) if (j.paySrc === "est") { delete j.payEst; delete j.paySrc; }
 console.log(`Shown: ${shown.length} jobs (${dupes} duplicates removed)`);
 const noExp = shown.filter((j) => j.noExperience).length, noExpRemote = shown.filter((j) => j.noExperience && j.workplace === "remote").length;
 console.log(`"No experience needed" flag: ${noExp} jobs (${noExpRemote} remote)`);
