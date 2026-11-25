@@ -1,6 +1,27 @@
 -- Havn: user accounts, Havn Plus subscriptions and the Havn Crew community space.
 -- Safe to run more than once. Nothing here drops or rewrites existing tables.
 
+create table if not exists public.subscriptions (
+  user_id uuid primary key references auth.users (id) on delete cascade,
+  plan text not null default 'plus',
+  period text not null default 'month',
+  status text not null default 'inactive',
+  current_period_end timestamptz,
+  cancel_at_period_end boolean not null default false,
+  provider text,
+  provider_customer_id text,
+  provider_subscription_id text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint subscriptions_period check (period in ('month', 'year')),
+  constraint subscriptions_status check (status in ('inactive', 'trialing', 'active', 'past_due', 'canceled'))
+);
+create index if not exists subscriptions_status_idx on public.subscriptions (status);
+alter table public.subscriptions enable row level security;
+
+drop policy if exists subscriptions_read_self on public.subscriptions;
+create policy subscriptions_read_self on public.subscriptions for select to authenticated using (user_id = auth.uid());
+
 create or replace function public.is_plus(u uuid default auth.uid())
 returns boolean language sql stable security definer set search_path = public as $$
   select exists (
@@ -66,27 +87,6 @@ select u.id,
        || substr(replace(u.id::text, '-', ''), 1, 4)
 from auth.users u
 where not exists (select 1 from public.profiles p where p.id = u.id);
-
-create table if not exists public.subscriptions (
-  user_id uuid primary key references auth.users (id) on delete cascade,
-  plan text not null default 'plus',
-  period text not null default 'month',
-  status text not null default 'inactive',
-  current_period_end timestamptz,
-  cancel_at_period_end boolean not null default false,
-  provider text,
-  provider_customer_id text,
-  provider_subscription_id text,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
-  constraint subscriptions_period check (period in ('month', 'year')),
-  constraint subscriptions_status check (status in ('inactive', 'trialing', 'active', 'past_due', 'canceled'))
-);
-create index if not exists subscriptions_status_idx on public.subscriptions (status);
-alter table public.subscriptions enable row level security;
-
-drop policy if exists subscriptions_read_self on public.subscriptions;
-create policy subscriptions_read_self on public.subscriptions for select to authenticated using (user_id = auth.uid());
 
 create table if not exists public.saved_jobs (
   user_id uuid not null references auth.users (id) on delete cascade,
