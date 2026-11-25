@@ -161,24 +161,26 @@ alter table public.usage_counters enable row level security;
 drop policy if exists usage_read_self on public.usage_counters;
 create policy usage_read_self on public.usage_counters for select to authenticated using (user_id = auth.uid());
 
-create or replace function public.use_quota(kind text, free_limit int)
-returns json language plpgsql security definer set search_path = public as $$
-declare u uuid := auth.uid(); n int;
+-- the parameter name must not shadow usage_counters.kind
+drop function if exists public.use_quota(text, int);
+create function public.use_quota(p_kind text, p_free_limit int)
+returns json language plpgsql security definer set search_path = public as $fn$
+declare u uuid := auth.uid(); n int; lim int := greatest(coalesce(p_free_limit, 0), 0);
 begin
   if u is null then return json_build_object('ok', false, 'error', 'signin'); end if;
-  if kind not in ('ai_search', 'ai_cv', 'ai_match') then return json_build_object('ok', false, 'error', 'kind'); end if;
+  if p_kind not in ('ai_search', 'ai_cv', 'ai_match') then return json_build_object('ok', false, 'error', 'kind'); end if;
   if public.is_plus(u) then return json_build_object('ok', true, 'plus', true, 'left', null); end if;
-  insert into public.usage_counters (user_id, month, kind, used)
-  values (u, public.month_key(), kind, 1)
-  on conflict (user_id, month, kind) do update set used = public.usage_counters.used + 1
-  returning used into n;
-  if n > greatest(free_limit, 0) then
-    update public.usage_counters set used = used - 1
-      where user_id = u and month = public.month_key() and kind = use_quota.kind;
-    return json_build_object('ok', false, 'error', 'limit', 'limit', free_limit);
+  insert into public.usage_counters as c (user_id, month, kind, used)
+  values (u, public.month_key(), p_kind, 1)
+  on conflict (user_id, month, kind) do update set used = c.used + 1
+  returning c.used into n;
+  if n > lim then
+    update public.usage_counters c set used = c.used - 1
+      where c.user_id = u and c.month = public.month_key() and c.kind = p_kind;
+    return json_build_object('ok', false, 'error', 'limit', 'limit', lim);
   end if;
-  return json_build_object('ok', true, 'plus', false, 'left', greatest(free_limit, 0) - n);
-end $$;
+  return json_build_object('ok', true, 'plus', false, 'left', lim - n);
+end $fn$;
 revoke all on function public.use_quota(text, int) from public;
 grant execute on function public.use_quota(text, int) to authenticated;
 
