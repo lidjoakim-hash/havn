@@ -245,7 +245,7 @@
   }
 
   function quota(kind, run) {
-    return sb().rpc("use_quota", { kind: kind, free_limit: FREE[kind] }).then(function (r) {
+    return sb().rpc("use_quota", { p_kind: kind, p_free_limit: FREE[kind] }).then(function (r) {
       var d = r.data || {};
       if (!d.ok) {
         if (d.error === "signin") { window.havn.signIn(kind); return null; }
