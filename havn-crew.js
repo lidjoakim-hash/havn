@@ -42,6 +42,7 @@
       handleBad: "Bruk 3-30 tegn: små bokstaver, tall, punktum, bindestrek eller understrek.",
       notifTab: "Varsler", noNotif: "Ingen varsler ennå.",
       nMention: "nevnte deg", nComment: "svarte på innlegget ditt", nMessage: "sendte deg en melding",
+      backendDown: "Innlogging er nede et øyeblikk. Jobbene fungerer som vanlig - prøv Havn Crew igjen litt senere.",
       limitHit: "Du har brukt opp gratiskvoten denne måneden. Havn Plus har ingen grense."
     },
     en: {
@@ -71,6 +72,7 @@
       handleBad: "Use 3-30 characters: lowercase letters, numbers, dot, dash or underscore.",
       notifTab: "Alerts", noNotif: "Nothing yet.",
       nMention: "mentioned you", nComment: "replied to your post", nMessage: "sent you a message",
+      backendDown: "Sign-in is down for a moment. The jobs work as usual - try Havn Crew again shortly.",
       limitHit: "You've used this month's free allowance. Havn Plus has no limit."
     }
   };
@@ -174,7 +176,7 @@
     document.addEventListener("click", onClick);
     if (document.getElementById("lang")) document.getElementById("lang").addEventListener("change", function () { routeMine(); });
 
-    refreshPlan().then(routeMine);
+    probeAuth().then(function () { guardBoard(); return refreshPlan(); }).then(routeMine);
     guardBoard();
     holdView();
   }
@@ -236,6 +238,17 @@
     else { guardBoard(); }
   }
 
+  /* -- is the sign-in service actually reachable? ------------------- */
+  /* If Supabase is restricted or down, nobody can get through the wall,
+     so the board must open up instead of showing five jobs and a dead button. */
+  function probeAuth() {
+    var c = window.havn.config;
+    if (!c || !c.supabaseUrl) { P.authDown = true; return Promise.resolve(); }
+    return fetch(c.supabaseUrl + "/auth/v1/settings", { headers: { apikey: c.supabaseAnonKey } })
+      .then(function (r) { P.authDown = !r.ok; })
+      .catch(function () { P.authDown = true; });
+  }
+
   /* -- plan -------------------------------------------------------- */
   function refreshPlan() {
     if (!signedIn()) { P.ready = true; P.plus = false; P.uid = null; P.me = null; return Promise.resolve(); }
@@ -276,7 +289,7 @@
     var more = document.getElementById("moreBox"); if (more) more.hidden = false;
     var cards = list.children;
     for (var i = 0; i < cards.length; i++) cards[i].style.display = "";
-    if (signedIn() || !cards.length) return;
+    if (signedIn() || P.authDown || !cards.length) return;
 
     var total = cards.length, i2;
     for (i2 = SHOW_FREE; i2 < total; i2++) cards[i2].style.display = "none";
@@ -303,6 +316,12 @@
   function renderCrew(tab) {
     var el = document.getElementById("crewBody"); if (!el) return;
     P.tab = tab || P.tab || "feed";
+    if (P.authDown) {
+      el.innerHTML = "<h1>" + esc(T("crew")) + '</h1><p class="crew-sub">' + esc(T("crewLead")) + "</p>" +
+        '<div class="crew-card" style="text-align:center;padding:30px 18px"><p style="margin:0">' +
+        esc(T("backendDown")) + "</p></div>";
+      return;
+    }
     if (!signedIn()) {
       el.innerHTML = "<h1>" + esc(T("crew")) + '</h1><p class="crew-sub">' + esc(T("crewLead")) + "</p>" +
         '<div class="crew-card" style="text-align:center;padding:34px 18px"><p style="margin:0 0 14px">' +
