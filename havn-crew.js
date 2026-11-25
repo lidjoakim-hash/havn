@@ -6,7 +6,8 @@
   var booted = false;   // boot() is called at the very bottom, once every var below is set
 
   /* -- plan rules -------------------------------------------------- */
-  var FREE = { saved: 10, ai_search: 3, ai_cv: 1, ai_match: 5 };
+  var FREE = { saved: 10, ai_search: 5, ai_cv: 5, ai_match: 5 };
+  var AI_FREE = 5;   // one shared monthly pool; the edge function enforces it
   var PRICE = { month: 99, year: 790 };           // kroner
   var SAVING = Math.round((1 - PRICE.year / (PRICE.month * 12)) * 100); // 33 %
 
@@ -37,6 +38,10 @@
       profile: "Profil", follow: "Følg", following: "Følger", feedTab: "Feed", meTab: "Min profil", dmTab: "Meldinger",
       noDm: "Ingen meldinger ennå.", handle: "Brukernavn", name: "Navn", headline: "Tittel",
       bio: "Om deg", save2: "Lagre", saved2: "Lagret", left: "{n} igjen denne måneden",
+      handleLbl: "Brukernavn (andre finner deg på @-navnet)", handleTaken: "Brukernavnet er opptatt.",
+      handleBad: "Bruk 3-30 tegn: små bokstaver, tall, punktum, bindestrek eller understrek.",
+      notifTab: "Varsler", noNotif: "Ingen varsler ennå.",
+      nMention: "nevnte deg", nComment: "svarte på innlegget ditt", nMessage: "sendte deg en melding",
       limitHit: "Du har brukt opp gratiskvoten denne måneden. Havn Plus har ingen grense."
     },
     en: {
@@ -62,6 +67,10 @@
       profile: "Profile", follow: "Follow", following: "Following", feedTab: "Feed", meTab: "My profile", dmTab: "Messages",
       noDm: "No messages yet.", handle: "Username", name: "Name", headline: "Headline",
       bio: "About you", save2: "Save", saved2: "Saved", left: "{n} left this month",
+      handleLbl: "Username (people find you by your @name)", handleTaken: "That username is taken.",
+      handleBad: "Use 3-30 characters: lowercase letters, numbers, dot, dash or underscore.",
+      notifTab: "Alerts", noNotif: "Nothing yet.",
+      nMention: "mentioned you", nComment: "replied to your post", nMessage: "sent you a message",
       limitHit: "You've used this month's free allowance. Havn Plus has no limit."
     }
   };
@@ -241,6 +250,7 @@
     }).then(function (r) {
       if (r && r.data) P.me = r.data;
       P.ready = true;
+      return loadUnread();
     }).catch(function () { P.ready = true; });
   }
 
@@ -302,9 +312,11 @@
     }
     el.innerHTML = "<h1>" + esc(T("crew")) + '</h1><p class="crew-sub">' + esc(T("crewLead")) + "</p>" +
       '<div class="crew-tabs" role="tablist">' +
-      tabBtn("feed", T("feedTab")) + tabBtn("me", T("meTab")) + tabBtn("dm", T("dmTab")) + "</div>" +
+      tabBtn("feed", T("feedTab")) + tabBtn("alerts", T("notifTab") + (P.unread ? " (" + P.unread + ")" : "")) +
+      tabBtn("me", T("meTab")) + tabBtn("dm", T("dmTab")) + "</div>" +
       '<div id="crewPane"></div>';
     if (P.tab === "feed") paneFeed();
+    else if (P.tab === "alerts") paneAlerts();
     else if (P.tab === "me") paneMe();
     else paneDm();
   }
@@ -380,6 +392,47 @@
       }).catch(function () { box.innerHTML = '<p class="crew-sub">—</p>'; });
   }
 
+  /* -- alerts ------------------------------------------------------ */
+  function loadUnread() {
+    if (!signedIn()) { P.unread = 0; return Promise.resolve(); }
+    return sb().from("notifications").select("id", { count: "exact", head: true }).eq("read", false)
+      .then(function (r) { P.unread = r.count || 0; })
+      .catch(function () { P.unread = 0; });
+  }
+
+  function paneAlerts() {
+    var pane = document.getElementById("crewPane"); if (!pane) return;
+    pane.innerHTML = '<p class="crew-sub">...</p>';
+    sb().from("notifications").select("id,kind,actor,post_id,read,created_at")
+      .order("created_at", { ascending: false }).limit(50)
+      .then(function (r) {
+        var rows = r.data || [];
+        if (!rows.length) {
+          pane.innerHTML = '<p class="crew-sub" style="text-align:center;padding:26px 0">' + esc(T("noNotif")) + "</p>";
+          return;
+        }
+        var ids = rows.map(function (x) { return x.actor; }).filter(Boolean);
+        sb().from("profiles").select("id,handle,name").in("id", ids).then(function (pr) {
+          var who = {}; (pr.data || []).forEach(function (x) { who[x.id] = x; });
+          pane.innerHTML = rows.map(function (x) {
+            var w = who[x.actor] || { handle: "?", name: "" };
+            var verb = x.kind === "mention" ? T("nMention") : x.kind === "message" ? T("nMessage") : T("nComment");
+            return '<div class="crew-card"' + (x.read ? ' style="opacity:.6"' : "") + '><div class="crew-head">' +
+              avatar(w) + '<div class="crew-who"><b>' + esc(w.name || "@" + w.handle) + "</b><span>" +
+              esc(verb) + " · " + esc(when(x.created_at)) + "</span></div></div></div>";
+          }).join("");
+          var unread = rows.filter(function (x) { return !x.read; }).map(function (x) { return x.id; });
+          if (unread.length) {
+            sb().from("notifications").update({ read: true }).in("id", unread).then(function () {
+              P.unread = 0;
+              var b = document.querySelector('[data-tab="alerts"]');
+              if (b) b.textContent = T("notifTab");
+            });
+          }
+        });
+      }).catch(function () { pane.innerHTML = '<p class="crew-sub">-</p>'; });
+  }
+
   /* -- my profile -------------------------------------------------- */
   function paneMe() {
     var pane = document.getElementById("crewPane"); if (!pane) return;
@@ -388,6 +441,7 @@
       '<div class="crew-head" style="margin-bottom:16px">' + avatar(m, true) +
       '<div class="crew-who" style="padding-top:6px"><b style="font-size:18px">' + esc(m.name || "@" + (m.handle || "")) +
       (P.plus ? '<span class="crew-badge">PLUS</span>' : "") + "</b><span>@" + esc(m.handle || "") + "</span></div></div>" +
+      field("handle", T("handleLbl"), m.handle || "", 30) +
       field("name", T("name"), m.name || "", 80) +
       field("headline", T("headline"), m.headline || "", 140) +
       field("location", lang() === "no" ? "Sted" : "Location", m.location || "", 80) +
@@ -481,8 +535,7 @@
       "<ul>" + li(lang() === "no" ? "Søk i alle jobbene" : "Search every job") +
       li(lang() === "no" ? "Lagre " + FREE.saved + " jobber" : "Save " + FREE.saved + " jobs") +
       li(lang() === "no" ? "Følg søknadene dine" : "Track your applications") +
-      li(FREE.ai_search + (lang() === "no" ? " KI-søk i måneden" : " AI searches a month")) +
-      li(FREE.ai_cv + (lang() === "no" ? " CV-tilpasning i måneden" : " CV tailoring a month")) +
+      li(AI_FREE + (lang() === "no" ? " KI-handlinger i måneden (søk, CV, treffscore)" : " AI actions a month (search, CV, match score)")) +
       li(lang() === "no" ? "Les og skriv i Havn Crew" : "Read and post in Havn Crew") + "</ul></div>" +
       '<div class="plus-card hot"><h2 style="margin:0;font-size:19px">' + esc(T("plus")) + "</h2>" +
       '<div class="plus-price">' + (yearly ? PRICE.year : PRICE.month) +
@@ -491,12 +544,11 @@
         ? T("yearNote", { y: PRICE.year, m: perMonthIfYear, s: savedKr })
         : (lang() === "no" ? "Si opp når du vil." : "Cancel any time.")) + "</p>" +
       "<ul>" + li(lang() === "no" ? "Alt i gratisversjonen" : "Everything in Free") +
-      li(lang() === "no" ? "KI-søk uten grense" : "Unlimited AI search") +
+      li(lang() === "no" ? "KI-handlinger uten månedsgrense" : "AI actions with no monthly cap") +
       li(lang() === "no" ? "CV tilpasset hver enkelt jobb" : "A CV tailored to each job") +
       li(lang() === "no" ? "Treffscore på alle jobbene" : "A match score on every job") +
       li(lang() === "no" ? "Lagre så mange jobber du vil" : "Save as many jobs as you like") +
-      li(lang() === "no" ? "Direktemeldinger i Havn Crew" : "Direct messages in Havn Crew") +
-      li(lang() === "no" ? "Nye jobber ett døgn før alle andre" : "New jobs a day before everyone else") + "</ul>" +
+      li(lang() === "no" ? "Direktemeldinger i Havn Crew" : "Direct messages in Havn Crew") + "</ul>" +
       '<div style="margin-top:18px">' + (P.plus
         ? '<p style="margin:0;font-weight:600">' + esc(T("have")) + "</p>"
         : '<button class="btn btn-primary" type="button" data-act="plus-notify" style="width:100%">' +
@@ -557,6 +609,11 @@
       return;
     }
     if (act === "crew-save-profile") {
+      var hEl = document.getElementById("pf-handle");
+      var h = hEl ? hEl.value.trim().toLowerCase() : "";
+      if (hEl && h && h !== (P.me && P.me.handle) && !/^[a-z0-9][a-z0-9_.-]{2,29}$/.test(h)) {
+        toast(T("handleBad")); return;
+      }
       var patch = {
         name: (document.getElementById("pf-name") || {}).value || "",
         headline: (document.getElementById("pf-headline") || {}).value || "",
@@ -564,12 +621,18 @@
         bio: (document.getElementById("pf-bio") || {}).value || "",
         updated_at: new Date().toISOString()
       };
+      if (hEl && h && h !== (P.me && P.me.handle)) patch.handle = h;
       el.disabled = true;
       sb().from("profiles").update(patch).eq("id", P.uid).then(function (r) {
         el.disabled = false;
-        if (r.error) { toast(r.error.message); return; }
+        if (r.error) {
+          toast(/duplicate|unique/i.test(r.error.message) ? T("handleTaken")
+            : /profiles_handle_shape/.test(r.error.message) ? T("handleBad") : r.error.message);
+          return;
+        }
         Object.assign(P.me || (P.me = {}), patch);
         toast(T("saved2"));
+        renderCrew("me");
       });
       return;
     }
