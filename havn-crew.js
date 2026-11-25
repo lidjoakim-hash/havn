@@ -243,6 +243,7 @@
   function guardBoard() {
     var list = document.getElementById("jobList"); if (!list) return;
     var old = document.getElementById("lockwall"); if (old) old.remove();
+    var more = document.getElementById("moreBox"); if (more) more.hidden = false;
     var cards = list.children;
     for (var i = 0; i < cards.length; i++) cards[i].style.display = "";
     if (signedIn() || !cards.length) return;
@@ -250,10 +251,13 @@
     var total = cards.length, i2;
     for (i2 = SHOW_FREE; i2 < total; i2++) cards[i2].style.display = "none";
     if (total <= SHOW_FREE) return;
-    var n = (document.getElementById("count") || {}).textContent || String(total);
+    if (more) more.hidden = true;
+    var meta = document.getElementById("resultsMeta");
+    var n = meta ? ((meta.textContent.match(/\d[\d\u00a0 ]*/g) || []).pop() || "").trim() : "";
+    if (!n) n = String(total);
     var w = document.createElement("div");
     w.id = "lockwall"; w.className = "lockwall";
-    w.innerHTML = '<div><h3>' + esc(T("signinWall", { n: n.replace(/\D.*$/, "") || total })) + "</h3><p>" +
+    w.innerHTML = '<div><h3>' + esc(T("signinWall", { n: n })) + "</h3><p>" +
       esc(T("signinWallP")) + '</p><button class="btn btn-primary" type="button" data-act="crew-signin">' +
       esc(T("signinBtn")) + "</button></div>";
     list.parentNode.insertBefore(w, list.nextSibling);
