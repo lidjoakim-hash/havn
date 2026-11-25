@@ -167,6 +167,26 @@
 
     refreshPlan().then(routeMine);
     guardBoard();
+    holdView();
+  }
+
+  /* the job board router hides every [data-view] when it renders, which would
+     close a Crew or Plus page that is already open; put it back when that happens */
+  function mine() {
+    var h = (location.hash || "").slice(1);
+    if (h === "crew" || h.indexOf("u-") === 0) return "crew";
+    if (h === "plus" || h === "pluss") return "plus";
+    return null;
+  }
+  function holdView() {
+    var mo = new MutationObserver(function () {
+      var id = mine(); if (!id) return;
+      var el = document.getElementById("v-" + id);
+      if (el && el.hidden) show(id);
+    });
+    document.querySelectorAll("[data-view]").forEach(function (s) {
+      mo.observe(s, { attributes: true, attributeFilter: ["hidden"] });
+    });
   }
 
   function addNav() {
