@@ -159,11 +159,13 @@ Deno.serve(async (req) => {
   let page = state.page || "/api/v1/feed";
   let lastModified = state.lastModified || new Date(Date.now() - START_DAYS * DAY).toUTCString();
   let etag = state.etag || "";
-  let imported = 0, removed = 0, skipped = 0, pages = 0;
+  let imported = 0, removed = 0, skipped = 0, pages = 0, unchanged = 0;
   let note = "";
 
   try {
-    while (pages < 15 && Date.now() - started < 110_000) {
+    // Smaller slices per run: the function was dying on WORKER_RESOURCE_LIMIT and had
+    // imported nothing since 21 November. It runs hourly, so it catches up over a few runs.
+    while (pages < 5 && Date.now() - started < 60_000) {
       const h: Record<string, string> = { "If-Modified-Since": lastModified };
       if (etag) h["If-None-Match"] = etag;
       const res = await fetch(BASE + page, { headers: headers(h) });
@@ -190,8 +192,8 @@ Deno.serve(async (req) => {
         const { count } = await sb.from("docs").delete({ count: "exact" }).eq("collection", "jobs").in("id", toDelete);
         removed += count ?? 0;
       }
-      for (let i = 0; i < toFetch.length; i += 10) {
-        const batch = toFetch.slice(i, i + 10);
+      for (let i = 0; i < toFetch.length; i += 5) {
+        const batch = toFetch.slice(i, i + 5);
         const gone: string[] = [];
         const rows = (await Promise.all(batch.map(async (b) => {
           try {
@@ -215,9 +217,23 @@ Deno.serve(async (req) => {
             return { collection: "jobs", id: b.id, data: job, updated_at: new Date().toISOString() };
           } catch { return null; }
         }))).filter(Boolean);
-        if (rows.length) {
-          const { error } = await sb.from("docs").upsert(rows, { onConflict: "collection,id" });
-          if (!error) imported += rows.length;
+        // Only write the jobs whose content actually changed. Stamping updated_at on every
+        // ad each run made the hourly index rebuild re-download all of them, which is what
+        // used up the database's egress quota.
+        let toWrite = rows as Array<{ collection: string; id: string; data: unknown; updated_at: string }>;
+        if (toWrite.length) {
+          const ids = toWrite.map((r) => r.id);
+          const { data: existing } = await sb.from("docs").select("id,data")
+            .eq("collection", "jobs").in("id", ids);
+          const prev = new Map(((existing || []) as Array<{ id: string; data: unknown }>)
+            .map((e) => [e.id, JSON.stringify(e.data)]));
+          const before = toWrite.length;
+          toWrite = toWrite.filter((r) => prev.get(r.id) !== JSON.stringify(r.data));
+          unchanged += before - toWrite.length;
+        }
+        if (toWrite.length) {
+          const { error } = await sb.from("docs").upsert(toWrite, { onConflict: "collection,id" });
+          if (!error) imported += toWrite.length;
         }
         if (gone.length) {
           const { count } = await sb.from("docs").delete({ count: "exact" }).eq("collection", "jobs").in("id", gone);
@@ -239,9 +255,9 @@ Deno.serve(async (req) => {
   const newState = {
     page, lastModified, etag,
     lastRun: Date.now(), lastNote: note, lastImported: imported, lastRemoved: removed + (typeof trimmed === "number" ? trimmed : 0),
-    lastSkipped: skipped, navJobs: total ?? 0,
+    lastSkipped: skipped, lastUnchanged: unchanged, navJobs: total ?? 0,
     imported: (state.imported ?? 0) + imported, removed: (state.removed ?? 0) + removed,
   };
   await sb.from("docs").upsert({ collection: "_sys", id: "nav", data: newState, updated_at: new Date().toISOString() }, { onConflict: "collection,id" });
-  return reply({ ok: true, pages, imported, removed, skipped, navJobs: total ?? 0, note });
+  return reply({ ok: true, pages, imported, unchanged, removed, skipped, navJobs: total ?? 0, note });
 });
