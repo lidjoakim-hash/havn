@@ -42,7 +42,9 @@ try {
   for (const f of meta.raw || []) for (const o of JSON.parse(await readFile(`${DIR}/${f}`, "utf8"))) prev.set(o.id, o);
 } catch { /* first run */ }
 
-const full = !meta.lastSync || !meta.fullAt || now - meta.fullAt > 7 * DAY || process.env.FULL === "1";
+// A full re-read pulls every job and every ad text out of the database, so it is the one
+// expensive run. Monthly instead of weekly: the hourly incremental run keeps things current.
+const full = !meta.lastSync || !meta.fullAt || now - meta.fullAt > 30 * DAY || process.env.FULL === "1";
 const since = new Date((meta.lastSync || 0) - 5 * 60000).toISOString(); // small overlap
 const syncStart = Date.now();
 
