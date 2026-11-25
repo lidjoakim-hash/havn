@@ -250,7 +250,7 @@
     }).then(function (r) {
       if (r && r.data) P.me = r.data;
       P.ready = true;
-      return loadUnread();
+      return loadUnread().then(syncSaved);
     }).catch(function () { P.ready = true; });
   }
 
@@ -658,6 +658,49 @@
       return;
     }
   }
+
+  /* -- saved jobs follow the account, not the browser --------------- */
+  function readSaved() {
+    try { return JSON.parse(localStorage.getItem("havn.saved") || "[]") || []; } catch (e) { return []; }
+  }
+  function writeSaved(list) {
+    try { localStorage.setItem("havn.saved", JSON.stringify(list)); } catch (e) { /* private window */ }
+  }
+
+  /* pull the account's saved jobs down, push anything saved while signed out up */
+  function syncSaved() {
+    if (!signedIn() || !P.uid) return Promise.resolve();
+    var local = readSaved();
+    return sb().from("saved_jobs").select("job_id").then(function (r) {
+      if (r.error) return;
+      var remote = (r.data || []).map(function (x) { return x.job_id; });
+      var merged = remote.slice();
+      var add = [];
+      local.forEach(function (id) {
+        if (merged.indexOf(id) === -1) { merged.push(id); add.push({ user_id: P.uid, job_id: id }); }
+      });
+      writeSaved(merged);
+      P.savedKnown = merged.slice();
+      var count = document.getElementById("myCount");
+      if (count) { count.hidden = !merged.length; if (merged.length) count.textContent = merged.length; }
+      if (add.length) return sb().from("saved_jobs").upsert(add, { onConflict: "user_id,job_id" });
+    }).catch(function () { /* offline: the browser copy still works */ });
+  }
+
+  /* after the board has toggled its own copy, mirror the change to the account */
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest('[data-act="save"]'); if (!el) return;
+    if (!signedIn() || !P.uid) return;
+    var id = el.getAttribute("data-id"); if (!id) return;
+    setTimeout(function () {
+      var now = readSaved();
+      var isSaved = now.indexOf(id) !== -1;
+      var q = isSaved
+        ? sb().from("saved_jobs").upsert({ user_id: P.uid, job_id: id }, { onConflict: "user_id,job_id" })
+        : sb().from("saved_jobs").delete().eq("user_id", P.uid).eq("job_id", id);
+      q.then(function () { P.savedKnown = now.slice(); }, function () { /* keep the local copy */ });
+    }, 50);
+  });
 
   /* -- free accounts save a limited number of jobs ------------------ */
   function savedCount() {
