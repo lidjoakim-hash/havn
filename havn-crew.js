@@ -35,6 +35,7 @@
       free: "Gratis", freeLead: "Alt du trenger for å lete.",
       have: "Du har Havn Plus", notify: "Si fra når Plus åpner", notified: "Vi sier fra på e-post.",
       plusSoon: "Betaling åpner snart. Legg igjen e-posten, så er du først inn.",
+      delAcc: "Slett kontoen min", delAccQ: "Slette kontoen din? Profil, lagrede jobber, CV, innlegg og meldinger slettes for godt. Dette kan ikke angres.", delAccDone: "Kontoen er slettet.",
       profile: "Profil", follow: "Følg", following: "Følger", feedTab: "Feed", meTab: "Min profil", dmTab: "Meldinger",
       noDm: "Ingen meldinger ennå.", handle: "Brukernavn", name: "Navn", headline: "Tittel",
       bio: "Om deg", save2: "Lagre", saved2: "Lagret", left: "{n} igjen denne måneden",
@@ -64,6 +65,7 @@
       free: "Free", freeLead: "Everything you need to look.",
       have: "You have Havn Plus", notify: "Tell me when Plus opens", notified: "We'll email you.",
       plusSoon: "Payments open shortly. Leave your email and you're first in.",
+      delAcc: "Delete my account", delAccQ: "Delete your account? Your profile, saved jobs, CV, posts and messages are deleted for good. This can't be undone.", delAccDone: "Your account is deleted.",
       profile: "Profile", follow: "Follow", following: "Following", feedTab: "Feed", meTab: "My profile", dmTab: "Messages",
       noDm: "No messages yet.", handle: "Username", name: "Name", headline: "Headline",
       bio: "About you", save2: "Save", saved2: "Saved", left: "{n} left this month",
@@ -269,7 +271,7 @@
   window.havnPlan = { is: function () { return P.plus; }, quota: quota, free: FREE };
 
   /* -- sign-in wall on the job board ------------------------------- */
-  var SHOW_FREE = 5;
+  var SHOW_FREE = 30;
   function guardBoard() {
     var list = document.getElementById("jobList"); if (!list) return;
     var old = document.getElementById("lockwall"); if (old) old.remove();
@@ -448,7 +450,8 @@
       '<div class="crew-field"><label for="pf-bio">' + esc(T("bio")) + '</label><textarea id="pf-bio" rows="4" maxlength="2000">' +
       esc(m.bio || "") + "</textarea></div>" +
       '<div class="crew-row"><button class="btn btn-primary btn-sm" type="button" data-act="crew-save-profile">' +
-      esc(T("save2")) + "</button></div></div>" +
+      esc(T("save2")) + "</button></div>" +
+      '<div class="crew-row" style="margin-top:22px"><button class="btn btn-ghost btn-sm" type="button" data-act="crew-delete-account" style="color:#9A4A33">' + esc(T("delAcc")) + "</button></div></div>" +
       (P.plus ? "" : plusNudge());
   }
   function field(id, label, val, max) {
@@ -606,6 +609,15 @@
     if (act === "crew-del") {
       var did = +el.getAttribute("data-id");
       sb().from("posts").delete().eq("id", did).then(function () { toast(T("deleted")); loadFeed(); });
+      return;
+    }
+    if (act === "crew-delete-account") {
+      if (!window.confirm(T("delAccQ"))) return;
+      sb().rpc("delete_my_account").then(function (r) {
+        if (r.error) { toast(r.error.message); return; }
+        try { localStorage.removeItem("havn.saved"); } catch (e) {}
+        sb().auth.signOut().then(function () { toast(T("delAccDone")); location.hash = "#jobs"; });
+      });
       return;
     }
     if (act === "crew-save-profile") {

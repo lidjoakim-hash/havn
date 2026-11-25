@@ -91,6 +91,8 @@ for (const r of changed) {
 // pay estimates depend only on title and place, so refresh them for every stored job (picks up estimate fixes without a full sync)
 for (const j of raw.values()) if (j.paySrc === "est" && !(+j.salaryMin || +j.salaryMax)) { try { j.payEst = estimateAny(j); } catch { /* keep old */ } }
 // re-check the "no experience needed" flag on every stored job: roles that need a degree, trade certificate or authorisation never qualify
+const decodeEnt = (s) => typeof s === "string" && s.includes("&") ? s.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16))).replace(/&(nbsp|amp|lt|gt|quot|apos);/g, (_, e) => ({ nbsp: " ", amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" }[e])) : s;
+for (const j of raw.values()) for (const k of ["title", "company", "description", "requirements", "benefits", "summary"]) if (typeof j[k] === "string") j[k] = decodeEnt(j[k]);
 for (const j of raw.values()) if (j.source && j.noExperience && !noExperienceOf(j.title, "ingen erfaring")) j.noExperience = false;
 console.log(`${full ? "Full" : "Incremental"} sync: ${changed.length} changed, ${raw.size} imported jobs in store`);
 
@@ -154,6 +156,6 @@ await writeFile(`${DIR}/flagged.json`, JSON.stringify(flagged));
 const bySource = {}; for (const j of shown) bySource[j.source] = (bySource[j.source] || 0) + 1;
 const newMeta = { lastSync: syncStart, fullAt: full ? syncStart : meta.fullAt, updated: new Date().toISOString(), count: shown.length, duplicatesRemoved: dupes,
   bySource, new24h: shown.filter((j) => now - (j.createdAt || 0) < DAY).length, remote: shown.filter((j) => j.workplace === "remote").length,
-  noExperience: noExp, noExperienceRemote: noExpRemote, companies: new Set(shown.map((j) => norm(j.company))).size, countries: new Set(shown.map((j) => j.country).filter(Boolean)).size, flagged: flagged.length, flaggedHidden: flagged.filter((f) => f.decision === "hidden").length, files, raw: rawFiles };
+  noExperience: noExp, noExperienceRemote: noExpRemote, withPay: shown.filter((j) => (+j.salaryMin || +j.salaryMax) && j.paySrc !== "est").length, companies: new Set(shown.map((j) => norm(j.company))).size, countries: new Set(shown.map((j) => j.country).filter(Boolean)).size, flagged: flagged.length, flaggedHidden: flagged.filter((f) => f.decision === "hidden").length, files, raw: rawFiles };
 await writeFile(`${DIR}/meta.json`, JSON.stringify(newMeta, null, 1));
 console.log(JSON.stringify({ ...newMeta, files: files.length, raw: rawFiles.length }));

@@ -13,6 +13,7 @@ const DAY = 86400000;
 let ownLookupFailed = false;
 
 const normCity = (j) => { const l = String(j.location || "").replace(/,\s*(norway|norge)$/i, "").replace(/^(norway|norge),\s*/i, "").replace(/^(?:norway|norge)\s*\((.+)\)$/i, "$1").trim(); return j.country === "Norway" ? l.replace(/\s+S$/, "") : l; };
+const decodeEnt = (s) => typeof s === "string" && s.includes("&") ? s.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(+n)).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16))).replace(/&(nbsp|amp|lt|gt|quot|apos);/g, (_, e) => ({ nbsp: " ", amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" }[e])) : s;
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const slug = (s) => String(s || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/æ/g, "ae").replace(/ø/g, "o").replace(/å/g, "a").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 60) || "x";
 const lines = (s) => String(s || "").split(/\n+/).map((x) => x.replace(/^[-•*]\s*/, "").trim()).filter(Boolean);
@@ -161,20 +162,20 @@ ${body}
 function isPublic(j) { return !j.source || ["nav", "jobtech", "ats"].includes(j.source); }
 const WHO = { Worldwide: "fra hele verden", Europe: "bor du i Europa", Nordics: "bor du i Norden", Norway: "bor du i Norge", "EU": "bor du i EU" };
 function jobRow(j, lang = "nb") {
-  const where = [normCity(j), j.country].filter(Boolean).join(", ");
+  const where = [normCity(j), j.country === "Norway" ? "" : j.country].filter(Boolean).join(", ");
   const pay = payText(j, lang);
   const href = isPublic(j) ? `${SITE}/job/${esc(j.id)}/` : `${SITE}/#job-${esc(j.id)}`;
   return `<li><a href="${href}">${esc(j.title)}</a><span>${esc(j.company)}${where ? " · " + esc(where) : ""}${pay ? " · " + esc(pay) : ""}</span></li>`;
 }
 
 function jobPage(j) {
-  const where = [j.location, j.country].filter(Boolean).join(", ");
+  const where = [normCity(j), j.country === "Norway" ? "" : j.country].filter(Boolean).join(", ");
   const pay = payText(j);
-  const req = lines(j.requirements), ben = lines(j.benefits);
+  const req = lines(decodeEnt(j.requirements)), ben = lines(decodeEnt(j.benefits));
   const isNav = j.source === "nav";
   const applyUrl = j.applyUrl || j.sourceUrl || `${SITE}/#job-${j.id}`;
   const canonical = `${SITE}/job/${j.id}/`;
-  const descText = String(j.description || "");
+  const descText = decodeEnt(String(j.description || ""));
   const jsonld = {
     "@context": "https://schema.org/", "@type": "JobPosting",
     title: j.title, description: `<p>${esc(descText).replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>")}</p>${req.length ? "<ul>" + req.map((r) => `<li>${esc(r)}</li>`).join("") + "</ul>" : ""}`,
