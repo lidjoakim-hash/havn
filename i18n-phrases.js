@@ -1,6 +1,7 @@
 // Havn – translations for text that is written straight into the page (employer page, pricing, post form, FAQ, privacy, report form).
 // Keys are the English text exactly as shown. The app swaps them for Norwegian when that language is chosen.
 window.HAVN_PHRASES = {
+  "Terms": ["Vilkår"],
   "We help with relocation": ["Vi hjelper med flytting"],
   "jobs for beginners": ["jobber for nybegynnere"],
   "jobs that show the pay": ["jobber som viser lønn"],
