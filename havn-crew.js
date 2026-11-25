@@ -3,8 +3,7 @@
    Self-contained: it reads window.havn (Supabase client, sign-in) and injects its own views. */
 (function () {
   "use strict";
-  if (!window.havn || !window.havn.sb) { document.addEventListener("DOMContentLoaded", boot); } else { boot(); }
-  var booted = false;
+  var booted = false;   // boot() is called at the very bottom, once every var below is set
 
   /* -- plan rules -------------------------------------------------- */
   var FREE = { saved: 10, ai_search: 3, ai_cv: 1, ai_match: 5 };
@@ -595,4 +594,8 @@
       refreshPlan().then(function () { guardBoard(); routeMine(); });
     });
   }
+
+  /* start last: everything above has to be initialised before boot() reads it */
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 })();
