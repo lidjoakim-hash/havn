@@ -1,6 +1,36 @@
 {
- "cdn": "https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@08b64caae385be764956c5956f1c079e62464522",
+ "cdn": "https://cdn.jsdelivr.net/gh/lidjoakim-hash/havn@7edb1ae21e3792c3453bee5bc921bf9af9ce5dea",
  "days": [
+  {
+   "date": "2026-11-26",
+   "theme": "pay",
+   "items": [
+    {
+     "type": "post",
+     "label": "Instagram + Facebook post",
+     "time": "13:00",
+     "file": "post.jpg",
+     "captions": {
+      "no": "Jobber der lønnen står i annonsen 🌿\n\n• Sykepleiere/spesialsykepleiere – Sør-Tromsøya sykehjem, Tromsø k… (734 300 kr/år)\n• Er du en koordinator som forstår strategi og ledelse? – IT, Forsvarets forskningsinstit… (651 000–760 000 kr/år)\n• Vernepleier/ Sykepleier Bli en del av vårt sterke fagmiljø… – Sandefjord kommune Avdeling 2 cd (568 600 kr/år)\n• Hærens musikkorps - Hornist – Forsvarets fellestjenester, For… (550 000–610 000 kr/år)\n• Konsulent/rådgiver (vikariat) – Rederi, fyr og sjømerking, Kyst… (525 000–583 000 kr/år)\n\n300 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio.\nHavn er alltid gratis for jobbsøkere.\n\n#lønn #ledigstilling #jobb #norge #havn",
+      "en": "Jobs that show the pay 🌿\n\n• Sykepleiere/spesialsykepleiere – Sør-Tromsøya sykehjem, Tromsø k… (734 300 kr/yr)\n• Er du en koordinator som forstår strategi og ledelse? – IT, Forsvarets forskningsinstit… (651 000–760 000 kr/yr)\n• Vernepleier/ Sykepleier Bli en del av vårt sterke fagmiljø… – Sandefjord kommune Avdeling 2 cd (568 600 kr/yr)\n• Hærens musikkorps - Hornist – Forsvarets fellestjenester, For… (550 000–610 000 kr/yr)\n• Konsulent/rådgiver (vikariat) – Rederi, fyr og sjømerking, Kyst… (525 000–583 000 kr/yr)\n\n300 open jobs right now. See them all and apply directly with the employer – link in bio.\nHavn is always free for job seekers.\n\n#lønn #ledigstilling #jobb #norge #havn"
+     },
+     "lang": "no"
+    },
+    {
+     "type": "video",
+     "label": "TikTok / Reels / Stories video",
+     "time": "19:00",
+     "file": "video.mp4",
+     "poster": "s1.jpg",
+     "captions": {
+      "no": "Jobber der lønnen står i annonsen 🌿 300 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio. #lønn #ledigstilling #jobb #norge #havn",
+      "en": "Jobs that show the pay 🌿 300 open jobs right now. See them all and apply directly with the employer – link in bio. #lønn #ledigstilling #jobb #norge #havn"
+     },
+     "lang": "no",
+     "note": "Add a calm trending sound in TikTok/Instagram before posting."
+    }
+   ]
+  },
   {
    "date": "2026-11-25",
    "theme": "remote",
