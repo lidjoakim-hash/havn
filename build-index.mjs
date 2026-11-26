@@ -62,7 +62,8 @@ const texts = new Map();
 try {
   if (full) { for (const r of await getAll(`docs?collection=eq.jobtext&select=id,data&order=id`)) texts.set(r.id, r.data || {}); }
   else {
-    const ids = changed.filter((r) => r.data && r.data.hasText).map((r) => r.id);
+    // only NEW jobs need their ad text fetched for the wording check; jobs already in the index keep their earlier result (saves most of the database egress)
+    const ids = changed.filter((r) => r.data && r.data.hasText && !prev.has(r.id)).map((r) => r.id);
     for (let i = 0; i < ids.length; i += 60) {
       const list = ids.slice(i, i + 60).map((x) => `"${String(x).replace(/"/g, "")}"`).join(",");
       for (const r of await getAll(`docs?collection=eq.jobtext&select=id,data&id=in.(${encodeURIComponent(list)})`)) texts.set(r.id, r.data || {});
