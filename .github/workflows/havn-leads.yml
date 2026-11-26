@@ -1,0 +1,35 @@
+name: Havn employer leads
+
+on:
+  schedule:
+    - cron: "17 5 * * 1"   # every Monday morning
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: havn-leads
+  cancel-in-progress: false
+
+jobs:
+  leads:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Make lead list and outreach drafts (nothing is sent)
+        env:
+          OUT_DIR: out
+        run: node scripts/employer-leads.mjs
+      - name: Publish to the employer-leads branch (not the public site)
+        run: |
+          cd out
+          git init -q -b employer-leads
+          git config user.name "havn-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "Employer leads $(date -u +%F)"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" employer-leads
