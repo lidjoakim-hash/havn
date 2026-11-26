@@ -1,0 +1,33 @@
+{
+ "lastSync": 1795702639177,
+ "fullAt": 1795493179238,
+ "updated": "2026-11-26T14:17:39.887Z",
+ "count": 8077,
+ "duplicatesRemoved": 90,
+ "bySource": {
+  "nav": 7891,
+  "ats": 186
+ },
+ "new24h": 407,
+ "remote": 5,
+ "noExperience": 170,
+ "noExperienceRemote": 0,
+ "companies": 4897,
+ "countries": 1,
+ "flagged": 88,
+ "flaggedHidden": 6,
+ "files": [
+  "jobs-0.json",
+  "jobs-1.json",
+  "jobs-2.json"
+ ],
+ "raw": [
+  "raw-0.json",
+  "raw-1.json",
+  "raw-2.json",
+  "raw-3.json",
+  "raw-4.json",
+  "raw-5.json",
+  "raw-6.json"
+ ]
+}
