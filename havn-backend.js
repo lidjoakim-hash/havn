@@ -41,11 +41,11 @@
   const subs={};let channel=null;const timers={};
   const last={},GAP={jobs:900000,jobtext:86400000};
   /* big public lists (jobs) refresh at most every 15 minutes, so phones don't re-download them all the time; your own changes show at once */
-  function notify(col,now){if(!subs[col])return;clearTimeout(timers[col]);const wait=now?700:Math.max(700,(last[col]||0)+(GAP[col]||0)-Date.now());timers[col]=setTimeout(()=>{last[col]=Date.now();(subs[col]||[]).forEach(s=>s.run())},wait)}
+  function notify(col,now){if(!subs[col])return;clearTimeout(timers[col]);const wait=now?700:Math.max(700,(last[col]||0)+(GAP[col]!=null?GAP[col]:300000)-Date.now());timers[col]=setTimeout(()=>{last[col]=Date.now();(subs[col]||[]).forEach(s=>s.run())},wait)}
   function ensureChannel(){
     if(channel)return;
-    channel=sb.channel("havn-docs").on("postgres_changes",{event:"*",schema:"public",table:T},p=>{const col=(p.new&&p.new.collection)||(p.old&&p.old.collection);if(col)notify(col);else Object.keys(subs).forEach(notify)}).subscribe();
-    setInterval(()=>Object.keys(subs).forEach(notify),120000);
+    channel=sb.channel("havn-docs").on("postgres_changes",{event:"*",schema:"public",table:T,filter:"collection=in.(requests,site,reports,applications,alerts,_sys)"},p=>{const col=(p.new&&p.new.collection)||(p.old&&p.old.collection);if(col)notify(col);else Object.keys(subs).forEach(notify)}).subscribe();
+    setInterval(()=>{if(document.hidden)return;Object.keys(subs).forEach(c=>notify(c))},900000);
   }
   function subscribe(col,run){ensureChannel();const s={run};(subs[col]=subs[col]||[]).push(s);last[col]=Date.now();run();return ()=>{subs[col]=(subs[col]||[]).filter(x=>x!==s)}}
 
