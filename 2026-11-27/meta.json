@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-27",
+  "theme": "oslo",
+  "items": [
+    {
+      "type": "post",
+      "label": "Instagram + Facebook post",
+      "time": "13:00",
+      "file": "post.jpg",
+      "captions": {
+        "no": "Nye jobber i Oslo 🌿\n\n• Dyktige tømrere søkes til Norges ledende fasadeentreprenør. – Ellingsen Rekruttering (350 kr/t)\n• Er du aktiv, spontan og fleksibel? Bli med på laget! – Mio BPA (236 kr/t)\n• Sosialkonsulent – Ambulerende tjenester, Oslo kom… (623 400–726 900 kr/år)\n• Tilkallingsvikar barnehage – Radiohuset barnehage, Oslo komm… (516 250–571 000 kr/år)\n• Økonomimedarbeider – Arbeids- og inkluderingsdeparte… (630 000–770 000 kr/år)\n\n1201 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio.\nHavn er alltid gratis for jobbsøkere.\n\n#oslo #jobbioslo #ledigstilling #jobb #havn",
+        "en": "New jobs in Oslo 🌿\n\n• Dyktige tømrere søkes til Norges ledende fasadeentreprenør. – Ellingsen Rekruttering (350 kr/h)\n• Er du aktiv, spontan og fleksibel? Bli med på laget! – Mio BPA (236 kr/h)\n• Sosialkonsulent – Ambulerende tjenester, Oslo kom… (623 400–726 900 kr/yr)\n• Tilkallingsvikar barnehage – Radiohuset barnehage, Oslo komm… (516 250–571 000 kr/yr)\n• Økonomimedarbeider – Arbeids- og inkluderingsdeparte… (630 000–770 000 kr/yr)\n\n1201 open jobs right now. See them all and apply directly with the employer – link in bio.\nHavn is always free for job seekers.\n\n#oslo #jobbioslo #ledigstilling #jobb #havn"
+      },
+      "lang": "no"
+    },
+    {
+      "type": "video",
+      "label": "TikTok / Reels / Stories video",
+      "time": "19:00",
+      "file": "video.mp4",
+      "poster": "s1.jpg",
+      "captions": {
+        "no": "Nye jobber i Oslo 🌿 1201 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio. #oslo #jobbioslo #ledigstilling #jobb #havn",
+        "en": "New jobs in Oslo 🌿 1201 open jobs right now. See them all and apply directly with the employer – link in bio. #oslo #jobbioslo #ledigstilling #jobb #havn"
+      },
+      "lang": "no",
+      "note": "Add a calm trending sound in TikTok/Instagram before posting."
+    }
+  ]
+}

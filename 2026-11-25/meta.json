@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-25",
+  "theme": "remote",
+  "items": [
+    {
+      "type": "post",
+      "label": "Instagram + Facebook post",
+      "time": "13:00",
+      "file": "post.jpg",
+      "captions": {
+        "no": "Fjernjobber du kan ta hjemmefra 🌿\n\n• Commercial Account Executive – Zscaler\n• Software Engineering Manager, Billing & Integrations – Sanity\n• Enterprise Sales Executive – UiPath\n\n5 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio.\nHavn er alltid gratis for jobbsøkere.\n\n#remotejobs #remotework #workfromhome #europejobs #havn",
+        "en": "Remote jobs you can do from home 🌿\n\n• Commercial Account Executive – Zscaler\n• Software Engineering Manager, Billing & Integrations – Sanity\n• Enterprise Sales Executive – UiPath\n\n5 open jobs right now. See them all and apply directly with the employer – link in bio.\nHavn is always free for job seekers.\n\n#remotejobs #remotework #workfromhome #europejobs #havn"
+      },
+      "lang": "en"
+    },
+    {
+      "type": "video",
+      "label": "TikTok / Reels / Stories video",
+      "time": "19:00",
+      "file": "video.mp4",
+      "poster": "s1.jpg",
+      "captions": {
+        "no": "Fjernjobber du kan ta hjemmefra 🌿 5 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio. #remotejobs #remotework #workfromhome #europejobs #havn",
+        "en": "Remote jobs you can do from home 🌿 5 open jobs right now. See them all and apply directly with the employer – link in bio. #remotejobs #remotework #workfromhome #europejobs #havn"
+      },
+      "lang": "en",
+      "note": "Add a calm trending sound in TikTok/Instagram before posting."
+    }
+  ]
+}

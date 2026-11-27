@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-02",
+  "theme": "stavanger",
+  "items": [
+    {
+      "type": "post",
+      "label": "Instagram + Facebook post",
+      "time": "13:00",
+      "file": "post.jpg",
+      "captions": {
+        "no": "Nye jobber i Stavanger-regionen 🌿\n\n• Kommunikasjonsrådgivar - vikariat – Statsforvalteren i Rogaland (620 000–750 000 kr/år)\n• Helsefagarbeider – Øygardstien boliger, Sola kommu… (475 300–556 700 kr/år)\n• Undervisningsinspektør ved Sande skole – Sola kommune\n• Pianolærer i Sola kulturskole – Kulturskolen, Sola kommune (ca. 600–720k kr/år (estimat, ikke bekreftet))\n• Sykepleier lindrende/ somatisk avdeling – Sola sykehjem avd 2AB, Sola kom… (ca. 620–710k kr/år (estimat, ikke bekreftet))\n\n118 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio.\nHavn er alltid gratis for jobbsøkere.\n\n#stavanger #sandnes #rogaland #ledigstilling #jobb #havn",
+        "en": "New jobs around Stavanger 🌿\n\n• Kommunikasjonsrådgivar - vikariat – Statsforvalteren i Rogaland (620 000–750 000 kr/yr)\n• Helsefagarbeider – Øygardstien boliger, Sola kommu… (475 300–556 700 kr/yr)\n• Undervisningsinspektør ved Sande skole – Sola kommune\n• Pianolærer i Sola kulturskole – Kulturskolen, Sola kommune (≈ NOK 600–720k/yr (estimate, not confirmed))\n• Sykepleier lindrende/ somatisk avdeling – Sola sykehjem avd 2AB, Sola kom… (≈ NOK 620–710k/yr (estimate, not confirmed))\n\n118 open jobs right now. See them all and apply directly with the employer – link in bio.\nHavn is always free for job seekers.\n\n#stavanger #sandnes #rogaland #ledigstilling #jobb #havn",
+        "ro": "Joburi noi în zona Stavanger 🌿\n\n• Kommunikasjonsrådgivar - vikariat – Statsforvalteren i Rogaland (620 000–750 000 kr/an)\n• Helsefagarbeider – Øygardstien boliger, Sola kommu… (475 300–556 700 kr/an)\n• Undervisningsinspektør ved Sande skole – Sola kommune\n• Pianolærer i Sola kulturskole – Kulturskolen, Sola kommune (≈ 600–720k NOK/an (estimare, neconfirmat))\n• Sykepleier lindrende/ somatisk avdeling – Sola sykehjem avd 2AB, Sola kom… (≈ 620–710k NOK/an (estimare, neconfirmat))\n\n118 joburi disponibile acum. Vezi toate joburile și aplică direct la angajator – link în bio.\nHavn este mereu gratuit pentru candidați.\n\n#stavanger #sandnes #rogaland #ledigstilling #jobb #havn"
+      },
+      "lang": "no"
+    },
+    {
+      "type": "video",
+      "label": "TikTok / Reels / Stories video",
+      "time": "19:00",
+      "file": "video.mp4",
+      "poster": "s1.jpg",
+      "captions": {
+        "no": "Nye jobber i Stavanger-regionen 🌿 118 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio. #stavanger #sandnes #rogaland #ledigstilling #jobb #havn",
+        "en": "New jobs around Stavanger 🌿 118 open jobs right now. See them all and apply directly with the employer – link in bio. #stavanger #sandnes #rogaland #ledigstilling #jobb #havn",
+        "ro": "Joburi noi în zona Stavanger 🌿 118 joburi disponibile acum. Vezi toate joburile și aplică direct la angajator – link în bio. #stavanger #sandnes #rogaland #ledigstilling #jobb #havn"
+      },
+      "lang": "no",
+      "note": "Add a calm trending sound in TikTok/Instagram before posting."
+    },
+    {
+      "type": "linkedin",
+      "label": "LinkedIn post (employers)",
+      "time": "Monday 08:00",
+      "file": "linkedin.jpg",
+      "lang": "en",
+      "captions": {
+        "en": "Hiring in Norway this week: 2 314 new jobs from 1 627 companies.\n\nOnly 9% of ads say what the job pays. Candidates skip ads without pay – and the ones that show it get better-matched applicants.\n\nOn Havn, standard job posts are free, and the first 25 companies get a Featured post free for 30 days. Reply here or DM me.\n\nhttps://lidjoakim-hash.github.io/havn\n#recruiting #hiring #norway #jobs",
+        "no": "Ansettelser i Norge denne uken: 2 314 nye stillinger fra 1 627 bedrifter.\n\nBare 9 % av annonsene oppgir lønn. Annonser med lønn får søkere som passer bedre.\n\nPå Havn er vanlige stillingsannonser gratis, og de 25 første bedriftene får en fremhevet annonse gratis i 30 dager. Send meg en melding.\n\nhttps://lidjoakim-hash.github.io/havn\n#rekruttering #jobb #norge"
+      }
+    },
+    {
+      "type": "newsletter",
+      "label": "Weekly email newsletter",
+      "time": "Monday 07:30",
+      "file": "newsletter.html",
+      "lang": "no",
+      "captions": {
+        "no": "Emne: 2 314 nye jobber denne uken – ukens utvalg fra Havn"
+      }
+    }
+  ]
+}

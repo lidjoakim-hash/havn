@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-24",
+  "theme": "intl",
+  "items": [
+    {
+      "type": "post",
+      "label": "Instagram + Facebook post",
+      "time": "13:00",
+      "file": "post.jpg",
+      "captions": {
+        "no": "Jobber i Norge – norsk ikke påkrevd 🌿\n\n• Rafting guides for class 5+ whitwater – Dagali Rafting As (28 000 kr/mnd)\n• Welders – NH Bemanning AS (300–310 kr/t)\n• Experienced Carpenter Wanted – Industri Rekruttering As (300 kr/t)\n• Postdoctoral Research Fellow in Economics – University of Oslo (750 000–800 000 kr/år)\n• Skilled Sheet Metal Workers – Bergen – Career Growth Possib… – Skuteviken Personell AS (315–355 kr/t)\n\n368 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio.\nHavn er alltid gratis for jobbsøkere.\n\n#jobsinnorway #workinnorway #jobbinorge #havn",
+        "en": "Jobs in Norway – no Norwegian needed 🌿\n\n• Rafting guides for class 5+ whitwater – Dagali Rafting As (28 000 kr/mo)\n• Welders – NH Bemanning AS (300–310 kr/h)\n• Experienced Carpenter Wanted – Industri Rekruttering As (300 kr/h)\n• Postdoctoral Research Fellow in Economics – University of Oslo (750 000–800 000 kr/yr)\n• Skilled Sheet Metal Workers – Bergen – Career Growth Possib… – Skuteviken Personell AS (315–355 kr/h)\n\n368 open jobs right now. See them all and apply directly with the employer – link in bio.\nHavn is always free for job seekers.\n\n#jobsinnorway #workinnorway #jobbinorge #havn"
+      },
+      "lang": "en"
+    },
+    {
+      "type": "video",
+      "label": "TikTok / Reels / Stories video",
+      "time": "19:00",
+      "file": "video.mp4",
+      "poster": "s1.jpg",
+      "captions": {
+        "no": "Jobber i Norge – norsk ikke påkrevd 🌿 368 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio. #jobsinnorway #workinnorway #jobbinorge #havn",
+        "en": "Jobs in Norway – no Norwegian needed 🌿 368 open jobs right now. See them all and apply directly with the employer – link in bio. #jobsinnorway #workinnorway #jobbinorge #havn"
+      },
+      "lang": "en",
+      "note": "Add a calm trending sound in TikTok/Instagram before posting."
+    }
+  ]
+}

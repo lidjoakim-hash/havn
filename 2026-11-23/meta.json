@@ -1,0 +1,51 @@
+{
+  "date": "2026-11-23",
+  "theme": "stavanger",
+  "items": [
+    {
+      "type": "post",
+      "label": "Instagram + Facebook post",
+      "time": "13:00",
+      "file": "post.jpg",
+      "captions": {
+        "no": "Nye jobber i Stavanger-regionen 🌿\n\n• Forsker i elektrokjemisk batteridegradering – Universitetet i Stavanger (740 000–920 000 kr/år)\n• Har du lyst å bygge karriere, og tjene veldig godt samtidig? – ABMARKETING AS (42 000 kr/mnd)\n• Vikariat avdelingsleder/inspektør – Stavanger fengsel (700 000–850 000 kr/år)\n• Regnskapskonsulent – Alstahaug kommune Økonomi (545 400–639 900 kr/år)\n• Trygge og omsorgsfulle BPA assistenter søkes til kvinne i T… – Mio BPA (236 kr/t)\n\n245 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio.\nHavn er alltid gratis for jobbsøkere.\n\n#stavanger #sandnes #rogaland #ledigstilling #jobb #havn",
+        "en": "New jobs around Stavanger 🌿\n\n• Forsker i elektrokjemisk batteridegradering – Universitetet i Stavanger (740 000–920 000 kr/yr)\n• Har du lyst å bygge karriere, og tjene veldig godt samtidig? – ABMARKETING AS (42 000 kr/mo)\n• Vikariat avdelingsleder/inspektør – Stavanger fengsel (700 000–850 000 kr/yr)\n• Regnskapskonsulent – Alstahaug kommune Økonomi (545 400–639 900 kr/yr)\n• Trygge og omsorgsfulle BPA assistenter søkes til kvinne i T… – Mio BPA (236 kr/h)\n\n245 open jobs right now. See them all and apply directly with the employer – link in bio.\nHavn is always free for job seekers.\n\n#stavanger #sandnes #rogaland #ledigstilling #jobb #havn"
+      },
+      "lang": "no"
+    },
+    {
+      "type": "video",
+      "label": "TikTok / Reels / Stories video",
+      "time": "19:00",
+      "file": "video.mp4",
+      "poster": "s1.jpg",
+      "captions": {
+        "no": "Nye jobber i Stavanger-regionen 🌿 245 ledige stillinger akkurat nå. Se alle og søk direkte hos arbeidsgiveren – lenke i bio. #stavanger #sandnes #rogaland #ledigstilling #jobb #havn",
+        "en": "New jobs around Stavanger 🌿 245 open jobs right now. See them all and apply directly with the employer – link in bio. #stavanger #sandnes #rogaland #ledigstilling #jobb #havn"
+      },
+      "lang": "no",
+      "note": "Add a calm trending sound in TikTok/Instagram before posting."
+    },
+    {
+      "type": "linkedin",
+      "label": "LinkedIn post (employers)",
+      "time": "Monday 08:00",
+      "file": "linkedin.jpg",
+      "lang": "en",
+      "captions": {
+        "en": "Hiring in Norway this week: 815 new jobs from 625 companies.\n\nOnly 4% of ads say what the job pays. Candidates skip ads without pay – and the ones that show it get better-matched applicants.\n\nOn Havn, standard job posts are free, and the first 25 companies get a Featured post free for 30 days. Reply here or DM me.\n\nhttps://havncareerhub.com\n#recruiting #hiring #norway #jobs",
+        "no": "Ansettelser i Norge denne uken: 815 nye stillinger fra 625 bedrifter.\n\nBare 4 % av annonsene oppgir lønn. Annonser med lønn får søkere som passer bedre.\n\nPå Havn er vanlige stillingsannonser gratis, og de 25 første bedriftene får en fremhevet annonse gratis i 30 dager. Send meg en melding.\n\nhttps://havncareerhub.com\n#rekruttering #jobb #norge"
+      }
+    },
+    {
+      "type": "newsletter",
+      "label": "Weekly email newsletter",
+      "time": "Monday 07:30",
+      "file": "newsletter.html",
+      "lang": "no",
+      "captions": {
+        "no": "Emne: 815 nye jobber denne uken – ukens utvalg fra Havn"
+      }
+    }
+  ]
+}
